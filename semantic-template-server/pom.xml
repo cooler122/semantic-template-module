@@ -20,6 +20,15 @@
     </properties>
 
     <build>
+
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <!--去除jar包中的配置文件信息-->
             <!--<plugin>-->
@@ -85,8 +94,86 @@
                     <overwrite>true</overwrite>
                 </configuration>
             </plugin>
+
+
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-resources-plugin</artifactId>-->
+                <!--<version>2.5</version>-->
+                <!--<configuration>-->
+                    <!--<useDefaultDelimiters>false</useDefaultDelimiters>-->
+                    <!--<delimiters>-->
+                        <!--<delimiter>$[*]</delimiter>-->
+                    <!--</delimiters>-->
+                    <!--<encoding>UTF-8</encoding>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>windows</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <classifier>windows</classifier>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+
+                <log.level>INFO</log.level>
+                <log.logDir>D:\mnt\work\semantic-template-module\logs\</log.logDir>
+                <debug.Path>D:\mnt\work\semantic-template-module\debugData\</debug.Path>
+
+                <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+                <jdbc.url><![CDATA[jdbc:mysql://127.0.0.1:3306/intent-customization?useUnicode=true&amp;characterEncoding=utf-8&amp;noDatetimeStringSync=true]]></jdbc.url>
+                <jdbc.username>root</jdbc.username>
+                <jdbc.password>123456</jdbc.password>
+
+                <redis.host>localhost</redis.host>
+                <redis.port>6379</redis.port>
+                <!--<redis.intent.passwd></redis.intent.passwd>     &lt;!&ndash; 本地redis没有密码，故注掉 &ndash;&gt;-->
+
+                <zookeeper.register.address>zookeeper://127.0.0.1:2181</zookeeper.register.address>              <!-- 服务注册中心地址 -->
+                <zookeeper.segmentation.address>zookeeper://127.0.0.1:2181</zookeeper.segmentation.address>     <!-- 分词服务地址 -->
+
+            </properties>
+        </profile>
+
+        <!-- 新的测试服务器  -->
+        <profile>
+            <id>mac</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <classifier>mac</classifier>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <log4j.level>INFO</log4j.level>
+                <log4j.logDir>/mnt/work/nlpintent/logs</log4j.logDir>
+                <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                <jdbc_nlp_intent.url><![CDATA[jdbc:mysql://192.168.10.34:3306/intent-customization?useUnicode=true&amp;characterEncoding=utf-8&amp;noDatetimeStringSync=true]]></jdbc_nlp_intent.url>
+                <jdbc_nlp_intent.username>appuser</jdbc_nlp_intent.username>
+                <jdbc_nlp_intent.password>appuser123</jdbc_nlp_intent.password>
+                <redis.intent.host>6379.redis.flw.com</redis.intent.host>
+                <redis.intent.port>6379</redis.intent.port>
+                <redis.intent.passwd>nlpflw2016</redis.intent.passwd>
+                <dubbo.registry.address>zookeeper://192.168.10.20:2181?backup=192.168.10.21:2181,192.168.10.22:2181</dubbo.registry.address>
+                <dubbo.registry.semantic.address>zookeeper://192.168.10.20:2181?backup=192.168.10.21:2181,192.168.10.22:2181</dubbo.registry.semantic.address>
+                <debug.Path>/mnt/work/nlpintent/debugData/</debug.Path>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <!-- 本服务api -->

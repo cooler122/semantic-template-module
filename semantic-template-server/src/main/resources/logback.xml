@@ -13,7 +13,7 @@
         /logs：就是tomcat下的日志路径，
         /ehrlog：如果没有目录会默认创建
     -->
-    <substitutionProperty name="logbase" value="C:/project-logs/" />
+    <substitutionProperty name="logbase" value="${log.logDir}" />
     <!-- 时间戳：这个时间戳可以作为每日日志的名称 -->
     <timestamp key="bySecond" datePattern="yyyy-MM-dd"/>
     <!-- appender：

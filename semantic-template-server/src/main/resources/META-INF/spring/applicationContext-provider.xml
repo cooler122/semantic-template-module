@@ -19,9 +19,8 @@
                     accepts="500"
                     accesslog="/mnt/work/nlpintent/logs/access.log"/>
 
-    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+    <dubbo:registry address="${zookeeper.register.address}"/>
     <!--<dubbo:registry address="zookeeper://192.168.10.20:2181?backup=192.168.10.21:2181,192.168.10.22:2181"/>-->
-    <!--<dubbo:registry address="${dubbo.registry.address}"/>-->
 
     <dubbo:service interface="com.cooler.semantic.api.SemanticParserFacade" ref="semanticParserFacade"
                    protocol="dubbo"

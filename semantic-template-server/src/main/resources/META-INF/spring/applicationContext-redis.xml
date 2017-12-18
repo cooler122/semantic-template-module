@@ -12,11 +12,11 @@
 
         <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" destroy-method="destroy">
             <property name="poolConfig" ref="jedisPoolConfig"></property>
-            <property name="hostName" value="${redis.hostName}"></property>
+            <property name="hostName" value="${redis.hostname}"></property>
             <property name="port" value="${redis.port}"></property>
             <property name="timeout" value="${redis.timeout}"></property>
             <property name="usePool" value="${redis.usePool}"></property>
-            <!--<property name="password" value="${redis.passWord}"></property>-->
+            <property name="password" value="${redis.password}"></property>
         </bean>
 
         <bean id="jedisTemplate" class="org.springframework.data.redis.core.RedisTemplate">

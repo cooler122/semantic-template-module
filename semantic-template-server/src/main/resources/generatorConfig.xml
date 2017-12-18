@@ -7,8 +7,13 @@
     <!--导入属性配置-->
     <properties resource="generator.properties"></properties>
 
-    <!--指定特定数据库的jdbc驱动jar包的位置-->
-    <classPathEntry location="${jdbc.driverLocation}"/>
+    <!--指定特定数据库的jdbc驱动jar包的位置
+    <classPathEntry location="C:\\Program Files\\MySQL\\mysql-connector-java-5.1.40.jar"/>
+    -->
+
+    <!--mac下指定特定数据库的jdbc驱动jar包的位置-->
+    <classPathEntry location="/Users/zhangsheng/javaspace/localfiles/mysql-connector-java-5.1.40.jar"/>
+
 
     <context id="default" targetRuntime="MyBatis3">
 
@@ -20,8 +25,8 @@
 
         <!--jdbc的数据库连接 -->
         <jdbcConnection
-                driverClass="${jdbc.driverClass}"
-                connectionURL="${jdbc.connectionURL}"
+                driverClass="${jdbc.driverClassName}"
+                connectionURL="${jdbc.url}"
                 userId="${jdbc.username}"
                 password="${jdbc.password}">
         </jdbcConnection>
@@ -64,8 +69,8 @@
             <property name="postfix" value="dao"/>
         </javaClientGenerator>
 
-        <table tableName="account" domainObjectName="Account" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
-        <!--<table tableName="action" domainObjectName="Action" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+        <!--<table tableName="account" domainObjectName="Account" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+        <table tableName="action" domainObjectName="Action" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         <!--<table tableName="behavior" domainObjectName="Behavior" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="combine_entity" domainObjectName="CombineEntity" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="domain" domainObjectName="Domain" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->

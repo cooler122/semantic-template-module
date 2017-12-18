@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <dubbo:application name="semantic_template_client_consumer"/>
+    <!--dev环境的zk-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181" check="false"></dubbo:registry>
+    <!--<dubbo:registry address="zookeeper://192.168.10.20:2181?backup=192.168.10.21:2181,192.168.10.22:2181" check="false"></dubbo:registry>-->
+    <!-- 要引用的服务 -->
+    <dubbo:reference interface="com.cooler.semantic.api.SemanticParserFacade" id="semanticParserFacade" version="1.0-SNAPSHOT"  />
+
+</beans>

@@ -121,9 +121,9 @@
                 <jdbc.username>root</jdbc.username>
                 <jdbc.password>123456</jdbc.password>
 
-                <redis.host>localhost</redis.host>
+                <redis.hostname>localhost</redis.hostname>
                 <redis.port>6379</redis.port>
-                <!--<redis.intent.passwd></redis.intent.passwd>     &lt;!&ndash; 本地redis没有密码，故注掉 &ndash;&gt;-->
+                <redis.password></redis.password>     <!-- 本地redis没有密码，故注掉 -->
 
                 <zookeeper.register.address>zookeeper://127.0.0.1:2181</zookeeper.register.address>              <!-- 服务注册中心地址 -->
                 <zookeeper.segmentation.address>zookeeper://127.0.0.1:2181</zookeeper.segmentation.address>     <!-- 分词服务地址 -->

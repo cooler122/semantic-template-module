@@ -2,7 +2,7 @@ package com.cooler.semantic.entity;
 
 import java.util.List;
 
-public class SemanticParserRequest {
+public class SemanticParserRequest implements java.io.Serializable{
 
     //--------------------------------------------------------------------0.传入的句子
     /**

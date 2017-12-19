@@ -2,7 +2,6 @@ package com.cooler.semantic.service.impl;
 
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.SentenceInfo;
-import com.cooler.semantic.model.WordInfo;
 import com.cooler.semantic.service.SentencePrecessService;
 import com.cooler.semantic.service.WeightCalculateService;
 import com.cooler.semantic.service.WordSegregateService;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

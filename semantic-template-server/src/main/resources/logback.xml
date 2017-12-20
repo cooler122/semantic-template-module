@@ -70,7 +70,7 @@
         appender-ref：确定使用哪个appender
          -->
     <root level="info">
-        <appender-ref ref="fileAppender"/>
+        <appender-ref ref="logFile"/>
         <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

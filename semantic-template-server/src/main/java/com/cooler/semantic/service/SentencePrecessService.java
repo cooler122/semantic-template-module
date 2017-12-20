@@ -1,7 +1,7 @@
 package com.cooler.semantic.service;
 
 import com.cooler.semantic.entity.SemanticParserRequest;
-import com.cooler.semantic.model.SentenceInfo;
+import com.cooler.semantic.model.SentenceVector;
 
 import java.util.List;
 
@@ -12,5 +12,5 @@ public interface SentencePrecessService {
      * @param request   请求体
      * @return  处理好的SentenceInfo对象
      */
-    List<SentenceInfo> sentenceProcess(SemanticParserRequest request);
+    List<SentenceVector> sentenceProcess(SemanticParserRequest request);
 }

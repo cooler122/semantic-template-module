@@ -1,6 +1,7 @@
 package com.cooler.semantic.entity;
 
 import java.util.List;
+import java.util.Set;
 
 public class SemanticParserRequest implements java.io.Serializable{
 
@@ -10,43 +11,32 @@ public class SemanticParserRequest implements java.io.Serializable{
      */
     private String cmd;
 
-    //--------------------------------------------------------------------1.账户参数
+    //--------------------------------------------------------------------1.账户参数AP
     /**
      * accountIds（账号列表，为了扩展查询匹配范围，可以传入多个账号）
      */
     private List<Integer> accountId;
 
-    //--------------------------------------------------------------------2.当前场景环境值
-    /**
-     * 当前所处的场景Id
-     */
-    private Integer sceneId;
-
-    /**
-     * 当前所处的意图ID
-     */
-    private Integer intentId;
-
-    /**
-     * 当前所处的规则ID
-     */
-    private Integer ruleId;
-
-    //--------------------------------------------------------------------3.配置参数
+    //--------------------------------------------------------------------2.配置参数CP
     /**
      * 是否能跳出上下文
      */
     private boolean canBreakContext = true;
 
     /**
-     * 实体询问最大次数
+     * 能否缺失实体批量访问(默认一个个询问)
      */
-    private int entityMaxQueryCount = 3;
+    private boolean canBatchQuery = false;
 
     /**
-     * 规则询问最大次数（要不要看后面效果!!!!!!!!!!!!!!!!!!!!）
+     * 规则询问最大次数（如果缺失实体批量询问，则用此量）（要不要看后面效果!!!!!!!!!!!!!!!!!!!!）
      */
     private int ruleMaxQueryCount = 20;
+
+    /**
+     * 实体询问最大次数（如果缺失实体一个个询问，则用此量）
+     */
+    private int entityMaxQueryCount = 3;
 
     /**
      * 上下文两次请求的间隔时间（默认一分钟）
@@ -58,26 +48,46 @@ public class SemanticParserRequest implements java.io.Serializable{
      */
     private double accuracyThreshold  = 0.7;
 
-    //---------------------------------------以下是上次匹配产生的上下文参数（如果丢失，则相当于系统“失忆”，此方案是将上下文数据放在服务端的一种实施方案）
+    //--------------------------------------------------------------------3.上下文数据CD，以下是上次匹配产生的上下文参数（如果丢失，则相当于系统“失忆”，此方案是将上下文数据放在服务端的一种实施方案）
     /**
      * 上下文编号（用来支持上下文的字段）
      */
     private String contextId;
 
     /**
-     * 上次询问的实体的实体ID
+     * 上次请求的结束时间戳（用来支持限定时间）
      */
-    private Integer queryEntityId;
+    private long lastEndTimestamp;
 
     /**
-     * 实体ID已经积累下来的询问次数（用来支持限定次数）
+     * 上次所处的场景Id
+     */
+    private Integer lastSceneId;
+
+    /**
+     * 上次所处的意图ID
+     */
+    private Integer lastIntentId;
+
+    /**
+     * 上次所处的规则ID
+     */
+    private Integer lastRuleId;
+
+    /**
+     * 缺失的实体集合ID（！！！！！！！！！！！！！！！！！看看后面是用缺失实体对象还是缺失实体ID）
+     */
+    private Set<Integer> lackingEntitySet;
+
+    /**
+     * 积累下来的询问次数（用来支持限定次数）
      */
     private int accumulatedQueryCount;
 
     /**
-     * 上次请求的结束时间戳（用来支持限定时间）
+     * 上次请求产生的状态
      */
-    private long lastResponseTimestamp;
+    private int lastState;
 
     public String getCmd() {
         return cmd;
@@ -95,30 +105,6 @@ public class SemanticParserRequest implements java.io.Serializable{
         this.accountId = accountId;
     }
 
-    public Integer getSceneId() {
-        return sceneId;
-    }
-
-    public void setSceneId(Integer sceneId) {
-        this.sceneId = sceneId;
-    }
-
-    public Integer getIntentId() {
-        return intentId;
-    }
-
-    public void setIntentId(Integer intentId) {
-        this.intentId = intentId;
-    }
-
-    public Integer getRuleId() {
-        return ruleId;
-    }
-
-    public void setRuleId(Integer ruleId) {
-        this.ruleId = ruleId;
-    }
-
     public boolean isCanBreakContext() {
         return canBreakContext;
     }
@@ -127,12 +113,12 @@ public class SemanticParserRequest implements java.io.Serializable{
         this.canBreakContext = canBreakContext;
     }
 
-    public int getEntityMaxQueryCount() {
-        return entityMaxQueryCount;
+    public boolean isCanBatchQuery() {
+        return canBatchQuery;
     }
 
-    public void setEntityMaxQueryCount(int entityMaxQueryCount) {
-        this.entityMaxQueryCount = entityMaxQueryCount;
+    public void setCanBatchQuery(boolean canBatchQuery) {
+        this.canBatchQuery = canBatchQuery;
     }
 
     public int getRuleMaxQueryCount() {
@@ -141,6 +127,14 @@ public class SemanticParserRequest implements java.io.Serializable{
 
     public void setRuleMaxQueryCount(int ruleMaxQueryCount) {
         this.ruleMaxQueryCount = ruleMaxQueryCount;
+    }
+
+    public int getEntityMaxQueryCount() {
+        return entityMaxQueryCount;
+    }
+
+    public void setEntityMaxQueryCount(int entityMaxQueryCount) {
+        this.entityMaxQueryCount = entityMaxQueryCount;
     }
 
     public int getContextWaitTime() {
@@ -167,12 +161,44 @@ public class SemanticParserRequest implements java.io.Serializable{
         this.contextId = contextId;
     }
 
-    public Integer getQueryEntityId() {
-        return queryEntityId;
+    public long getLastEndTimestamp() {
+        return lastEndTimestamp;
     }
 
-    public void setQueryEntityId(Integer queryEntityId) {
-        this.queryEntityId = queryEntityId;
+    public void setLastEndTimestamp(long lastEndTimestamp) {
+        this.lastEndTimestamp = lastEndTimestamp;
+    }
+
+    public Integer getLastSceneId() {
+        return lastSceneId;
+    }
+
+    public void setLastSceneId(Integer lastSceneId) {
+        this.lastSceneId = lastSceneId;
+    }
+
+    public Integer getLastIntentId() {
+        return lastIntentId;
+    }
+
+    public void setLastIntentId(Integer lastIntentId) {
+        this.lastIntentId = lastIntentId;
+    }
+
+    public Integer getLastRuleId() {
+        return lastRuleId;
+    }
+
+    public void setLastRuleId(Integer lastRuleId) {
+        this.lastRuleId = lastRuleId;
+    }
+
+    public Set<Integer> getLackingEntitySet() {
+        return lackingEntitySet;
+    }
+
+    public void setLackingEntitySet(Set<Integer> lackingEntitySet) {
+        this.lackingEntitySet = lackingEntitySet;
     }
 
     public int getAccumulatedQueryCount() {
@@ -183,11 +209,11 @@ public class SemanticParserRequest implements java.io.Serializable{
         this.accumulatedQueryCount = accumulatedQueryCount;
     }
 
-    public long getLastResponseTimestamp() {
-        return lastResponseTimestamp;
+    public int getLastState() {
+        return lastState;
     }
 
-    public void setLastResponseTimestamp(long lastResponseTimestamp) {
-        this.lastResponseTimestamp = lastResponseTimestamp;
+    public void setLastState(int lastState) {
+        this.lastState = lastState;
     }
 }

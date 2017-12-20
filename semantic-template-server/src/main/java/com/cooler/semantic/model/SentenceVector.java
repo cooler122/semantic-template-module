@@ -3,7 +3,7 @@ package com.cooler.semantic.model;
 import java.io.Serializable;
 import java.util.List;
 
-public class SentenceInfo implements Serializable, Cloneable {
+public class SentenceVector implements Serializable, Cloneable {
     /**
      * 原始句子
      */

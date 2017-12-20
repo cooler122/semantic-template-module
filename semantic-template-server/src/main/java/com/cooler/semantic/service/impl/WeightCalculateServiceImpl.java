@@ -1,6 +1,6 @@
 package com.cooler.semantic.service.impl;
 
-import com.cooler.semantic.model.SentenceInfo;
+import com.cooler.semantic.model.SentenceVector;
 import com.cooler.semantic.service.WeightCalculateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,7 @@ public class WeightCalculateServiceImpl implements WeightCalculateService {
     private Logger logger = LoggerFactory.getLogger(WeightCalculateServiceImpl.class);
 
     @Override
-    public void calculateWeight(List<SentenceInfo> sentenceInfos) {
+    public void calculateWeight(List<SentenceVector> sentenceVectors) {
         logger.info("权重计算...");
     }
 }

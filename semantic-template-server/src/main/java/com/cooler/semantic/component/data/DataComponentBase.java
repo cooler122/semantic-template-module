@@ -1,8 +1,17 @@
 package com.cooler.semantic.component.data;
 
 public class DataComponentBase<T> implements DataComponent<T> {
+    /**
+     * 数据组件ID
+     */
     private String id;
+    /**
+     * 数据组件类型（1为功能组件，2为逻辑组件）
+     */
     private String type;
+    /**
+     * 数据组件数据体
+     */
     private T data;
 
     public DataComponentBase() {
@@ -41,5 +50,14 @@ public class DataComponentBase<T> implements DataComponent<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "DataComponentBase{" +
+                "id='" + id + '\'' +
+                ", type='" + type + '\'' +
+                ", data=" + data +
+                '}';
     }
 }

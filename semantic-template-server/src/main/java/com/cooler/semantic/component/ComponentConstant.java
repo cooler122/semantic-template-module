@@ -9,6 +9,10 @@ import java.util.Map;
 public class ComponentConstant {
 
     /**
+     * 循环次数
+     */
+    public static int loopCount = 0;
+    /**
      * 数据组件Map
      */
     public static Map<String, DataComponent> dataBeanMap = new HashMap<>();

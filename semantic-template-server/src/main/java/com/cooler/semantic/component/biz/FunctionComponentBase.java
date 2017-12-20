@@ -69,7 +69,7 @@ public abstract class FunctionComponentBase implements FunctionComponent {
         this.outputDataBeanId = outputDataBeanId;
     }
 
-    public void go() {
+    public void doit() {
         //1.获取输入参数体
         String inputDataBeanId = this.getInputDataBeanId();                     //查找输入参数体ID
         String outputDataBeanId = this.getOutputDataBeanId();
@@ -85,12 +85,14 @@ public abstract class FunctionComponentBase implements FunctionComponent {
 
         if(selectNextId == null) return;                                      //出口
 
-
         //3.带动下一个组件再来运行
         String nextComponentId = ComponentConstant.nextComponentIdMap.get(selectNextId);
         FunctionComponent nextFunctionComponent = ComponentConstant.functionComponentMap.get(nextComponentId);
+        System.out.println(selectNextId + " --->    " + nextComponentId);
 
-        nextFunctionComponent.go();
+        ComponentConstant.loopCount ++;
+
+        nextFunctionComponent.doit();
 
     }
 

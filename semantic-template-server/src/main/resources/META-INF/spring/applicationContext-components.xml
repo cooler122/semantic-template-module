@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-2.5.xsd
+    http://www.springframework.org/schema/jee 
+    http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-2.5.xsd http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+
+    <bean id="componentConstant" class="com.cooler.semantic.component.ComponentConstant" scope="singleton">
+        <!-- 数据组件声明 -->
+        <property name="dataBeanMap">
+            <map>
+                <entry key="semanticParserRequest"><null/></entry>
+            </map>
+        </property>
+
+        <!-- 功能组件声明 -->
+        <property name="functionComponentMap">
+            <map>
+                <entry key="VCC" value-ref="validateConfComponent"/>
+                <entry key="SPC" value-ref="sentenceProcessComponent"/>
+                <entry key="ESC" value-ref="entitySearchComponent"/>
+                <entry key="ENDC" value-ref="eNDComponent"/>
+            </map>
+        </property>
+
+        <!-- 关联映射声明 -->
+        <property name="nextComponentIdMap">
+            <map>
+                <entry key="VCC_S" value="SPC"/>
+                <entry key="VCC_E" value="ENDC"/>
+
+                <entry key="SPC_S" value="ESC"/>
+                <entry key="SPC_E" value="ENDC"/>
+
+                <entry key="ESC_S" value="ENDC"/>
+            </map>
+        </property>
+
+    </bean>
+
+
+</beans>
+

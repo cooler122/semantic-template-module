@@ -14,7 +14,6 @@ public class WordSegregateServiceImpl implements WordSegregateService {
 
     @Override
     public List<SentenceVector> wordSegregate(String sentence, Integer accountId, List<Integer> domainIds, List<Integer> selectorIds, boolean isDropPunctuation) {
-        logger.info("分词...");
         return null;
     }
 }

@@ -4,6 +4,6 @@ public interface FunctionComponent {
     /**
      * 功能组件执行
      */
-    void doit();
+    void run();
 
 }

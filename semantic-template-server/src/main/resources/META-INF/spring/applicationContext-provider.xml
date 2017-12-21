@@ -5,12 +5,14 @@
        http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <!--提供方的应用名-->
-    <dubbo:application name="nlp-intent" logger="log4j"/>
+    <dubbo:application name="nlp-intent"/>
 
-    <!--导入dubbo的bean的配置文件-->
     <import resource="classpath:META-INF/spring/applicationContext-beans.xml"/>
+    <import resource="classpath:META-INF/spring/applicationContext-components.xml"/>
     <import resource="classpath:META-INF/spring/applicationContext-redis.xml"/>
+
     <import resource="classpath:META-INF/spring/applicationContext-consumer.xml"/>
+
 
     <!--dubbo协议默认配置，线程池为fixed，默认100，端口port外部配置（properties文件）-->
     <dubbo:protocol id="dubbo" name="dubbo" serialization="hessian2"

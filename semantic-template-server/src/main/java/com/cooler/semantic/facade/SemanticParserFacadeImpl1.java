@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component("semanticParserFacade")
+@Component("semanticParserFacade1")
 public class SemanticParserFacadeImpl1 implements SemanticParserFacade {
 
     private static Logger logger = LoggerFactory.getLogger(SemanticParserFacadeImpl1.class.getName());

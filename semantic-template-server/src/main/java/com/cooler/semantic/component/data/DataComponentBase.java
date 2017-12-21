@@ -4,15 +4,15 @@ public class DataComponentBase<T> implements DataComponent<T> {
     /**
      * 数据组件ID
      */
-    private String id;
+    protected String id;
     /**
      * 数据组件类型（1为功能组件，2为逻辑组件）
      */
-    private String type;
+    protected String type;
     /**
      * 数据组件数据体
      */
-    private T data;
+    protected T data;
 
     public DataComponentBase() {
     }

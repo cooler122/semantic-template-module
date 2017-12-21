@@ -15,6 +15,5 @@ public class WeightCalculateServiceImpl implements WeightCalculateService {
 
     @Override
     public void calculateWeight(List<SentenceVector> sentenceVectors) {
-        logger.info("权重计算...");
     }
 }

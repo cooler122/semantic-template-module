@@ -1,13 +1,13 @@
 package com.cooler.semantic.component.biz.impl;
 
-import com.cooler.semantic.component.biz.ENDComponent;
 import com.cooler.semantic.component.ComponentBizResult;
+import com.cooler.semantic.component.biz.FunctionComponentBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component("eNDComponent")
-public class ENDComponentImpl extends FunctionComponentBase<Object, Object> implements ENDComponent {
+public class ENDComponentImpl extends FunctionComponentBase<Object, Object> {
 
     private static Logger logger = LoggerFactory.getLogger(ENDComponentImpl.class.getName());
 

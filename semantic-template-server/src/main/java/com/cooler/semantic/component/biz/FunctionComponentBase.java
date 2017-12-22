@@ -1,21 +1,24 @@
-package com.cooler.semantic.component.biz.impl;
+package com.cooler.semantic.component.biz;
 
 import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentConstant;
-import com.cooler.semantic.component.biz.FunctionComponent;
 import com.cooler.semantic.component.data.*;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.model.ContextOwner;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class FunctionComponentBase<I, O> implements FunctionComponent {
+public abstract class FunctionComponentBase<I, O> implements SemanticComponent {
 
     /**
      * 组件ID
      */
     protected String id;
     /**
-     * 组件类型（逻辑组件、判断组件）
+     * 组件类型（1功能组件、2判断组件）
+     */
+    protected int type = 1;
+    /**
+     * 组件位置标记
      */
     protected String processCode;
     /**
@@ -36,19 +39,23 @@ public abstract class FunctionComponentBase<I, O> implements FunctionComponent {
      */
     protected boolean isSuccess = false;
 
-    public FunctionComponentBase() {  }
 
     public FunctionComponentBase(String id, String processCode, String inputDataBeanId, String outputDataBeanId) {
         this.id = id;
+        this.type = 1;
         this.processCode = processCode;
         this.inputDataBeanId = inputDataBeanId;
         this.outputDataBeanId = outputDataBeanId;
     }
 
+    public int getType() {
+        return type;
+    }
+
     /**
      * 此方法为组件的核心调配方法，能够让组件按照设定次序依次进行
      */
-    public void run(ContextOwner contextOwner) {
+    public void functionRun(ContextOwner contextOwner) {
 
         //1.获取输入参数体
         DataComponent<I> inputDataComponent = null;
@@ -68,19 +75,28 @@ public abstract class FunctionComponentBase<I, O> implements FunctionComponent {
         DataComponent outputDataComponent = bizData != null ? new DataComponentBase(outputDataBeanId, contextOwner, bizData.getClass().getSimpleName(), bizData) : new DataComponentBase(this.outputDataBeanId, contextOwner, null, null);
         if(isStore && outputDataBeanId != null && outputDataComponent != null){
             componentConstant.putDataComponent(outputDataComponent);                                                 //子组件的OutPutDataComponent保存到数据源ComponentConstant的Map中（后续最好用ThreadLocal实现此Map，放redis也行啊）
-            System.out.println("输出参数：" + JSON.toJSONString(outputDataComponent));
         }
+        System.out.println("输出参数：" + JSON.toJSONString(outputDataComponent));
 
         if(resultCode.equals("END_S"))  return;                                                                      //流程出口（检测状态码，看是否结束）
 
         //4.带动下一个组件再来运行
         String nextComponentId = componentConstant.getFCIDByResultCode(resultCode);
-        FunctionComponent nextFunctionComponent = componentConstant.getFunctionComponent(nextComponentId);
+        SemanticComponent nextComponent = componentConstant.getFunctionComponent(nextComponentId);
         System.out.println("转换 ：" + resultCode + "     --->    " + nextComponentId);
+        componentConstant.setTraceByContextOwnerIndex(contextOwner.getOwnerIndex(), resultCode);
 
-        if(nextFunctionComponent != null)  nextFunctionComponent.run(contextOwner);                                    //强迫停止，一般不会出现哪个组件为空的情况
-
+        if(nextComponent != null)  {
+            if(nextComponent.getType() == 1){
+                nextComponent.functionRun(contextOwner);
+            }else{
+                nextComponent.verdictRun(contextOwner, nextComponentId);
+            }
+        }
     }
+
+    @Override
+    public void verdictRun(ContextOwner contextOwner, String nextComponentId) {  }
 
     /**
      * 本组件需要运行的业务逻辑，由本抽象类的具体子类来重写实现
@@ -89,9 +105,5 @@ public abstract class FunctionComponentBase<I, O> implements FunctionComponent {
     protected ComponentBizResult<O> runBiz(I bizData) {
         return null;
     }
-
-
-
-
 
 }

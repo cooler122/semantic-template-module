@@ -1,9 +1,8 @@
 package com.cooler.semantic.component;
 
-import com.cooler.semantic.component.biz.FunctionComponent;
+import com.cooler.semantic.component.biz.SemanticComponent;
 import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.model.ContextOwner;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,13 +10,17 @@ import java.util.Map;
 public class ComponentConstant {
 
     /**
-     * 数据组件Map
+     * 轨迹跟踪字符串Map
+     */
+    private Map<String, StringBuffer> traceSBMap = new HashMap<>();
+    /**
+     * 数据组件Map（以后用redis代替）
      */
     private Map<String, DataComponent> dataBeanMap = new HashMap<>();
     /**
      * 功能组件Map
      */
-    private static Map<String, FunctionComponent> functionComponentMap = new HashMap<>();
+    private static Map<String, SemanticComponent> functionComponentMap = new HashMap<>();
     /**
      * 流程关系Map
      */
@@ -56,9 +59,10 @@ public class ComponentConstant {
      * @param componentId   功能组件ID
      * @return  功能组件对象
      */
-    public FunctionComponent getFunctionComponent(String componentId){
+    public SemanticComponent getFunctionComponent(String componentId){
         return functionComponentMap.get(componentId);
     }
+
 
     /**
      * 通过结果码，获取功能组件ID(对外接口)
@@ -69,11 +73,26 @@ public class ComponentConstant {
         return nextComponentIdMap.get(resultCode);
     }
 
+    public void setTraceByContextOwnerIndex(String contextOwnerIndex, String processCode){
+
+        StringBuffer stringBuffer = traceSBMap.get(contextOwnerIndex);
+        if(stringBuffer == null){
+            stringBuffer = new StringBuffer("START");
+            traceSBMap.put(contextOwnerIndex, stringBuffer);
+        }
+        stringBuffer.append("   --->    ").append(processCode);
+    }
+
+    public String getTraceByContextOwnerIndex(String contextOwnerIndex){
+        StringBuffer stringBuffer = traceSBMap.get(contextOwnerIndex);
+        return stringBuffer.toString();
+    }
+
     public void setDataBeanMap(Map<String, DataComponent> dataBeanMap) {
         this.dataBeanMap = dataBeanMap;
     }
 
-    public void setFunctionComponentMap(Map<String, FunctionComponent> functionComponentMap) {
+    public void setFunctionComponentMap(Map<String, SemanticComponent> functionComponentMap) {
         this.functionComponentMap = functionComponentMap;
     }
 
@@ -85,7 +104,7 @@ public class ComponentConstant {
         return dataBeanMap;
     }
 
-    public static Map<String, FunctionComponent> getFunctionComponentMap() {
+    public static Map<String, SemanticComponent> getFunctionComponentMap() {
         return functionComponentMap;
     }
 

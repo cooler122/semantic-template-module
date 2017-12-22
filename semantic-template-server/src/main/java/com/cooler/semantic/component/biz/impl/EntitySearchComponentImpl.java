@@ -1,7 +1,7 @@
 package com.cooler.semantic.component.biz.impl;
 
-import com.cooler.semantic.component.biz.EntitySearchComponent;
 import com.cooler.semantic.component.ComponentBizResult;
+import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.model.SentenceVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component("entitySearchComponent")
-public class EntitySearchComponentImpl extends FunctionComponentBase<List<SentenceVector>, List<SentenceVector>> implements EntitySearchComponent {
+public class EntitySearchComponentImpl extends FunctionComponentBase<List<SentenceVector>, List<SentenceVector>> {
 
     private static Logger logger = LoggerFactory.getLogger(EntitySearchComponentImpl.class.getName());
 

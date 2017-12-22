@@ -1,6 +1,6 @@
 package com.cooler.semantic.component.biz.impl;
 
-import com.cooler.semantic.component.biz.ValidateConfComponent;
+import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.component.ComponentBizResult;
 import org.slf4j.Logger;
@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component("validateConfComponent")
-public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticParserRequest, SemanticParserRequest> implements ValidateConfComponent {
+public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticParserRequest, SemanticParserRequest> {
 
     private static Logger logger = LoggerFactory.getLogger(ValidateConfComponentImpl.class.getName());
 

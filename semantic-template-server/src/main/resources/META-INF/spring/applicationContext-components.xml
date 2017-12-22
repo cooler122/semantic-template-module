@@ -31,6 +31,12 @@
                 <entry key="SPC" value-ref="sentenceProcessComponent"/>
                 <entry key="ESC" value-ref="entitySearchComponent"/>
                 <entry key="ENDC" value-ref="eNDComponent"/>
+
+                <entry key="D1" value-ref="verdictComponentBase"/>
+                <entry key="D2" value-ref="verdictComponentBase"/>
+                <entry key="D3" value-ref="verdictComponentBase"/>
+                <entry key="D4" value-ref="verdictComponentBase"/>
+
             </map>
         </property>
 
@@ -43,7 +49,15 @@
                 <entry key="SPC_S" value="ESC"/>
                 <entry key="SPC_E" value="ENDC"/>
 
-                <entry key="ESC_S" value="ENDC"/>
+                <entry key="ESC_S" value="D1"/>
+
+                <entry key="D1_S" value="D2"/>
+                <entry key="D2_S" value="D3"/>
+                <entry key="D3_S" value="D4"/>
+                <entry key="D3_E" value="ENDC"/>
+
+                <entry key="D4_S" value="ENDC"/>
+                <entry key="D_E" value="ENDC"/>
             </map>
         </property>
 

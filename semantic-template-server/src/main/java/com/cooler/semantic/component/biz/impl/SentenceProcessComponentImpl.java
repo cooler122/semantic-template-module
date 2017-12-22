@@ -1,6 +1,6 @@
 package com.cooler.semantic.component.biz.impl;
 
-import com.cooler.semantic.component.biz.SentenceProcessComponent;
+import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.model.SentenceVector;
@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component("sentenceProcessComponent")
-public class SentenceProcessComponentImpl extends FunctionComponentBase<SemanticParserRequest, List<SentenceVector>> implements SentenceProcessComponent {
+public class SentenceProcessComponentImpl extends FunctionComponentBase<SemanticParserRequest, List<SentenceVector>> {
 
     private static Logger logger = LoggerFactory.getLogger(SentenceProcessComponentImpl.class.getName());
 
@@ -39,7 +39,7 @@ public class SentenceProcessComponentImpl extends FunctionComponentBase<Semantic
         Integer accountId = bizData.getAccountIds().get(0);              //取出第一个accountId，进行分词
         List<SentenceVector> sentenceVectors = wordSegregateService.wordSegregate(cmd, accountId, null, Arrays.asList(1), true);
 
-        if (null == sentenceVectors) {                        //TODO:注意这里如果添加&&false，则是一个测试状态，当上门的方法还没有做好的时候，添加这个为了放开口子向下执行。
+        if (null == sentenceVectors && false) {                        //TODO:注意这里如果添加&&false，则是一个测试状态，当上门的方法还没有做好的时候，添加这个为了放开口子向下执行。
             logger.error("分词错误，原始句子: " + cmd);
             return new ComponentBizResult("SPC_E", false, new ArrayList<SentenceVector>());
         }

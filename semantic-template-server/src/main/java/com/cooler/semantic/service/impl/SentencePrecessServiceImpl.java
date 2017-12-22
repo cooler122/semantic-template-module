@@ -29,7 +29,7 @@ public class SentencePrecessServiceImpl implements SentencePrecessService {
 
         //SO-2-1.多重分词（包含标词）
         logger.info("SO-2-1.分词...");
-        Integer accountId = request.getAccountId().get(0);              //取出第一个accountId，进行分词
+        Integer accountId = request.getAccountIds().get(0);              //取出第一个accountId，进行分词
         List<SentenceVector> sentenceVectors = wordSegregateService.wordSegregate(cmd, accountId, null, Arrays.asList(1), true);
 
         if (null == sentenceVectors) {

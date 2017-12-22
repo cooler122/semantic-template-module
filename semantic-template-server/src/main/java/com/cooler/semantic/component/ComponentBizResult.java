@@ -1,26 +1,23 @@
 package com.cooler.semantic.component;
 
-import com.cooler.semantic.component.data.DataComponent;
-import com.cooler.semantic.constant.IOType;
-
-public class ComponentBizResult {
+public class ComponentBizResult<O> {
     /**
      * 结果返回码
      */
     private String resultCode = null;
     /**
-     * 组件输入输出类型
+     * 数据体是否保存
      */
-    private IOType ioType = IOType.NO_IN_OUT;
+    private boolean isStore = false;
     /**
      * 输出参数数据组件
      */
-    private DataComponent outputDataComponent;
+    private O outputData;
 
-    public ComponentBizResult(String resultCode, IOType ioType, DataComponent outputDataComponent) {
+    public ComponentBizResult(String resultCode, boolean isStore, O outputData) {
         this.resultCode = resultCode;
-        this.ioType = ioType;
-        this.outputDataComponent = outputDataComponent;
+        this.isStore = isStore;
+        this.outputData = outputData;
     }
 
     public String getResultCode() {
@@ -31,19 +28,19 @@ public class ComponentBizResult {
         this.resultCode = resultCode;
     }
 
-    public IOType getIoType() {
-        return ioType;
+    public boolean isStore() {
+        return isStore;
     }
 
-    public void setIoType(IOType ioType) {
-        this.ioType = ioType;
+    public void setStore(boolean store) {
+        isStore = store;
     }
 
-    public DataComponent getOutputDataComponent() {
-        return outputDataComponent;
+    public O getOutputData() {
+        return outputData;
     }
 
-    public void setOutputDataComponent(DataComponent outputDataComponent) {
-        this.outputDataComponent = outputDataComponent;
+    public void setOutputData(O outputData) {
+        this.outputData = outputData;
     }
 }

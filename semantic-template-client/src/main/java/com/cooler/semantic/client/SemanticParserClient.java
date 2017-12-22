@@ -19,7 +19,10 @@ public class SemanticParserClient {
         logger.info("客户端，开始访问...");
         SemanticParserRequest request = new SemanticParserRequest();
         request.setCmd("北京今天天气怎么样？");                   //添加一个句子
-        request.setAccountId(Arrays.asList(1));                     //添加一个测试用户
+        request.setAccountIds(Arrays.asList(1));                     //添加一个测试账户
+        request.setUserId(2);                                       //添加一个用户标号
+        request.setContextId(1);                                    //添加一个上下文编号
+
 
         semanticParserFacade.semanticParse(request);
     }

@@ -21,9 +21,7 @@
     <bean id="componentConstant" class="com.cooler.semantic.component.ComponentConstant" scope="singleton">
         <!-- 数据组件声明 -->
         <property name="dataBeanMap">
-            <map>
-                <entry key="semanticParserRequest"><null/></entry>
-            </map>
+            <map></map>
         </property>
 
         <!-- 功能组件声明 -->

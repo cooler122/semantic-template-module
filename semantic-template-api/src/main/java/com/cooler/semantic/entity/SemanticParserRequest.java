@@ -13,9 +13,13 @@ public class SemanticParserRequest implements java.io.Serializable{
 
     //--------------------------------------------------------------------1.账户参数AP
     /**
-     * accountIds（账号列表，为了扩展查询匹配范围，可以传入多个账号）
+     * accountIds（账号列表，为了扩展查询匹配范围，可以传入多个账号，但是第一个一定要放核心账户ID，即coreAccountId）
      */
-    private List<Integer> accountId;
+    private List<Integer> accountIds;
+    /**
+     * 核心账号的用户ID
+     */
+    private Integer userId;
 
     //--------------------------------------------------------------------2.配置参数CP
     /**
@@ -52,7 +56,7 @@ public class SemanticParserRequest implements java.io.Serializable{
     /**
      * 上下文编号（用来支持上下文的字段）
      */
-    private String contextId;
+    private int contextId = 0;
 
     /**
      * 上次请求的结束时间戳（用来支持限定时间）
@@ -97,12 +101,20 @@ public class SemanticParserRequest implements java.io.Serializable{
         this.cmd = cmd;
     }
 
-    public List<Integer> getAccountId() {
-        return accountId;
+    public List<Integer> getAccountIds() {
+        return accountIds;
     }
 
-    public void setAccountId(List<Integer> accountId) {
-        this.accountId = accountId;
+    public void setAccountIds(List<Integer> accountIds) {
+        this.accountIds = accountIds;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public boolean isCanBreakContext() {
@@ -153,11 +165,11 @@ public class SemanticParserRequest implements java.io.Serializable{
         this.accuracyThreshold = accuracyThreshold;
     }
 
-    public String getContextId() {
+    public int getContextId() {
         return contextId;
     }
 
-    public void setContextId(String contextId) {
+    public void setContextId(int contextId) {
         this.contextId = contextId;
     }
 
@@ -215,5 +227,27 @@ public class SemanticParserRequest implements java.io.Serializable{
 
     public void setLastState(int lastState) {
         this.lastState = lastState;
+    }
+
+    @Override
+    public String toString() {
+        return "SemanticParserRequest{" +
+                "cmd='" + cmd + '\'' +
+                ", accountIds=" + accountIds +
+                ", canBreakContext=" + canBreakContext +
+                ", canBatchQuery=" + canBatchQuery +
+                ", ruleMaxQueryCount=" + ruleMaxQueryCount +
+                ", entityMaxQueryCount=" + entityMaxQueryCount +
+                ", contextWaitTime=" + contextWaitTime +
+                ", accuracyThreshold=" + accuracyThreshold +
+                ", contextId='" + contextId + '\'' +
+                ", lastEndTimestamp=" + lastEndTimestamp +
+                ", lastSceneId=" + lastSceneId +
+                ", lastIntentId=" + lastIntentId +
+                ", lastRuleId=" + lastRuleId +
+                ", lackingEntitySet=" + lackingEntitySet +
+                ", accumulatedQueryCount=" + accumulatedQueryCount +
+                ", lastState=" + lastState +
+                '}';
     }
 }

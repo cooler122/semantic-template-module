@@ -114,7 +114,7 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
 
     private ComponentBizResult<O> d3(I bizData) {
         System.out.println("D3 process...");
-        if(true)    return new ComponentBizResult<>("D3_E", false, null);
+//        if(true)    return new ComponentBizResult<>("D3_E", false, null);
         return new ComponentBizResult<>("D3_S", false, null);
     }
 

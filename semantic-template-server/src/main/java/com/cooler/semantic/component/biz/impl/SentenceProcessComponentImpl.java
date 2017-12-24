@@ -26,7 +26,7 @@ public class SentenceProcessComponentImpl extends FunctionComponentBase<Semantic
     private WeightCalculateService weightCalculateService;  //权重计算组件
 
     public SentenceProcessComponentImpl() {
-        super("SPC", "SO-2", "semanticParserRequest", "sentenceVectors");
+        super("SPC", "SO_2", "semanticParserRequest", "sentenceVectors");
     }
 
     @Override

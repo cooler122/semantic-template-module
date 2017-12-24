@@ -66,6 +66,11 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
         System.out.println("\n组件ID：" + this.id + "，入参：" + JSON.toJSONString(inputDataComponent) + "，开始运行...");
         I inputBizData = inputDataComponent != null ? inputDataComponent.getData() : null;
         ComponentBizResult<O> componentBizResult = null;
+
+
+        Class thisClazz = this.getClass();
+
+
         switch (netComponentId){
             case "D1" : componentBizResult = d1(inputBizData); break;
             case "D2" : componentBizResult = d2(inputBizData); break;

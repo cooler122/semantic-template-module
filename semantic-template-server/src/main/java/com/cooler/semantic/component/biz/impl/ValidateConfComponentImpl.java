@@ -13,7 +13,7 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
     private static Logger logger = LoggerFactory.getLogger(ValidateConfComponentImpl.class.getName());
 
     public ValidateConfComponentImpl() {
-        super("VCC", "SO-1", "semanticParserRequest", "semanticParserRequest");
+        super("VCC", "SO_1", "semanticParserRequest", "semanticParserRequest");
     }
 
     @Override

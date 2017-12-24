@@ -6,13 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-@Component("furcationComponentImpl")
-public class FurcationComponentImpl extends FunctionComponentBase<Object, Object> {
+@Component("contextLPDataSearchComponent")
+public class ContextLPDataSearchComponentImpl extends FunctionComponentBase<Object, Object> {
 
-    private static Logger logger = LoggerFactory.getLogger(FurcationComponentImpl.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(ContextLPDataSearchComponentImpl.class.getName());
 
-    public FurcationComponentImpl() {
-        super("FC", "D1", null, null);
+    public ContextLPDataSearchComponentImpl() {
+        super("CLPDSC", "SO_4", null, "contextLPDataBean");
     }
 
     @Override

@@ -15,7 +15,7 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
     private static Logger logger = LoggerFactory.getLogger(EntitySearchComponentImpl.class.getName());
 
     public EntitySearchComponentImpl() {
-        super("ESC", "SO-3", "sentenceVectors", "sentenceVectors");
+        super("ESC", "SO_3", "sentenceVectors", "sentenceVectors");
     }
 
     @Override

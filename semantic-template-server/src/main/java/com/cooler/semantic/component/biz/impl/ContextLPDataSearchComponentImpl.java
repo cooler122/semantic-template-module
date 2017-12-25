@@ -19,7 +19,7 @@ public class ContextLPDataSearchComponentImpl extends FunctionComponentBase<Obje
     protected ComponentBizResult<Object> runBiz(Object bizData) {
         logger.info("SO_1.校验和配置");
 
-        return new ComponentBizResult("VCC_S", true, bizData);
+        return new ComponentBizResult("VCC_S",1, bizData);
     }
 
 }

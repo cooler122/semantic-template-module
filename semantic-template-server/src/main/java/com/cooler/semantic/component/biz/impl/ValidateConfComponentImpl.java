@@ -47,7 +47,7 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
 
         setAccountData(bizData);                                                     //设置用户配置参数
 
-        return new ComponentBizResult("VCC_S", true, bizData);
+        return new ComponentBizResult("VCC_S", 1, bizData);
     }
 
     private ComponentBizResult validate(SemanticParserRequest request) {

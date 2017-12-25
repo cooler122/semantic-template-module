@@ -47,6 +47,6 @@ public class SentenceProcessComponentImpl extends FunctionComponentBase<Semantic
         logger.info("SO-2-2.计算权重...");
         weightCalculateService.calculateWeight(sentenceVectors);          //此方法为分词段设置权重，并返回权重数组，如果分词不成功，则返回默认分词权重数组(此为句子内部各个此的权重值，可以作为后续相似度计算标准)
 
-        return new ComponentBizResult("SPC_S", true, sentenceVectors);
+        return new ComponentBizResult("SPC_S", 1, sentenceVectors);
     }
 }

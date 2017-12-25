@@ -76,16 +76,20 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
             case "D2" : componentBizResult = d2(inputBizData); break;
             case "D3" : componentBizResult = d3(inputBizData); break;
             case "D4" : componentBizResult = d4(inputBizData); break;
-            default: componentBizResult = new ComponentBizResult<>("D_E", false, null);
+            default: componentBizResult = new ComponentBizResult<>("D_E");
         }
 
         //3.分析结果，保存数据
         String resultCode = componentBizResult.getResultCode();                                                         //返回执行结果码
-        boolean isStore = componentBizResult.isStore();                                                                //返回输入输出类型
+        int saveCode = componentBizResult.getSaveCode();                                                                //返回输入输出类型
         O bizData = componentBizResult.getOutputData();                                                                 //返回输出数据体
         DataComponent outputDataComponent = bizData != null ? new DataComponentBase(outputDataBeanId, contextOwner, bizData.getClass().getSimpleName(), bizData) : new DataComponentBase(this.outputDataBeanId, contextOwner, null, null);
-        if(isStore && outputDataBeanId != null && outputDataComponent != null){
-            componentConstant.putDataComponent(outputDataComponent);                                                 //子组件的OutPutDataComponent保存到数据源ComponentConstant的Map中（后续最好用ThreadLocal实现此Map，放redis也行啊）
+        if(outputDataBeanId != null && outputDataComponent != null){
+            if(saveCode == 1){
+                componentConstant.putDataComponent(outputDataComponent);                                                 //子组件的OutPutDataComponent保存到数据源ComponentConstant的Map中（后续最好用ThreadLocal实现此Map，放redis也行啊）
+            }else if(saveCode == 2){
+                //TODO:数据远程存储
+            }
         }
         System.out.println("输出参数：" + JSON.toJSONString(outputDataComponent));
 
@@ -109,22 +113,22 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
 
     private ComponentBizResult<O> d1(I bizData) {
         System.out.println("D1 process...");
-        return new ComponentBizResult<>("D1_S", false, null);
+        return new ComponentBizResult<>("D1_S");
     }
 
     private ComponentBizResult<O> d2(I bizData) {
         System.out.println("D2 process...");
-        return new ComponentBizResult<>("D2_S", false, null);
+        return new ComponentBizResult<>("D2_S");
     }
 
     private ComponentBizResult<O> d3(I bizData) {
         System.out.println("D3 process...");
 //        if(true)    return new ComponentBizResult<>("D3_E", false, null);
-        return new ComponentBizResult<>("D3_S", false, null);
+        return new ComponentBizResult<>("D3_S");
     }
 
     private ComponentBizResult<O> d4(I bizData) {
         System.out.println("D4 process...");
-        return new ComponentBizResult<>("D4_S", false, null);
+        return new ComponentBizResult<>("D4_S");
     }
 }

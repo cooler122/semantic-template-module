@@ -21,6 +21,6 @@ public class ENDComponentImpl extends FunctionComponentBase<Object, Object> {
 
         //TODO:校验和配置逻辑
 
-        return new ComponentBizResult("END", false, null);
+        return new ComponentBizResult("END");
     }
 }

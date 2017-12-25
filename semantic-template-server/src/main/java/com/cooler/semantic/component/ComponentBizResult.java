@@ -5,10 +5,11 @@ public class ComponentBizResult<O> {
      * 结果返回码
      */
     private String resultCode = null;
+
     /**
-     * 数据体是否保存（默认不保存，保存则要手动设置true）
+     * 数据保存码(1，保存到本地；2，保存到远程)
      */
-    private boolean isStore = false;
+    private int saveCode = 1;
     /**
      * 输出参数数据组件
      */
@@ -18,15 +19,43 @@ public class ComponentBizResult<O> {
      */
     private String errorCode = null;
 
-    public ComponentBizResult(String resultCode, boolean isStore, O outputData) {
+    /**
+     * 执行通过了，返回下面3个码
+     * @param resultCode    结果码
+     */
+    public ComponentBizResult(String resultCode) {
         this.resultCode = resultCode;
-        this.isStore = isStore;
+        this.saveCode = 0;
+    }
+
+    /**
+     * 执行通过了，返回下面3个码
+     * @param resultCode    结果码
+     * @param saveCode  保存状态码
+     * @param outputData    数据体
+     */
+    public ComponentBizResult(String resultCode,int saveCode, O outputData) {
+        this.resultCode = resultCode;
+        this.saveCode = saveCode;
         this.outputData = outputData;
     }
 
+    /**
+     * 发生错误了，只返回resultCode和errorCode
+     * @param resultCode    结果码
+     * @param errorCode     错误原因码
+     */
     public ComponentBizResult(String resultCode, String errorCode) {
         this.resultCode = resultCode;
         this.errorCode = errorCode;
+    }
+
+    public int getSaveCode() {
+        return saveCode;
+    }
+
+    public void setSaveCode(int saveCode) {
+        this.saveCode = saveCode;
     }
 
     public String getResultCode() {
@@ -35,14 +64,6 @@ public class ComponentBizResult<O> {
 
     public void setResultCode(String resultCode) {
         this.resultCode = resultCode;
-    }
-
-    public boolean isStore() {
-        return isStore;
-    }
-
-    public void setStore(boolean store) {
-        isStore = store;
     }
 
     public O getOutputData() {

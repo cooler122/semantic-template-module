@@ -25,7 +25,7 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
         //TODO:词语-实体检索
         List<SentenceVector> sentenceVectors = null;            //获取这个量
 
-        return new ComponentBizResult("ESC_S", true, sentenceVectors);
+        return new ComponentBizResult("ESC_S", 1, sentenceVectors);
     }
 
 

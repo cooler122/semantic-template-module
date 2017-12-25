@@ -70,11 +70,15 @@ public abstract class FunctionComponentBase<I, O> implements SemanticComponent {
 
         //3.分析结果，保存数据
         String resultCode = componentBizResult.getResultCode();                                                         //返回执行结果码
-        boolean isStore = componentBizResult.isStore();                                                                //返回输入输出类型
+        int saveCode = componentBizResult.getSaveCode();                                                                //返回输入输出类型
         O bizData = componentBizResult.getOutputData();                                                                 //返回输出数据体
         DataComponent outputDataComponent = bizData != null ? new DataComponentBase(outputDataBeanId, contextOwner, bizData.getClass().getSimpleName(), bizData) : new DataComponentBase(this.outputDataBeanId, contextOwner, null, null);
-        if(isStore && outputDataBeanId != null && outputDataComponent != null){
-            componentConstant.putDataComponent(outputDataComponent);                                                 //子组件的OutPutDataComponent保存到数据源ComponentConstant的Map中（后续最好用ThreadLocal实现此Map，放redis也行啊）
+        if(outputDataBeanId != null && outputDataComponent != null){
+            if(saveCode == 1){
+                componentConstant.putDataComponent(outputDataComponent);                                                 //子组件的OutPutDataComponent保存到数据源ComponentConstant的Map中（后续最好用ThreadLocal实现此Map，放redis也行啊）
+            }else if(saveCode == 2){
+                //TODO:数据远程存储
+            }
         }
         System.out.println("输出参数：" + JSON.toJSONString(outputDataComponent));
 

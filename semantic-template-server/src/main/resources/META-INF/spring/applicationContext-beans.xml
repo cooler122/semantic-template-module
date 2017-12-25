@@ -51,6 +51,7 @@
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocation" value="classpath:mybatis-configuration.xml"/>
@@ -59,8 +60,9 @@
 
     <!--自动装载dao配置-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.flw.intent.dao"/>
+        <property name="basePackage" value="com.cooler.semantic.dao"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+
     </bean>
 
 

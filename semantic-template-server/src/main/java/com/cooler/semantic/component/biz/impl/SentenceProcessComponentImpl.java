@@ -4,14 +4,13 @@ import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.model.SentenceVector;
-import com.cooler.semantic.service.WeightCalculateService;
-import com.cooler.semantic.service.WordSegregateService;
+import com.cooler.semantic.service.external.WeightCalculateService;
+import com.cooler.semantic.service.external.WordSegregateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class SentenceProcessComponentImpl extends FunctionComponentBase<Semantic
 
         if (null == sentenceVectors && false) {                        //TODO:注意这里如果添加&&false，则是一个测试状态，当上门的方法还没有做好的时候，添加这个为了放开口子向下执行。
             logger.error("分词错误，原始句子: " + cmd);
-            return new ComponentBizResult("SPC_E", false, new ArrayList<SentenceVector>());
+            return new ComponentBizResult("SPC_F","SPC_F1_wordSegregateError");
         }
 
         //SO-2-2.计算权重

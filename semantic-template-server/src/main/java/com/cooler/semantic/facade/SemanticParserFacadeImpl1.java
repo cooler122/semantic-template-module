@@ -5,9 +5,9 @@ import com.cooler.semantic.api.SemanticParserFacade;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.entity.SemanticParserResponse;
 import com.cooler.semantic.model.SentenceVector;
-import com.cooler.semantic.service.EntityService;
-import com.cooler.semantic.service.PreprocessingService;
-import com.cooler.semantic.service.SentencePrecessService;
+import com.cooler.semantic.service.external.EntitySearchService;
+import com.cooler.semantic.service.external.PreprocessingService;
+import com.cooler.semantic.service.external.SentencePrecessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class SemanticParserFacadeImpl1 implements SemanticParserFacade {
     @Autowired
     private SentencePrecessService sentencePrecessService;         //句子处理组件（分词、权重、词频）
     @Autowired
-    private EntityService entityService;                         //实体处理组件
+    private EntitySearchService entitySearchService;                         //实体处理组件
 
 
     public SemanticParserResponse semanticParse(SemanticParserRequest request) {
@@ -44,7 +44,7 @@ public class SemanticParserFacadeImpl1 implements SemanticParserFacade {
 
         //SO-3.词语-实体检索
         logger.info("SO-3.-------------------词语-实体检索");
-        List<SentenceVector> sentenceVectorsWithEntity = entityService.entitySearch(request, sentenceVectors);
+        List<SentenceVector> sentenceVectorsWithEntity = entitySearchService.entitySearch(request, sentenceVectors);
         logger.info("检索的sentenceInfo集合： " + JSON.toJSONString(sentenceVectorsWithEntity));
 
         //SO-4、SO-5.缺参匹配

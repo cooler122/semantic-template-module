@@ -44,20 +44,20 @@
         <property name="nextComponentIdMap">
             <map>
                 <entry key="VCC_S" value="SPC"/>
-                <entry key="VCC_E" value="ENDC"/>
+                <entry key="VCC_F" value="ENDC"/>
 
                 <entry key="SPC_S" value="ESC"/>
-                <entry key="SPC_E" value="ENDC"/>
+                <entry key="SPC_F" value="ENDC"/>
 
                 <entry key="ESC_S" value="D1"/>
 
                 <entry key="D1_S" value="D2"/>
                 <entry key="D2_S" value="D3"/>
                 <entry key="D3_S" value="D4"/>
-                <entry key="D3_E" value="ENDC"/>
+                <entry key="D3_F" value="ENDC"/>
 
                 <entry key="D4_S" value="ENDC"/>
-                <entry key="D_E" value="ENDC"/>
+                <entry key="D_F" value="ENDC"/>
             </map>
         </property>
 

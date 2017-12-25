@@ -1,11 +1,11 @@
-package com.cooler.semantic.service;
+package com.cooler.semantic.service.external;
 
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.SentenceVector;
 
 import java.util.List;
 
-public interface EntityService {
+public interface EntitySearchService {
     /**
      * 按照request中的参数，进行实体归属，并将归属的实体保存到sentenceInfo中
      * @param request   请求对象

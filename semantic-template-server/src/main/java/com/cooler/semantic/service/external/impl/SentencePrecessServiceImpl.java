@@ -1,10 +1,10 @@
-package com.cooler.semantic.service.impl;
+package com.cooler.semantic.service.external.impl;
 
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.SentenceVector;
-import com.cooler.semantic.service.SentencePrecessService;
-import com.cooler.semantic.service.WeightCalculateService;
-import com.cooler.semantic.service.WordSegregateService;
+import com.cooler.semantic.service.external.SentencePrecessService;
+import com.cooler.semantic.service.external.WeightCalculateService;
+import com.cooler.semantic.service.external.WordSegregateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

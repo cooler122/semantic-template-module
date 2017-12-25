@@ -1,4 +1,4 @@
-package com.cooler.semantic.service;
+package com.cooler.semantic.service.external;
 
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.SentenceVector;

@@ -1,7 +1,7 @@
-package com.cooler.semantic.service.impl;
+package com.cooler.semantic.service.external.impl;
 
 import com.cooler.semantic.entity.SemanticParserRequest;
-import com.cooler.semantic.service.PreprocessingService;
+import com.cooler.semantic.service.external.PreprocessingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

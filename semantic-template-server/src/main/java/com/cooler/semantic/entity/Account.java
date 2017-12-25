@@ -1,120 +1,76 @@
 package com.cooler.semantic.entity;
 
 public class Account {
-    private Integer accountId;
+    private Integer id;
 
-    private String apiKey;
+    private String accountName;
 
-    private Boolean canBreakContext;
+    private String accountOwner;
 
-    private Integer entityMaxQueryCount;
+    private Integer userCount;
 
-    private Integer contextWaitTime;
+    private String passwordMd5;
 
-    private Double accuracyThreshold;
+    private Integer state;
 
-    private Integer intentRuleIngateOutgate;
-
-    private Integer intentRuleNonIngateOutgate;
-
-    private Integer logType;
-
-    private Integer algorithmType;
-
-    public Account(Integer accountId, String apiKey, Boolean canBreakContext, Integer entityMaxQueryCount, Integer contextWaitTime, Double accuracyThreshold, Integer intentRuleIngateOutgate, Integer intentRuleNonIngateOutgate, Integer logType, Integer algorithmType) {
-        this.accountId = accountId;
-        this.apiKey = apiKey;
-        this.canBreakContext = canBreakContext;
-        this.entityMaxQueryCount = entityMaxQueryCount;
-        this.contextWaitTime = contextWaitTime;
-        this.accuracyThreshold = accuracyThreshold;
-        this.intentRuleIngateOutgate = intentRuleIngateOutgate;
-        this.intentRuleNonIngateOutgate = intentRuleNonIngateOutgate;
-        this.logType = logType;
-        this.algorithmType = algorithmType;
+    public Account(Integer id, String accountName, String accountOwner, Integer userCount, String passwordMd5, Integer state) {
+        this.id = id;
+        this.accountName = accountName;
+        this.accountOwner = accountOwner;
+        this.userCount = userCount;
+        this.passwordMd5 = passwordMd5;
+        this.state = state;
     }
 
     public Account() {
         super();
     }
 
-    public Integer getAccountId() {
-        return accountId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setAccountId(Integer accountId) {
-        this.accountId = accountId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public String getApiKey() {
-        return apiKey;
+    public String getAccountName() {
+        return accountName;
     }
 
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey == null ? null : apiKey.trim();
+    public void setAccountName(String accountName) {
+        this.accountName = accountName == null ? null : accountName.trim();
     }
 
-    public Boolean getCanBreakContext() {
-        return canBreakContext;
+    public String getAccountOwner() {
+        return accountOwner;
     }
 
-    public void setCanBreakContext(Boolean canBreakContext) {
-        this.canBreakContext = canBreakContext;
+    public void setAccountOwner(String accountOwner) {
+        this.accountOwner = accountOwner == null ? null : accountOwner.trim();
     }
 
-    public Integer getEntityMaxQueryCount() {
-        return entityMaxQueryCount;
+    public Integer getUserCount() {
+        return userCount;
     }
 
-    public void setEntityMaxQueryCount(Integer entityMaxQueryCount) {
-        this.entityMaxQueryCount = entityMaxQueryCount;
+    public void setUserCount(Integer userCount) {
+        this.userCount = userCount;
     }
 
-    public Integer getContextWaitTime() {
-        return contextWaitTime;
+    public String getPasswordMd5() {
+        return passwordMd5;
     }
 
-    public void setContextWaitTime(Integer contextWaitTime) {
-        this.contextWaitTime = contextWaitTime;
+    public void setPasswordMd5(String passwordMd5) {
+        this.passwordMd5 = passwordMd5 == null ? null : passwordMd5.trim();
     }
 
-    public Double getAccuracyThreshold() {
-        return accuracyThreshold;
+    public Integer getState() {
+        return state;
     }
 
-    public void setAccuracyThreshold(Double accuracyThreshold) {
-        this.accuracyThreshold = accuracyThreshold;
-    }
-
-    public Integer getIntentRuleIngateOutgate() {
-        return intentRuleIngateOutgate;
-    }
-
-    public void setIntentRuleIngateOutgate(Integer intentRuleIngateOutgate) {
-        this.intentRuleIngateOutgate = intentRuleIngateOutgate;
-    }
-
-    public Integer getIntentRuleNonIngateOutgate() {
-        return intentRuleNonIngateOutgate;
-    }
-
-    public void setIntentRuleNonIngateOutgate(Integer intentRuleNonIngateOutgate) {
-        this.intentRuleNonIngateOutgate = intentRuleNonIngateOutgate;
-    }
-
-    public Integer getLogType() {
-        return logType;
-    }
-
-    public void setLogType(Integer logType) {
-        this.logType = logType;
-    }
-
-    public Integer getAlgorithmType() {
-        return algorithmType;
-    }
-
-    public void setAlgorithmType(Integer algorithmType) {
-        this.algorithmType = algorithmType;
+    public void setState(Integer state) {
+        this.state = state;
     }
 }

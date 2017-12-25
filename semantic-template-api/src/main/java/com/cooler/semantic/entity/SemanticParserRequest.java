@@ -16,6 +16,8 @@ public class SemanticParserRequest implements java.io.Serializable{
      * accountIds（账号列表，为了扩展查询匹配范围，可以传入多个账号，但是第一个一定要放核心账户ID，即coreAccountId）
      */
     private List<Integer> accountIds;
+
+    private String password;
     /**
      * 核心账号的用户ID
      */
@@ -52,6 +54,16 @@ public class SemanticParserRequest implements java.io.Serializable{
      */
     private double accuracyThreshold  = 0.7;
 
+    /**
+     * 日志类型
+     */
+    private int log_type = 3;
+
+    /**
+     * 算法类型
+     */
+    private int algorithm_type = 1;
+
     //--------------------------------------------------------------------3.上下文数据CD，以下是上次匹配产生的上下文参数（如果丢失，则相当于系统“失忆”，此方案是将上下文数据放在服务端的一种实施方案）
     /**
      * 上下文编号（用来支持上下文的字段）
@@ -86,12 +98,12 @@ public class SemanticParserRequest implements java.io.Serializable{
     /**
      * 积累下来的询问次数（用来支持限定次数）
      */
-    private int accumulatedQueryCount;
+    private int accumulatedQueryCount = 0;
 
     /**
      * 上次请求产生的状态
      */
-    private int lastState;
+    private int lastState = 0;
 
     public String getCmd() {
         return cmd;
@@ -107,6 +119,14 @@ public class SemanticParserRequest implements java.io.Serializable{
 
     public void setAccountIds(List<Integer> accountIds) {
         this.accountIds = accountIds;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Integer getUserId() {
@@ -221,6 +241,22 @@ public class SemanticParserRequest implements java.io.Serializable{
         this.accumulatedQueryCount = accumulatedQueryCount;
     }
 
+    public int getLog_type() {
+        return log_type;
+    }
+
+    public void setLog_type(int log_type) {
+        this.log_type = log_type;
+    }
+
+    public int getAlgorithm_type() {
+        return algorithm_type;
+    }
+
+    public void setAlgorithm_type(int algorithm_type) {
+        this.algorithm_type = algorithm_type;
+    }
+
     public int getLastState() {
         return lastState;
     }
@@ -234,13 +270,17 @@ public class SemanticParserRequest implements java.io.Serializable{
         return "SemanticParserRequest{" +
                 "cmd='" + cmd + '\'' +
                 ", accountIds=" + accountIds +
+                ", password='" + password + '\'' +
+                ", userId=" + userId +
                 ", canBreakContext=" + canBreakContext +
                 ", canBatchQuery=" + canBatchQuery +
                 ", ruleMaxQueryCount=" + ruleMaxQueryCount +
                 ", entityMaxQueryCount=" + entityMaxQueryCount +
                 ", contextWaitTime=" + contextWaitTime +
                 ", accuracyThreshold=" + accuracyThreshold +
-                ", contextId='" + contextId + '\'' +
+                ", log_type=" + log_type +
+                ", algorithm_type=" + algorithm_type +
+                ", contextId=" + contextId +
                 ", lastEndTimestamp=" + lastEndTimestamp +
                 ", lastSceneId=" + lastSceneId +
                 ", lastIntentId=" + lastIntentId +

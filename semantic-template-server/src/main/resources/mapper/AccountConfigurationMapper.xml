@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cooler.semantic.dao.AccountConfigurationMapper" >
+  <resultMap id="BaseResultMap" type="com.cooler.semantic.entity.AccountConfiguration" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="account_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="can_break_context" jdbcType="BIT" javaType="java.lang.Boolean" />
+      <arg column="can_batch_query" jdbcType="BIT" javaType="java.lang.Boolean" />
+      <arg column="rule_max_query_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="entity_max_query_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="context_wait_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="accuracy_threshold" jdbcType="DOUBLE" javaType="java.lang.Double" />
+      <arg column="log_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="algorithm_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, account_id, user_id, can_break_context, can_batch_query, rule_max_query_count, 
+    entity_max_query_count, context_wait_time, accuracy_threshold, log_type, algorithm_type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from account_configuration
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from account_configuration
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cooler.semantic.entity.AccountConfiguration" >
+    insert into account_configuration (id, account_id, user_id, 
+      can_break_context, can_batch_query, rule_max_query_count, 
+      entity_max_query_count, context_wait_time, accuracy_threshold, 
+      log_type, algorithm_type)
+    values (#{id,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{canBreakContext,jdbcType=BIT}, #{canBatchQuery,jdbcType=BIT}, #{ruleMaxQueryCount,jdbcType=INTEGER}, 
+      #{entityMaxQueryCount,jdbcType=INTEGER}, #{contextWaitTime,jdbcType=INTEGER}, #{accuracyThreshold,jdbcType=DOUBLE}, 
+      #{logType,jdbcType=INTEGER}, #{algorithmType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cooler.semantic.entity.AccountConfiguration" >
+    insert into account_configuration
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="canBreakContext != null" >
+        can_break_context,
+      </if>
+      <if test="canBatchQuery != null" >
+        can_batch_query,
+      </if>
+      <if test="ruleMaxQueryCount != null" >
+        rule_max_query_count,
+      </if>
+      <if test="entityMaxQueryCount != null" >
+        entity_max_query_count,
+      </if>
+      <if test="contextWaitTime != null" >
+        context_wait_time,
+      </if>
+      <if test="accuracyThreshold != null" >
+        accuracy_threshold,
+      </if>
+      <if test="logType != null" >
+        log_type,
+      </if>
+      <if test="algorithmType != null" >
+        algorithm_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="canBreakContext != null" >
+        #{canBreakContext,jdbcType=BIT},
+      </if>
+      <if test="canBatchQuery != null" >
+        #{canBatchQuery,jdbcType=BIT},
+      </if>
+      <if test="ruleMaxQueryCount != null" >
+        #{ruleMaxQueryCount,jdbcType=INTEGER},
+      </if>
+      <if test="entityMaxQueryCount != null" >
+        #{entityMaxQueryCount,jdbcType=INTEGER},
+      </if>
+      <if test="contextWaitTime != null" >
+        #{contextWaitTime,jdbcType=INTEGER},
+      </if>
+      <if test="accuracyThreshold != null" >
+        #{accuracyThreshold,jdbcType=DOUBLE},
+      </if>
+      <if test="logType != null" >
+        #{logType,jdbcType=INTEGER},
+      </if>
+      <if test="algorithmType != null" >
+        #{algorithmType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.AccountConfiguration" >
+    update account_configuration
+    <set >
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="canBreakContext != null" >
+        can_break_context = #{canBreakContext,jdbcType=BIT},
+      </if>
+      <if test="canBatchQuery != null" >
+        can_batch_query = #{canBatchQuery,jdbcType=BIT},
+      </if>
+      <if test="ruleMaxQueryCount != null" >
+        rule_max_query_count = #{ruleMaxQueryCount,jdbcType=INTEGER},
+      </if>
+      <if test="entityMaxQueryCount != null" >
+        entity_max_query_count = #{entityMaxQueryCount,jdbcType=INTEGER},
+      </if>
+      <if test="contextWaitTime != null" >
+        context_wait_time = #{contextWaitTime,jdbcType=INTEGER},
+      </if>
+      <if test="accuracyThreshold != null" >
+        accuracy_threshold = #{accuracyThreshold,jdbcType=DOUBLE},
+      </if>
+      <if test="logType != null" >
+        log_type = #{logType,jdbcType=INTEGER},
+      </if>
+      <if test="algorithmType != null" >
+        algorithm_type = #{algorithmType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.AccountConfiguration" >
+    update account_configuration
+    set account_id = #{accountId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      can_break_context = #{canBreakContext,jdbcType=BIT},
+      can_batch_query = #{canBatchQuery,jdbcType=BIT},
+      rule_max_query_count = #{ruleMaxQueryCount,jdbcType=INTEGER},
+      entity_max_query_count = #{entityMaxQueryCount,jdbcType=INTEGER},
+      context_wait_time = #{contextWaitTime,jdbcType=INTEGER},
+      accuracy_threshold = #{accuracyThreshold,jdbcType=DOUBLE},
+      log_type = #{logType,jdbcType=INTEGER},
+      algorithm_type = #{algorithmType,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <!-- 自定义业务 -->
+  <select id="selectAIdUId"  resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from account_configuration
+    where account_id = #{accountId,jdbcType=INTEGER} and user_id = #{userId,jdbcType=INTEGER}
+  </select>
+
+</mapper>

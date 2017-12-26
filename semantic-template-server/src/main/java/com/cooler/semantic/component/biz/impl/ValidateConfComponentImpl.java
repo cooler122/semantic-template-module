@@ -122,4 +122,16 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
             request.setAlgorithm_type(accountConfiguration.getAlgorithmType());
         }
     }
+
+    public static void main(String args[]) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+
+        String password = "123456";
+
+        //确定计算方法
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        BASE64Encoder base64en = new BASE64Encoder();
+        //加密后的字符串
+        String password_md5 = base64en.encode(md5.digest(password.getBytes("utf-8")));
+        System.out.println(password_md5);
+    }
 }

@@ -11,19 +11,23 @@
       <arg column="state" jdbcType="INTEGER" javaType="java.lang.Integer" />
     </constructor>
   </resultMap>
+
   <sql id="Base_Column_List" >
     id, account_name, account_owner, user_count, password_md5, state
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from account
     where id = #{id,jdbcType=INTEGER}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from account
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <insert id="insert" parameterType="com.cooler.semantic.entity.Account" >
     insert into account (id, account_name, account_owner, 
       user_count, password_md5, state
@@ -32,6 +36,7 @@
       #{userCount,jdbcType=INTEGER}, #{passwordMd5,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}
       )
   </insert>
+
   <insert id="insertSelective" parameterType="com.cooler.semantic.entity.Account" >
     insert into account
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -75,6 +80,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.Account" >
     update account
     <set >
@@ -96,6 +102,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.Account" >
     update account
     set account_name = #{accountName,jdbcType=VARCHAR},
@@ -105,4 +112,5 @@
       state = #{state,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
 </mapper>

@@ -150,7 +150,7 @@
                 <debug.Path>/Users/zhangsheng/javaspace/locallogs/stm-debug-logs/</debug.Path>
 
                 <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
-                <jdbc.url><![CDATA[jdbc:mysql://127.0.0.1:3306/intent-customization?useUnicode=true&amp;characterEncoding=utf-8&amp;noDatetimeStringSync=true]]></jdbc.url>
+                <jdbc.url><![CDATA[jdbc:mysql://127.0.0.1:3306/stm?useUnicode=true&amp;characterEncoding=utf-8&amp;noDatetimeStringSync=true]]></jdbc.url>
                 <jdbc.username>root</jdbc.username>
                 <jdbc.password>!QAZ2wsx</jdbc.password>
 

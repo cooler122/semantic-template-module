@@ -3,9 +3,9 @@ package com.cooler.semantic.component.biz.impl;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.component.ComponentBizResult;
+import com.cooler.semantic.facade.WordSegmentFacade;
 import com.cooler.semantic.model.SentenceVector;
 import com.cooler.semantic.service.external.WeightCalculateService;
-import com.cooler.semantic.service.external.WordSegregateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class SentenceProcessComponentImpl extends FunctionComponentBase<Semantic
     private static Logger logger = LoggerFactory.getLogger(SentenceProcessComponentImpl.class.getName());
 
     @Autowired
-    private WordSegregateService wordSegregateService;      //分词组件
+    private WordSegmentFacade wordSegmentFacade;      //分词组件
     @Autowired
     private WeightCalculateService weightCalculateService;  //权重计算组件
 
@@ -36,7 +36,7 @@ public class SentenceProcessComponentImpl extends FunctionComponentBase<Semantic
         logger.info("SO-2-1.分词...");
         String cmd = bizData.getCmd();
         Integer accountId = bizData.getAccountIds().get(0);              //取出第一个accountId，进行分词
-        List<SentenceVector> sentenceVectors = wordSegregateService.wordSegregate(cmd, accountId, null, Arrays.asList(1), true);
+        List<SentenceVector> sentenceVectors = wordSegmentFacade.wordSegment(cmd, accountId, null, Arrays.asList(1), true);
 
         if (null == sentenceVectors && false) {                        //TODO:注意这里如果添加&&false，则是一个测试状态，当上门的方法还没有做好的时候，添加这个为了放开口子向下执行。
             logger.error("分词错误，原始句子: " + cmd);

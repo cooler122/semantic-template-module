@@ -1,6 +1,5 @@
 package com.cooler.semantic.model;
 
-import com.flw.semantic.entity.Term;
 
 import java.util.List;
 

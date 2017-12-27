@@ -1,10 +1,10 @@
 package com.cooler.semantic.service.external.impl;
 
 import com.cooler.semantic.entity.SemanticParserRequest;
+import com.cooler.semantic.facade.WordSegmentFacade;
 import com.cooler.semantic.model.SentenceVector;
 import com.cooler.semantic.service.external.SentencePrecessService;
 import com.cooler.semantic.service.external.WeightCalculateService;
-import com.cooler.semantic.service.external.WordSegregateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class SentencePrecessServiceImpl implements SentencePrecessService {
     private static Logger logger = LoggerFactory.getLogger(SentencePrecessServiceImpl.class.getName());
 
     @Autowired
-    private WordSegregateService wordSegregateService;      //分词组件
+    private WordSegmentFacade wordSegmentFacade;      //分词组件
     @Autowired
     private WeightCalculateService weightCalculateService;  //权重计算组件
 
@@ -30,7 +30,7 @@ public class SentencePrecessServiceImpl implements SentencePrecessService {
         //SO-2-1.多重分词（包含标词）
         logger.info("SO-2-1.分词...");
         Integer accountId = request.getAccountIds().get(0);              //取出第一个accountId，进行分词
-        List<SentenceVector> sentenceVectors = wordSegregateService.wordSegregate(cmd, accountId, null, Arrays.asList(1), true);
+        List<SentenceVector> sentenceVectors = wordSegmentFacade.wordSegment(cmd, accountId, null, Arrays.asList(1), true);
 
         if (null == sentenceVectors) {
             logger.error("分词错误，原始句子: " + cmd);

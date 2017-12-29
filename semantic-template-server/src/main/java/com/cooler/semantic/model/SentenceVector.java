@@ -15,24 +15,25 @@ public class SentenceVector implements Serializable, Cloneable {
     private List<String> words;
 
     /**
-     * 每一个词语在数据库中对应的wordId
-     */
-    private List<Integer> wordIds;
-
-    /**
      * 分好词的词性数组
      */
     private List<String> natures;
+
+    /**
+     * 设好权重的权重数值数组
+     */
+    private List<Double> weights;
+
+    /**
+     * 每一个词语在数据库中对应的wordId
+     */
+    private List<Integer> wordIds;
 
     /**
      * 实体类型集合（0为词语实体、1为字符串实体、2为正则实体、3为code实体）,默认全是0
      */
     private List<Integer> entityTypes;
 
-    /**
-     * 设好权重的权重数值数组
-     */
-    private List<Double> weights;
 
 //    /**
 //     * 综合词段信息

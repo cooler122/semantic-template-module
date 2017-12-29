@@ -7,9 +7,7 @@
     <dubbo:registry address="${zookeeper.segmentation.address}" check="false"></dubbo:registry>
 
 
-    <dubbo:reference interface="com.cooler.semantic.facade.WordSegmentFacade" version="1.0-SNAPSHOT" id="wordSegmentFacade" timeout="2000"/>
-
-    <dubbo:reference interface="com.cooler.semantic.facade.SemanticFacade" version="1.0-SNAPSHOT" id="semanticService" timeout="2000"/>
-    <dubbo:reference interface="com.cooler.semantic.facade.DynamicConfigFacade" version="1.0-SNAPSHOT" id="dynamicConfigService" timeout="2000"/>
+    <dubbo:reference interface="com.cooler.semantic.facade.CustomizedConfigureFacade" version="1.0-SNAPSHOT" id="customizedConfigureFacade" timeout="2000"/>
+    <dubbo:reference interface="com.cooler.semantic.facade.CustomizedSemanticFacade" version="1.0-SNAPSHOT" id="customizedSemanticFacade" timeout="2000"/>
 
 </beans>

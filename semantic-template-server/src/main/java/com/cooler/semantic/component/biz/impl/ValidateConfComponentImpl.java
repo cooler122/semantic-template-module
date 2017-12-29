@@ -6,6 +6,7 @@ import com.cooler.semantic.entity.Account;
 import com.cooler.semantic.entity.AccountConfiguration;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.component.ComponentBizResult;
+import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.service.internal.AccountConfigurationService;
 import com.cooler.semantic.service.internal.AccountService;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
     }
 
     @Override
-    protected ComponentBizResult<SemanticParserRequest> runBiz(SemanticParserRequest bizData) {
+    protected ComponentBizResult<SemanticParserRequest> runBiz(ContextOwner contextOwner, SemanticParserRequest bizData) {
         logger.info("SO_1.校验和配置");
 
         ComponentBizResult validateResult = validate(bizData);                       //校验请求体

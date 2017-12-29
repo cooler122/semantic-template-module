@@ -4,9 +4,9 @@ import com.cooler.semantic.dao.AccountMapper;
 import com.cooler.semantic.entity.Account;
 import com.cooler.semantic.service.internal.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component("accountService")
+@Service("accountService")
 public class AccountServiceImpl implements AccountService{
 
     @Autowired

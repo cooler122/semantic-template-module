@@ -1,4 +1,4 @@
-package com.cooler.semantic.api;
+package com.cooler.semantic.facade;
 
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.entity.SemanticParserResponse;

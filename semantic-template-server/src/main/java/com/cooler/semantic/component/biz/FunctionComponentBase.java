@@ -66,7 +66,7 @@ public abstract class FunctionComponentBase<I, O> implements SemanticComponent {
         //2.运行业务
         System.out.println("\n组件ID：" + this.id + "，流程编号：" + this.processCode + "，入参：" + JSON.toJSONString(inputDataComponent) + "，开始运行...");
         I inputBizData = inputDataComponent != null ? inputDataComponent.getData() : null;
-        ComponentBizResult<O> componentBizResult = runBiz(inputBizData);                                                //运行子组件的逻辑，运行体中获得子组件的OutPutDataComponent
+        ComponentBizResult<O> componentBizResult = runBiz(contextOwner, inputBizData);                                                //运行子组件的逻辑，运行体中获得子组件的OutPutDataComponent
 
         //3.分析结果，保存数据
         String resultCode = componentBizResult.getResultCode();                                                         //返回执行结果码
@@ -106,7 +106,7 @@ public abstract class FunctionComponentBase<I, O> implements SemanticComponent {
      * 本组件需要运行的业务逻辑，由本抽象类的具体子类来重写实现
      * @return  返回运行的结果体以及结果状态
      */
-    protected ComponentBizResult<O> runBiz(I bizData) {
+    protected ComponentBizResult<O> runBiz(ContextOwner contextOwner, I bizData) {
         return null;
     }
 

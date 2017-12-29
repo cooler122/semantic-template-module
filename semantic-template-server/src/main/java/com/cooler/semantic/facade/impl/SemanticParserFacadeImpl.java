@@ -1,12 +1,12 @@
-package com.cooler.semantic.facade;
+package com.cooler.semantic.facade.impl;
 
-import com.cooler.semantic.api.SemanticParserFacade;
 import com.cooler.semantic.component.ComponentConstant;
 import com.cooler.semantic.component.biz.SemanticComponent;
 import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.component.data.DataComponentBase;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.entity.SemanticParserResponse;
+import com.cooler.semantic.facade.SemanticParserFacade;
 import com.cooler.semantic.model.ContextOwner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

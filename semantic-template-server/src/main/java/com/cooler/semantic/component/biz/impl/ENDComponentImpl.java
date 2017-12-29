@@ -2,6 +2,7 @@ package com.cooler.semantic.component.biz.impl;
 
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
+import com.cooler.semantic.model.ContextOwner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ public class ENDComponentImpl extends FunctionComponentBase<Object, Object> {
     }
 
     @Override
-    protected ComponentBizResult<Object> runBiz(Object bizData) {
+    protected ComponentBizResult<Object> runBiz(ContextOwner contextOwner, Object bizData) {
         logger.info("END.结束流程");
 
         //TODO:校验和配置逻辑

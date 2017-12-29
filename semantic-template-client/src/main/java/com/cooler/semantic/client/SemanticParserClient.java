@@ -1,6 +1,6 @@
 package com.cooler.semantic.client;
 
-import com.cooler.semantic.api.SemanticParserFacade;
+import com.cooler.semantic.facade.SemanticParserFacade;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ public class SemanticParserClient {
 
         logger.info("客户端，开始访问...");
         SemanticParserRequest request = new SemanticParserRequest();
-        request.setCmd("北京今天天气怎么样？");                   //添加一个句子
+        request.setCmd("今天北京天气怎么样？");                   //添加一个句子
         request.setAccountIds(Arrays.asList(1));                     //添加一个测试账户
         request.setPassword("123456");
         request.setUserId(2);                                       //添加一个用户标号

@@ -24,7 +24,7 @@
     <dubbo:registry address="${zookeeper.register.address}"/>
     <!--<dubbo:registry address="zookeeper://192.168.10.20:2181?backup=192.168.10.21:2181,192.168.10.22:2181"/>-->
 
-    <dubbo:service interface="com.cooler.semantic.api.SemanticParserFacade" ref="semanticParserFacade"
+    <dubbo:service interface="com.cooler.semantic.facade.SemanticParserFacade" ref="semanticParserFacade"
                    protocol="dubbo"
                    version="1.0-SNAPSHOT"
                    timeout="200000"

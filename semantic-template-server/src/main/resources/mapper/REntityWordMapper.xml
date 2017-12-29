@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cooler.semantic.dao.REntityWordMapper" >
+  <resultMap id="BaseResultMap" type="com.cooler.semantic.entity.REntityWord" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="entity_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="entity_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="word_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="word" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="normal_word" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="state" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="account_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="r_msg" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, entity_id, entity_name, word_id, word, normal_word, state, account_id, r_msg, 
+    create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from r_entity_word
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from r_entity_word
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cooler.semantic.entity.REntityWord" >
+    insert into r_entity_word (id, entity_id, entity_name, 
+      word_id, word, normal_word, 
+      state, account_id, r_msg, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{entityId,jdbcType=INTEGER}, #{entityName,jdbcType=VARCHAR}, 
+      #{wordId,jdbcType=INTEGER}, #{word,jdbcType=VARCHAR}, #{normalWord,jdbcType=VARCHAR}, 
+      #{state,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{rMsg,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cooler.semantic.entity.REntityWord" >
+    insert into r_entity_word
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="entityId != null" >
+        entity_id,
+      </if>
+      <if test="entityName != null" >
+        entity_name,
+      </if>
+      <if test="wordId != null" >
+        word_id,
+      </if>
+      <if test="word != null" >
+        word,
+      </if>
+      <if test="normalWord != null" >
+        normal_word,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="rMsg != null" >
+        r_msg,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="entityId != null" >
+        #{entityId,jdbcType=INTEGER},
+      </if>
+      <if test="entityName != null" >
+        #{entityName,jdbcType=VARCHAR},
+      </if>
+      <if test="wordId != null" >
+        #{wordId,jdbcType=INTEGER},
+      </if>
+      <if test="word != null" >
+        #{word,jdbcType=VARCHAR},
+      </if>
+      <if test="normalWord != null" >
+        #{normalWord,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="rMsg != null" >
+        #{rMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.REntityWord" >
+    update r_entity_word
+    <set >
+      <if test="entityId != null" >
+        entity_id = #{entityId,jdbcType=INTEGER},
+      </if>
+      <if test="entityName != null" >
+        entity_name = #{entityName,jdbcType=VARCHAR},
+      </if>
+      <if test="wordId != null" >
+        word_id = #{wordId,jdbcType=INTEGER},
+      </if>
+      <if test="word != null" >
+        word = #{word,jdbcType=VARCHAR},
+      </if>
+      <if test="normalWord != null" >
+        normal_word = #{normalWord,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="rMsg != null" >
+        r_msg = #{rMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.REntityWord" >
+    update r_entity_word
+    set entity_id = #{entityId,jdbcType=INTEGER},
+      entity_name = #{entityName,jdbcType=VARCHAR},
+      word_id = #{wordId,jdbcType=INTEGER},
+      word = #{word,jdbcType=VARCHAR},
+      normal_word = #{normalWord,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER},
+      account_id = #{accountId,jdbcType=INTEGER},
+      r_msg = #{rMsg,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

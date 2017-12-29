@@ -6,6 +6,9 @@ import com.cooler.semantic.service.internal.WordCNService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 @Service("wordCNService")
 public class WordCNServiceImpl implements WordCNService {
 
@@ -41,5 +44,10 @@ public class WordCNServiceImpl implements WordCNService {
     @Override
     public int updateByPrimaryKey(WordCN record) {
         return wordCNMapper.updateByPrimaryKey(record);
+    }
+
+    @Override
+    public List<WordCN> selectByWords(Set<String> words) {
+        return wordCNMapper.selectByWords(words);
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service("entityService")
+@Service("entitySearchService")
 public class EntitySearchServiceImpl implements EntitySearchService {
     private Logger logger = LoggerFactory.getLogger(EntitySearchServiceImpl.class);
     @Override

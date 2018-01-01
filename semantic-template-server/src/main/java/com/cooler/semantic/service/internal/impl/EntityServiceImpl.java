@@ -6,6 +6,8 @@ import com.cooler.semantic.service.internal.EntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("entityService")
 public class EntityServiceImpl implements EntityService {
     @Autowired
@@ -39,5 +41,10 @@ public class EntityServiceImpl implements EntityService {
     @Override
     public int updateByPrimaryKey(Entity record) {
         return entityMapper.updateByPrimaryKey(record);
+    }
+
+    @Override
+    public List<Entity> selectByEIds(List<Integer> entityIds) {
+        return entityMapper.selectByEIds(entityIds);
     }
 }

@@ -94,14 +94,15 @@
   </update>
 
   <!-- 业务相关 -->
-  <select id="selectByWords" resultMap="BaseResultMap" >
+  <select id="selectByWords" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from word_cn
     where state = 1 and word IN
     <foreach collection="words" item="word" open="(" separator="," close=")">
-      word = #{word,jdbcType=VARCHAR}
+      #{word,jdbcType=VARCHAR}
     </foreach>
+    order by word desc
   </select>
 
 </mapper>

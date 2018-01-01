@@ -127,4 +127,17 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 业务逻辑 -->
+  <select id="selectByEIds" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from entity
+    where id IN
+    <foreach collection="entityIds" item="entityId" open="(" separator="," close=")">
+      #{entityId,jdbcType=INTEGER}
+    </foreach>
+  </select>
+
+
 </mapper>

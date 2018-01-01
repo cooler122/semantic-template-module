@@ -6,6 +6,9 @@ import com.cooler.semantic.service.internal.REntityWordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 @Service("rEntityWordService")
 public class REntityWordServiceImpl implements REntityWordService {
 
@@ -40,5 +43,10 @@ public class REntityWordServiceImpl implements REntityWordService {
     @Override
     public int updateByPrimaryKey(REntityWord record) {
         return rEntityWordMapper.updateByPrimaryKey(record);
+    }
+
+    @Override
+    public List<REntityWord> selectByAIdWords(Integer accountId, Set<String> allWords) {
+        return rEntityWordMapper.selectByAIdWords(accountId, allWords);
     }
 }

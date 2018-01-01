@@ -1,5 +1,7 @@
 package com.cooler.semantic.model;
 
+import com.cooler.semantic.entity.REntityWord;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,31 +27,9 @@ public class SentenceVector implements Serializable, Cloneable {
     private List<Double> weights;
 
     /**
-     * 每一个词语在数据库中对应的wordId
+     * 关系列表
      */
-    private List<Integer> wordIds;
-
-    /**
-     * 实体类型集合（0为词语实体、1为字符串实体、2为正则实体、3为code实体）,默认全是0
-     */
-    private List<Integer> entityTypes;
-
-
-//    /**
-//     * 综合词段信息
-//     */
-//    private List<WordInfo> wordInfos;
-//
-//    /**
-//     * 一对一关系Map，（为了多维度值计算相似度）
-//     */
-//    private Map<Integer, REntityWord> rEntityWordMap;
-//
-//    /**
-//     * 一对多关系集合，（后续离散排布和转置，为了计算交集）
-//     */
-//    private List<R_Entities_Word> rEntitiesWords;
-
+    private List<List<REntityWordInfo>> rEntityWordInfosList;
 
     public String getSentence() {
         return sentence;
@@ -67,14 +47,6 @@ public class SentenceVector implements Serializable, Cloneable {
         this.words = words;
     }
 
-    public List<Integer> getWordIds() {
-        return wordIds;
-    }
-
-    public void setWordIds(List<Integer> wordIds) {
-        this.wordIds = wordIds;
-    }
-
     public List<String> getNatures() {
         return natures;
     }
@@ -83,19 +55,19 @@ public class SentenceVector implements Serializable, Cloneable {
         this.natures = natures;
     }
 
-    public List<Integer> getEntityTypes() {
-        return entityTypes;
-    }
-
-    public void setEntityTypes(List<Integer> entityTypes) {
-        this.entityTypes = entityTypes;
-    }
-
     public List<Double> getWeights() {
         return weights;
     }
 
     public void setWeights(List<Double> weights) {
         this.weights = weights;
+    }
+
+    public List<List<REntityWordInfo>> getrEntityWordInfosList() {
+        return rEntityWordInfosList;
+    }
+
+    public void setrEntityWordInfosList(List<List<REntityWordInfo>> rEntityWordInfosList) {
+        this.rEntityWordInfosList = rEntityWordInfosList;
     }
 }

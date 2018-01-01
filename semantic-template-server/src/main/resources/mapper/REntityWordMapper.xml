@@ -152,4 +152,16 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 业务相关 -->
+  <select id="selectByAIdWords" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from r_entity_word
+    where account_id = #{accountId,jdbcType=INTEGER} and word IN
+    <foreach collection="words" item="word" open="(" separator="," close=")">
+      #{word,jdbcType=VARCHAR}
+    </foreach>
+  </select>
+
 </mapper>

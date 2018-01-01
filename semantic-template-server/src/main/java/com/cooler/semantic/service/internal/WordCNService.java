@@ -8,8 +8,9 @@ import java.util.Set;
 public interface WordCNService extends BaseService<WordCN>{
     /**
      * 按照字符串词集来查询WordCN对象
+     * @param accountId 次词语插入者账户
      * @param words  字符串词集
      * @return
      */
-    List<WordCN> selectByWords(@Param("words") Set<String> words);
+    List<WordCN> selectByWords(Integer accountId, @Param("words") Set<String> words);
 }

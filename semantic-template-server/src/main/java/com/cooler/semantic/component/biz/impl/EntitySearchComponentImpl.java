@@ -84,8 +84,7 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
 
             //5.最终剩下的，只能作为常量实体存在于模板之中，实体类型为0。
             // 这里分两种情况：a.这个词在词表中有，但在关系表中没有指定它是哪种实体；b.这个词在词表中也没有，你没办法判断其是否有意义，所以还是需要添加进去（宁滥勿缺）
-            //TODO:后面需要在selectByWords的业务逻辑里面添加上没有查询到的词语，一旦没有查询到，就将它插入到word_cn表里面，并带出它的id
-            List<WordCN> wordCNs = wordCNService.selectByWords(allWords);
+            List<WordCN> wordCNs = wordCNService.selectByWords(accountId, allWords);
 
             for (WordCN wordCN : wordCNs) {
                 Integer wordId = wordCN.getId();
@@ -117,14 +116,6 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
                 rEntityWordInfosList.add(rEntityWordInfos);
             }
             sentenceVector.setrEntityWordInfosList(rEntityWordInfosList);
-        }
-
-        System.out.println(JSON.toJSONString(sentenceVectors));
-        for (SentenceVector sentenceVector : sentenceVectors) {
-            List<List<REntityWordInfo>> lists = sentenceVector.getrEntityWordInfosList();
-            for (List<REntityWordInfo> list : lists) {
-                System.out.println(JSON.toJSONString(list));
-            }
         }
 
         return new ComponentBizResult("ESC_S", 1, sentenceVectors);

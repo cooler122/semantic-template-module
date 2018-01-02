@@ -30,6 +30,9 @@
                 <entry key="VCC" value-ref="validateConfComponent"/>
                 <entry key="SPC" value-ref="sentenceProcessComponent"/>
                 <entry key="ESC" value-ref="entitySearchComponent"/>
+
+                <entry key="FPMC" value-ref="fullParamMatchComponent"/>
+
                 <entry key="ENDC" value-ref="eNDComponent"/>
 
                 <entry key="D1" value-ref="verdictComponentBase"/>
@@ -53,8 +56,11 @@
 
                 <entry key="D1_S" value="D2"/>
                 <entry key="D2_S" value="D3"/>
-                <entry key="D3_S" value="D4"/>
+                <entry key="D3_S" value="FPMC"/>
                 <entry key="D3_F" value="ENDC"/>
+
+                <entry key="FPMC_S" value="D4"/>
+                <entry key="FPMC_F" value="ENDC"/>
 
                 <entry key="D4_S" value="ENDC"/>
                 <entry key="D_F" value="ENDC"/>

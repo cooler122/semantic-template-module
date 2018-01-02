@@ -35,6 +35,11 @@ public class REntityWordInfo {
      */
     private Integer entityType;
 
+    /**
+     * 实体类型和实体ID的合并值，用以后续查询
+     */
+    private String entityTypeId;
+
     public String getWord() {
         return word;
     }
@@ -81,5 +86,13 @@ public class REntityWordInfo {
 
     public void setEntityType(Integer entityType) {
         this.entityType = entityType;
+    }
+
+    public String getEntityTypeId() {
+        return entityType == 0 ? entityType + "_" + wordId : entityType + "_" + entityId;           //如果等于0，标识常量实体，如果不等于0，是其它类别实体
+    }
+
+    public void setEntityTypeId(String entityTypeId) {
+        this.entityTypeId = entityTypeId;
     }
 }

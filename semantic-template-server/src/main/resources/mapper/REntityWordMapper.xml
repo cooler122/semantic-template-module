@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cooler.semantic.dao.REntityWordMapper" >
+
   <resultMap id="BaseResultMap" type="com.cooler.semantic.entity.REntityWord" >
     <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
@@ -15,20 +16,24 @@
       <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
     </constructor>
   </resultMap>
+
   <sql id="Base_Column_List" >
     id, entity_id, entity_name, word_id, word, normal_word, state, account_id, r_msg, 
     create_time
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from r_entity_word
     where id = #{id,jdbcType=INTEGER}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from r_entity_word
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <insert id="insert" parameterType="com.cooler.semantic.entity.REntityWord" >
     insert into r_entity_word (id, entity_id, entity_name, 
       word_id, word, normal_word, 
@@ -39,6 +44,7 @@
       #{state,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{rMsg,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
+
   <insert id="insertSelective" parameterType="com.cooler.semantic.entity.REntityWord" >
     insert into r_entity_word
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -106,6 +112,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.REntityWord" >
     update r_entity_word
     <set >
@@ -139,6 +146,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.REntityWord" >
     update r_entity_word
     set entity_id = #{entityId,jdbcType=INTEGER},

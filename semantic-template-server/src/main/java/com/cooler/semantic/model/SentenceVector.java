@@ -1,6 +1,7 @@
 package com.cooler.semantic.model;
 
 import com.cooler.semantic.entity.REntityWord;
+import com.cooler.semantic.entity.RRuleEntity;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,9 +28,14 @@ public class SentenceVector implements Serializable, Cloneable {
     private List<Double> weights;
 
     /**
-     * 关系列表
+     * （REntityWord关键数据）对象列表
      */
     private List<List<REntityWordInfo>> rEntityWordInfosList;
+
+    /**
+     * (RRuleEntity）对象列表，根据各个实体取出来的实体列表（粗取结果集）
+     */
+    private List<List<RRuleEntity>> rRuleEntitiesList;
 
     public String getSentence() {
         return sentence;
@@ -69,5 +75,13 @@ public class SentenceVector implements Serializable, Cloneable {
 
     public void setrEntityWordInfosList(List<List<REntityWordInfo>> rEntityWordInfosList) {
         this.rEntityWordInfosList = rEntityWordInfosList;
+    }
+
+    public List<List<RRuleEntity>> getrRuleEntitiesList() {
+        return rRuleEntitiesList;
+    }
+
+    public void setrRuleEntitiesList(List<List<RRuleEntity>> rRuleEntitiesList) {
+        this.rRuleEntitiesList = rRuleEntitiesList;
     }
 }

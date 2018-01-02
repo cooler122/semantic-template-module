@@ -71,11 +71,11 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
             rEntityWordInfo.setEntityName(rEntityWord.getEntityName());
             rEntityWordInfo.setNormalWord(rEntityWord.getNormalWord());
             rEntityWordInfo.setEntityType(1);                                                   //1表示字符串实体
+            rEntityWordInfo.setEntityTypeId("1_" + rEntityWord.getEntityId());
 
             rEntityWordInfos.add(rEntityWordInfo);
 
             allWords.remove(word);                                                              //删除掉查询出了实体的词语，剩下的词语查不到实体了
-
         }
 
         if(allWords.size() > 0){
@@ -97,10 +97,11 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
                 REntityWordInfo rEntityWordInfo = new REntityWordInfo();
                 rEntityWordInfo.setWordId(wordId);
                 rEntityWordInfo.setWord(word);
-                rEntityWordInfo.setEntityId(null);
-                rEntityWordInfo.setEntityName(null);
+                rEntityWordInfo.setEntityId(wordId);                                                                    //这里是常量实体，则将entityId和entityName设置为wordID和word
+                rEntityWordInfo.setEntityName(word);
                 rEntityWordInfo.setNormalWord(word);
                 rEntityWordInfo.setEntityType(0);
+                rEntityWordInfo.setEntityTypeId("0_" + wordId);
                 rEntityWordInfos.add(rEntityWordInfo);
 
                 rEntityWordInfosMap.put(word, rEntityWordInfos);

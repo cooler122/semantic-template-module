@@ -1,10 +1,9 @@
 package com.cooler.semantic.model;
 
-import com.cooler.semantic.entity.REntityWord;
 import com.cooler.semantic.entity.RRuleEntity;
-
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 public class SentenceVector implements Serializable, Cloneable {
     /**

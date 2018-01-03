@@ -15,6 +15,7 @@
       <arg column="is_necessary" jdbcType="TINYINT" javaType="java.lang.Byte" />
       <arg column="necessary_entity_query" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="natrue" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="volume_rate" jdbcType="DOUBLE" javaType="java.lang.Double" />
       <arg column="weight" jdbcType="DOUBLE" javaType="java.lang.Double" />
       <arg column="state" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="account_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
@@ -24,7 +25,8 @@
 
   <sql id="Base_Column_List" >
     id, rule_id, rule_name, serial_number, entity_type, entity_id, entity_name, entity_type_id, 
-    is_necessary, necessary_entity_query, natrue, weight, state, account_id, create_time
+    is_necessary, necessary_entity_query, natrue, volume_rate, weight, state, account_id, 
+    create_time
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -43,15 +45,15 @@
     insert into r_rule_entity (id, rule_id, rule_name, 
       serial_number, entity_type, entity_id, 
       entity_name, entity_type_id, is_necessary, 
-      necessary_entity_query, natrue, weight, 
-      state, account_id, create_time
-      )
+      necessary_entity_query, natrue, volume_rate, 
+      weight, state, account_id, 
+      create_time)
     values (#{id,jdbcType=INTEGER}, #{ruleId,jdbcType=INTEGER}, #{ruleName,jdbcType=VARCHAR}, 
       #{serialNumber,jdbcType=INTEGER}, #{entityType,jdbcType=INTEGER}, #{entityId,jdbcType=INTEGER}, 
       #{entityName,jdbcType=VARCHAR}, #{entityTypeId,jdbcType=VARCHAR}, #{isNecessary,jdbcType=TINYINT}, 
-      #{necessaryEntityQuery,jdbcType=VARCHAR}, #{natrue,jdbcType=VARCHAR}, #{weight,jdbcType=DOUBLE}, 
-      #{state,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
-      )
+      #{necessaryEntityQuery,jdbcType=VARCHAR}, #{natrue,jdbcType=VARCHAR}, #{volumeRate,jdbcType=DOUBLE}, 
+      #{weight,jdbcType=DOUBLE}, #{state,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
 
   <insert id="insertSelective" parameterType="com.cooler.semantic.entity.RRuleEntity" >
@@ -89,6 +91,9 @@
       </if>
       <if test="natrue != null" >
         natrue,
+      </if>
+      <if test="volumeRate != null" >
+        volume_rate,
       </if>
       <if test="weight != null" >
         weight,
@@ -136,6 +141,9 @@
       </if>
       <if test="natrue != null" >
         #{natrue,jdbcType=VARCHAR},
+      </if>
+      <if test="volumeRate != null" >
+        #{volumeRate,jdbcType=DOUBLE},
       </if>
       <if test="weight != null" >
         #{weight,jdbcType=DOUBLE},
@@ -185,6 +193,9 @@
       <if test="natrue != null" >
         natrue = #{natrue,jdbcType=VARCHAR},
       </if>
+      <if test="volumeRate != null" >
+        volume_rate = #{volumeRate,jdbcType=DOUBLE},
+      </if>
       <if test="weight != null" >
         weight = #{weight,jdbcType=DOUBLE},
       </if>
@@ -213,22 +224,34 @@
       is_necessary = #{isNecessary,jdbcType=TINYINT},
       necessary_entity_query = #{necessaryEntityQuery,jdbcType=VARCHAR},
       natrue = #{natrue,jdbcType=VARCHAR},
+      volume_rate = #{volumeRate,jdbcType=DOUBLE},
       weight = #{weight,jdbcType=DOUBLE},
       state = #{state,jdbcType=INTEGER},
       account_id = #{accountId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  
+
   <!-- 业务相关 -->
+
   <select id="selectByREntityWordInfos" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
     from r_rule_entity
-    where state = 1 and account_id = #{accountId,jdbcType=INTEGER} and entity_type_id IN 
+    where state = 1 and account_id = #{accountId,jdbcType=INTEGER} and entity_type_id IN
     <foreach collection="rEntityWordInfos" item="rEntityWordInfo" open="(" separator="," close=")">
       #{rEntityWordInfo.entityTypeId,jdbcType=VARCHAR}
     </foreach>
   </select>
-  
+
+  <select id="selectBySVRuleInfos" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from r_rule_entity
+    where state = 1 and account_id = #{accountId,jdbcType=INTEGER} and rule_id IN
+    <foreach collection="svRuleInfos" item="svRuleInfo" open="(" separator="," close=")">
+      #{svRuleInfo.ruleId,jdbcType=INTEGER}
+    </foreach>
+  </select>
+
 </mapper>

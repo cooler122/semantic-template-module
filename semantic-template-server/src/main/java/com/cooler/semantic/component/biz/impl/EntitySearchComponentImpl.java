@@ -118,7 +118,6 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
             }
             sentenceVector.setrEntityWordInfosList(rEntityWordInfosList);
         }
-
         return new ComponentBizResult("ESC_S", 1, sentenceVectors);
     }
 

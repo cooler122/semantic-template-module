@@ -1,6 +1,6 @@
 package com.cooler.semantic.service.external;
 
-import com.cooler.semantic.entity.Rule;
+import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.model.SentenceVector;
 
 import java.util.List;
@@ -12,5 +12,5 @@ public interface RuleSearchService {
      * @param sentenceVectors   句子向量
      * @return  规则集合
      */
-    List<Rule> getRulesBySentenceVectors(Integer accountId, List<SentenceVector> sentenceVectors);
+    List<SVRuleInfo> getRulesBySentenceVectors(Integer accountId, List<SentenceVector> sentenceVectors);
 }

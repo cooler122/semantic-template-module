@@ -25,6 +25,8 @@ public class RRuleEntity {
 
     private String natrue;
 
+    private Double volumeRate;
+
     private Double weight;
 
     private Integer state;
@@ -33,7 +35,7 @@ public class RRuleEntity {
 
     private Date createTime;
 
-    public RRuleEntity(Integer id, Integer ruleId, String ruleName, Integer serialNumber, Integer entityType, Integer entityId, String entityName, String entityTypeId, Byte isNecessary, String necessaryEntityQuery, String natrue, Double weight, Integer state, Integer accountId, Date createTime) {
+    public RRuleEntity(Integer id, Integer ruleId, String ruleName, Integer serialNumber, Integer entityType, Integer entityId, String entityName, String entityTypeId, Byte isNecessary, String necessaryEntityQuery, String natrue, Double volumeRate, Double weight, Integer state, Integer accountId, Date createTime) {
         this.id = id;
         this.ruleId = ruleId;
         this.ruleName = ruleName;
@@ -45,6 +47,7 @@ public class RRuleEntity {
         this.isNecessary = isNecessary;
         this.necessaryEntityQuery = necessaryEntityQuery;
         this.natrue = natrue;
+        this.volumeRate = volumeRate;
         this.weight = weight;
         this.state = state;
         this.accountId = accountId;
@@ -141,6 +144,14 @@ public class RRuleEntity {
 
     public void setNatrue(String natrue) {
         this.natrue = natrue == null ? null : natrue.trim();
+    }
+
+    public Double getVolumeRate() {
+        return volumeRate;
+    }
+
+    public void setVolumeRate(Double volumeRate) {
+        this.volumeRate = volumeRate;
     }
 
     public Double getWeight() {

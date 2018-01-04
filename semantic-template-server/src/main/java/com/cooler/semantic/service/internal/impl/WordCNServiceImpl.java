@@ -62,14 +62,14 @@ public class WordCNServiceImpl implements WordCNService {
 
         String wordDuplicate = "";
         try{
-            for (String word : words) {                                                                                     //将数据库中没有记录的词语添加到数据库word_cn表中
+            for (String word : words) {                                                                                 //将数据库中没有记录的词语添加到数据库word_cn表中
                 WordCN wordCN = new WordCN();
                 wordCN.setWord(word);
                 wordCN.setAccountId(accountId);
-                wordDuplicate = word;                                                                                       //这里将字符串传出去，如果重复性插入会报异常，捕捉后会有日志提示具体重复性插入的词语
+                wordDuplicate = word;                                                                                   //这里将字符串传出去，如果重复性插入会报异常，捕捉后会有日志提示具体重复性插入的词语
                 int wordId = wordCNMapper.insert(wordCN);
                 if(wordId != 0){
-                    db_wordCNs.add(wordCN);                                                                                 //此时wordCN对象会将主键带回来，但没有带回state和create_time，这两个字段当前没有作用
+                    db_wordCNs.add(wordCN);                                                                             //此时wordCN对象会将主键带回来，但没有带回state和create_time，这两个字段当前没有作用
                 }
             }
         }catch (Exception e){

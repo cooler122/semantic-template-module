@@ -33,7 +33,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             case Constant.JACCARD_WEIGHT_RATE : {
                 return jaccardSimilarity(svRuleInfos, rRuleEntityMap, Constant.JACCARD_WEIGHT_RATE);
             }
-            case Constant.JACCARD_VOLUME_WEIGHT_RATE : {
+            case Constant.JACCARD_VOLUME_WEIGHT_RATE : {                                                                //TODO:jaccard算法的两个因子还可以用更复杂的组合方式进行调节
                 return jaccardSimilarity(svRuleInfos, rRuleEntityMap, Constant.JACCARD_VOLUME_WEIGHT_RATE);
             }
             case Constant.COSINE : {
@@ -146,6 +146,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             Double rule_weight_square = 0d;                                                                             //规则中的权重平方和
             Double cosineValue = 0d;                                                                                    //cosine值（由上面3个量计算得到）
 
+            //3.构建分子
             for(int i = 0; i < rEntityWordInfosList.size(); i ++){                                                          //遍历svRuleInfo绑定的一个分词方式指定的实体集群
                 List<REntityWordInfo> rEntityWordInfos = rEntityWordInfosList.get(i);                                        //第i个word分词段归属到的实体集合
                 for(int j = 0; j < rEntityWordInfos.size(); j ++){                                                              //遍历每一个分词段指定的实体集
@@ -163,9 +164,13 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                     }
                 }
             }
+
+            //4.构建分母的一个因子
             for (Double weight : weights) {
                 sv_weight_square += weight * weight;
             }
+
+            //5.构建分母的第二个因子
             Collection<RRuleEntity> rRuleEntities = rRuleEntityMap.values();
             for (RRuleEntity rRuleEntity : rRuleEntities) {
                 if(rRuleEntity.getRuleId() == ruleId){
@@ -179,5 +184,98 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
         return svRuleInfos;
     }
 
+    /**
+     * 皮尔逊相似度
+     * @param svRuleInfos
+     * @param rRuleEntityMap
+     * @return
+     */
+    private List<SVRuleInfo> pearsonSimilarity(List<SVRuleInfo> svRuleInfos, Map<String, RRuleEntity> rRuleEntityMap){
+        for (SVRuleInfo svRuleInfo : svRuleInfos) {                                                                     //下面是3层循环，所以svRuleInfos在前面做了优化，限定数量最多为5个
+            //1.准备好两方数据：句子向量的的数据在svRuleInfo的rEntityWordInfosList里面和外面；其绑定的rule的数据，全部放在入参rRuleEntityMap里面
+            String sentence = svRuleInfo.getSentence();
+            List<String> words = svRuleInfo.getWords();
+            List<String> natures = svRuleInfo.getNatures();
+            List<Double> weights = svRuleInfo.getWeights();
+
+            List<List<REntityWordInfo>> rEntityWordInfosList = svRuleInfo.getrEntityWordInfosList();                    //代表了句子向量一方的数据
+
+            Integer ruleId = svRuleInfo.getRuleId();                                                                    //指向ruleId的这条rule
+
+            //2.给予每个实体集合的每个实体一次机会，如果能匹配上，则填充余弦公式的分子
+            Double numerator = 0d;                                                                                      //分子
+            Double sv_weight_square = 0d;                                                                               //句子向量中的权重平方和
+            Double rule_weight_square = 0d;                                                                             //规则中的权重平方和
+            Double cosineValue = 0d;                                                                                    //cosine值（由上面3个量计算得到）
+
+            //3.构建分子
+            for(int i = 0; i < rEntityWordInfosList.size(); i ++){                                                          //遍历svRuleInfo绑定的一个分词方式指定的实体集群
+                List<REntityWordInfo> rEntityWordInfos = rEntityWordInfosList.get(i);                                        //第i个word分词段归属到的实体集合
+                for(int j = 0; j < rEntityWordInfos.size(); j ++){                                                              //遍历每一个分词段指定的实体集
+                    REntityWordInfo rEntityWordInfo = rEntityWordInfos.get(j);
+                    Integer entityType = rEntityWordInfo.getEntityType();
+                    Integer entityId = rEntityWordInfo.getEntityId();
+                    String key = ruleId + "_" + entityType + "_" + entityId;
+                    RRuleEntity rRuleEntity = rRuleEntityMap.get(key);                                                          //按照这个key，检索到，就表示被记录，表示能匹配上
+                    if(rRuleEntity != null){
+                        //记录此句子向量中归属的实体成功匹配上绑定的规则中的一个实体了 //TODO: 那么规则中的rRuleEntity也可以在db中记录这一次匹配，可以统计一个rRuleEntity的匹配次数
+                        System.out.println("Matched！ : 原句" + sentence + ", 分词方式：" + Arrays.toString(words.toArray()) + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
+                        Double sv_weight = weights.get(i);                                                                      //句子向量中，第i个word分词归属到的实体的权重
+                        Double rule_weight = rRuleEntity.getWeight();                                                           //rule模板中，这个实体在rule中的权重
+                        numerator += sv_weight * rule_weight;
+                    }
+                }
+            }
+
+            //4.构建分母的一个因子
+            for (Double weight : weights) {
+                sv_weight_square += weight * weight;
+            }
+
+            //5.构建分母的第二个因子
+            Collection<RRuleEntity> rRuleEntities = rRuleEntityMap.values();
+            for (RRuleEntity rRuleEntity : rRuleEntities) {
+                if(rRuleEntity.getRuleId() == ruleId){
+                    Double weight = rRuleEntity.getWeight();
+                    rule_weight_square += weight * weight;
+                }
+            }
+            cosineValue = numerator / (Math.sqrt(sv_weight_square) * Math.sqrt(rule_weight_square));
+            svRuleInfo.setSimilarity(cosineValue);
+        }
+        return svRuleInfos;
+    }
+
+    /**
+     * pearson算法
+     * @param ruleWeightArray
+     * @param sentenceVectorWeightArray
+     * @return 相似度值
+     */
+    public static double pearson(double[] ruleWeightArray, double[] sentenceVectorWeightArray){
+        double sumX = 0.0;
+        double sumY = 0.0;
+        double sumX_Sq = 0.0;
+        double sumY_Sq = 0.0;
+        double sumXY = 0.0;
+        int size = ruleWeightArray.length;
+
+        for (int i = 0; i < size; i ++) {
+            double p1 = ruleWeightArray[i];
+            double p2 = sentenceVectorWeightArray[i];
+            sumX += p1;
+            sumY += p2;
+            sumX_Sq += Math.pow(p1, 2);
+            sumY_Sq += Math.pow(p2, 2);
+            sumXY += p1 * p2;
+        }
+        double numerator = sumXY - sumX * sumY / size;
+        double denominator = Math.sqrt((sumX_Sq - sumX * sumX / size) * (sumY_Sq - sumY * sumY / size));
+
+        if (denominator == 0) {                                                                                         // 分母不能为0
+            return 0;
+        }
+        return numerator / denominator;
+    }
 
 }

@@ -10,18 +10,24 @@ public class SVRuleInfo implements Comparable<SVRuleInfo>{
      */
     private Integer accountId;
 
-    //*****************************************************1.作为粗选凭证参数，1.按照preVolumeRateOccupancy * preWeightOccupancy的值进行竞争，前n（配置设置）名参与相似度计算，其他舍弃
+    //*****************************************************1.作为第一次和第二次的初步规则筛选凭证参数：第一次筛选，preRuleWeightOccupancy和preRuleWeightOccupancy，必须达到一定阈值才能通过。 第二次筛选，按照preRuleVolumeRateOccupancy * preRuleWeightOccupancy的值进行竞争，前n（配置设置）名参与相似度计算，其他舍弃
     /**
      * 规则中 有效实体数量 预期占有率
      */
-    private Double preVolumeRateOccupancy = 0d;
+    private Double preRuleVolumeRateOccupancy = 0d;
 
     /**
      * 规则中 有效权重 预期占有率
      */
-    private Double preWeightOccupancy = 0d;
+    private Double preRuleWeightOccupancy = 0d;
 
-    //*****************************************************2.SentenceVector数据：此RuleInfo做为一个计算单元，以下是从句子向量SentenceVector中取出来的值，用来进行相似度计算的值
+    //*****************************************************2.作为计算相似度的结果参数：按照intersectionVolumeRateOccupancy 和 intersectionWeightOccupancy的值来选出最佳匹配的规则。
+    /**
+     * 句子向量和规则的交集 有效实体数量 实际占有率
+     */
+    private Double similarity = 0d;
+
+    //*****************************************************3.SentenceVector数据：此RuleInfo做为一个计算单元，以下是从句子向量SentenceVector中取出来的值，用来进行相似度计算的值
     /**
      * 原始句子
      */
@@ -47,7 +53,7 @@ public class SVRuleInfo implements Comparable<SVRuleInfo>{
      */
     private List<List<REntityWordInfo>> rEntityWordInfosList = null;
 
-    //*****************************************************0.本身属性，待着ruleId，后面能够去找对应的rule
+    //*****************************************************4.此句子向量（分词方式）绑定的ruleId，后面能够去找对应的rule，跟这个句子向量进行匹配
     /**
      * 规则ID
      */
@@ -80,22 +86,6 @@ public class SVRuleInfo implements Comparable<SVRuleInfo>{
 
     public void setAccountId(Integer accountId) {
         this.accountId = accountId;
-    }
-
-    public Double getPreVolumeRateOccupancy() {
-        return preVolumeRateOccupancy;
-    }
-
-    public void setPreVolumeRateOccupancy(Double preVolumeRateOccupancy) {
-        this.preVolumeRateOccupancy = preVolumeRateOccupancy;
-    }
-
-    public Double getPreWeightOccupancy() {
-        return preWeightOccupancy;
-    }
-
-    public void setPreWeightOccupancy(Double preWeightOccupancy) {
-        this.preWeightOccupancy = preWeightOccupancy;
     }
 
     public String getSentence() {
@@ -138,10 +128,34 @@ public class SVRuleInfo implements Comparable<SVRuleInfo>{
         this.weights = weights;
     }
 
+    public Double getPreRuleVolumeRateOccupancy() {
+        return preRuleVolumeRateOccupancy;
+    }
+
+    public void setPreRuleVolumeRateOccupancy(Double preRuleVolumeRateOccupancy) {
+        this.preRuleVolumeRateOccupancy = preRuleVolumeRateOccupancy;
+    }
+
+    public Double getPreRuleWeightOccupancy() {
+        return preRuleWeightOccupancy;
+    }
+
+    public void setPreRuleWeightOccupancy(Double preRuleWeightOccupancy) {
+        this.preRuleWeightOccupancy = preRuleWeightOccupancy;
+    }
+
+    public Double getSimilarity() {
+        return similarity;
+    }
+
+    public void setSimilarity(Double similarity) {
+        this.similarity = similarity;
+    }
+
     @Override
     public int compareTo(SVRuleInfo o) {                                                                                //倒序排序，见"if(o_product > product) return 1;"
-        Double product = this.getPreVolumeRateOccupancy() * this.getPreWeightOccupancy();
-        Double o_product = o.getPreVolumeRateOccupancy() * o.getPreWeightOccupancy();
+        Double product = this.getPreRuleVolumeRateOccupancy() * this.getPreRuleWeightOccupancy();
+        Double o_product = o.getPreRuleVolumeRateOccupancy() * o.getPreRuleWeightOccupancy();
         if(o_product > product) return 1;
         else if(product == o_product) return 0;
         else return -1;

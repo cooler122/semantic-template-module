@@ -43,10 +43,10 @@ public class RuleSearchServiceImpl implements RuleSearchService {
                 Integer ruleId = rRuleEntity.getRuleId();
                 SVRuleInfo svRuleInfo = ruleInfoMap.get(ruleId);
                 if(svRuleInfo == null)  svRuleInfo = new SVRuleInfo();
-                svRuleInfo.setPreVolumeRateOccupancy(svRuleInfo.getPreVolumeRateOccupancy() + rRuleEntity.getVolumeRate());
-                svRuleInfo.setPreWeightOccupancy(svRuleInfo.getPreWeightOccupancy() + rRuleEntity.getWeight());
+                svRuleInfo.setPreRuleVolumeRateOccupancy(svRuleInfo.getPreRuleVolumeRateOccupancy() + rRuleEntity.getVolumeRate()); //经过累积，看看对于检索出来的规则能有怎样的预期实体数量占有率
+                svRuleInfo.setPreRuleWeightOccupancy(svRuleInfo.getPreRuleWeightOccupancy() + rRuleEntity.getWeight());             //经过累积，看看对于检索出来的规则能有怎样的预期实体权重占有率
 
-                if(svRuleInfo.getPreWeightOccupancy() >= 0.35 && svRuleInfo.getPreVolumeRateOccupancy() >= 0.2){                      //规则端阈值，只有超过这两个阈值之一，才有资格建立成一个完整的RuleInfo对象，参与相似度计算，不然计算没意义（是或是并，也可调节）
+                if(svRuleInfo.getPreRuleVolumeRateOccupancy() >= 0.2 || svRuleInfo.getPreRuleWeightOccupancy() >= 0.34){        //规则端阈值，只有超过这两个阈值之一，才有资格建立成一个完整的RuleInfo对象，参与相似度计算，不然计算没意义（是或是并，也可调节）
                     svRuleInfo.setRuleId(ruleId);                                                                       //自身数据：ruleId、ruleName、accountId、
                     svRuleInfo.setRuleName(rRuleEntity.getRuleName());
                     svRuleInfo.setAccountId(rRuleEntity.getAccountId());

@@ -95,4 +95,5 @@ public class REntityWordInfo {
     public void setEntityTypeId(String entityTypeId) {
         this.entityTypeId = entityTypeId;
     }
+
 }

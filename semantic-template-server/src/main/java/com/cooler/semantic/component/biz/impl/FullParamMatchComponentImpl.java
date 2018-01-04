@@ -44,11 +44,13 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
     protected ComponentBizResult<Object> runBiz(ContextOwner contextOwner, List<SentenceVector> sentenceVectors) {
         logger.info("fullParamMatch.全参匹配");
 
+        //1.通过各个分词段检索出的实体，将各个实体对应的rule数据（这一步主要获得各个实体对应的ruleId）检索出来，通过预估值计算，提取最佳的前5位规则，并封装成SVRuleInfo集合返回出来
         System.out.println(JSON.toJSONString(sentenceVectors));
         Integer accountId = contextOwner.getAccountId();
         List<SVRuleInfo> svRuleInfos = ruleSearchService.getRulesBySentenceVectors(accountId, sentenceVectors);
         System.out.println(JSON.toJSONString(svRuleInfos));
 
+        //2.通过svRuleInfo里面的ruleId，将每一个rule-entity关联数据检索出来，以备后续计算相似度
         List<RRuleEntity> rRuleEntities = rRuleEntityService.selectBySVRuleInfos(accountId, svRuleInfos);            //这个list理应包含所有SVRuleInfo的所有实体相关数据
         Map<String, RRuleEntity> rRuleEntityDataMap = new HashMap<>();
         for (RRuleEntity rRuleEntity : rRuleEntities) {
@@ -57,7 +59,7 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
             rRuleEntityDataMap.put(ruleId + "_" + entityTypeId, rRuleEntity);                                           //将这些数据放入了Map<ruleId_entityTypeId, RRE>集合中，方便后续取用
         }
 
-        List<SVRuleInfo> svRuleInfosResult = similarityCalculateService.similarityCalculate(accountId, svRuleInfos, rRuleEntityDataMap);
+        List<SVRuleInfo> svRuleInfosResult = similarityCalculateService.similarityCalculate(contextOwner, svRuleInfos, rRuleEntityDataMap);
         SVRuleInfo optimalSvRuleInfo = svRuleInfosResult.get(0);
 
         return new ComponentBizResult("FPMC_S",1, optimalSvRuleInfo);

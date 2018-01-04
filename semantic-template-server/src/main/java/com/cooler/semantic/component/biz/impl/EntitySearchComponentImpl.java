@@ -3,13 +3,11 @@ package com.cooler.semantic.component.biz.impl;
 import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
-import com.cooler.semantic.entity.Entity;
 import com.cooler.semantic.entity.REntityWord;
 import com.cooler.semantic.entity.WordCN;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SentenceVector;
-import com.cooler.semantic.service.internal.EntityService;
 import com.cooler.semantic.service.internal.REntityWordService;
 import com.cooler.semantic.service.internal.WordCNService;
 import org.slf4j.Logger;
@@ -23,9 +21,6 @@ import java.util.*;
 public class EntitySearchComponentImpl extends FunctionComponentBase<List<SentenceVector>, List<SentenceVector>> {
 
     private static Logger logger = LoggerFactory.getLogger(EntitySearchComponentImpl.class.getName());
-
-    @Autowired
-    private EntityService entityService;
 
     @Autowired
     private REntityWordService rEntityWordService;

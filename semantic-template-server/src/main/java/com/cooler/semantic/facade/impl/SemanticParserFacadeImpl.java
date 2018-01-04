@@ -30,7 +30,7 @@ public class SemanticParserFacadeImpl implements SemanticParserFacade {
     public SemanticParserResponse semanticParse(SemanticParserRequest request) {
         logger.info("开始解析...");
 
-        //2.构建用户上下文坐标
+        //1.构建用户上下文坐标
         List<Integer> accountIds = request.getAccountIds();
         Integer coreAccountId = accountIds.get(0);                                                                     //用户账号
         Integer userId = request.getUserId();                                                                          //用户编号
@@ -41,8 +41,10 @@ public class SemanticParserFacadeImpl implements SemanticParserFacade {
         DataComponent<SemanticParserRequest> dataComponent = new DataComponentBase<>("semanticParserRequest", contextOwner, "SemanticParserRequest", request);     //初始用户的瞬时数据到数据组件
         componentConstant.putDataComponent(dataComponent);                                                          //加载初始数据组件
 
+        //3.执行链式流程
         startComponent.functionRun(contextOwner);                                                                    //执行
 
+        //4.记录轨迹
         String traceByContextOwnerIndex = componentConstant.getTraceByContextOwnerIndex(contextOwner.getOwnerIndex());
         System.out.println(traceByContextOwnerIndex);
 

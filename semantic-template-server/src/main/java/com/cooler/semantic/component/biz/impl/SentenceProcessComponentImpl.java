@@ -1,6 +1,7 @@
 package com.cooler.semantic.component.biz.impl;
 
 import com.cooler.semantic.component.biz.FunctionComponentBase;
+import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.facade.CustomizedSemanticFacade;
@@ -49,6 +50,6 @@ public class SentenceProcessComponentImpl extends FunctionComponentBase<Semantic
         logger.info("SO-2-2.计算权重...");
         List<SentenceVector> sentenceVectors = weightCalculateService.calculateWeight(accountId, sentenceVectorParams);        //此方法为分词段设置权重，并返回权重数组，如果分词不成功，则返回默认分词权重数组(此为句子内部各个此的权重值，可以作为后续相似度计算标准)
 
-        return new ComponentBizResult("SPC_S", 1, sentenceVectors);
+        return new ComponentBizResult("SPC_S", Constant.STORE_LOCAL, sentenceVectors);
     }
 }

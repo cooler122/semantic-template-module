@@ -12,5 +12,5 @@ public interface SimilarityCalculateService {
      * 为SVRuleInfo集合计算相似度
      * @param svRuleInfos
      */
-    List<SVRuleInfo> similarityCalculate(ContextOwner contextOwner, List<SVRuleInfo> svRuleInfos, Map<String, RRuleEntity> rRuleEntityMap);
+    List<SVRuleInfo> similarityCalculate(Integer algorithmType, List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap);
 }

@@ -3,6 +3,7 @@ package com.cooler.semantic.component.biz.impl;
 import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
+import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.REntityWord;
 import com.cooler.semantic.entity.WordCN;
 import com.cooler.semantic.model.ContextOwner;
@@ -113,7 +114,7 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
             }
             sentenceVector.setrEntityWordInfosList(rEntityWordInfosList);
         }
-        return new ComponentBizResult("ESC_S", 1, sentenceVectors);
+        return new ComponentBizResult("ESC_S", Constant.STORE_LOCAL, sentenceVectors);
     }
 
 

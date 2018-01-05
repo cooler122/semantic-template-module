@@ -4,7 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentConstant;
 import com.cooler.semantic.component.data.*;
 import com.cooler.semantic.component.ComponentBizResult;
+import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.model.ContextOwner;
+import com.cooler.semantic.model.SVRuleInfo;
+import com.cooler.semantic.service.external.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class FunctionComponentBase<I, O> implements SemanticComponent {
@@ -34,6 +37,9 @@ public abstract class FunctionComponentBase<I, O> implements SemanticComponent {
      */
     @Autowired
     private ComponentConstant componentConstant;
+
+    @Autowired
+    private RedisService<DataComponent> redisService;
     /**
      * 此组件中的逻辑是否执行成功
      */
@@ -74,15 +80,18 @@ public abstract class FunctionComponentBase<I, O> implements SemanticComponent {
         O bizData = componentBizResult.getOutputData();                                                                 //返回输出数据体
         DataComponent outputDataComponent = bizData != null ? new DataComponentBase(outputDataBeanId, contextOwner, bizData.getClass().getSimpleName(), bizData) : new DataComponentBase(this.outputDataBeanId, contextOwner, null, null);
         if(outputDataBeanId != null && outputDataComponent != null){
-            if(saveCode == 1){
-                componentConstant.putDataComponent(outputDataComponent);                                                 //子组件的OutPutDataComponent保存到数据源ComponentConstant的Map中（后续最好用ThreadLocal实现此Map，放redis也行啊）
-            }else if(saveCode == 2){
-                //TODO:数据远程存储
+            if(saveCode == Constant.STORE_LOCAL){                                                                     //将输出对象保存到本地
+                componentConstant.putDataComponent(outputDataComponent);                                                    //子组件的OutPutDataComponent保存到数据源ComponentConstant的Map中（后续最好用ThreadLocal实现此Map，放redis也行啊）
+            }else if(saveCode == Constant.STORE_REMOTE){                                                             //将输出对象保存到远程
+                redisService.setCacheObject(contextOwner.getOwnerIndex() + "_" + outputDataBeanId, outputDataComponent);
+            }else if(saveCode == Constant.STORE_LOCAL_REMOTE){                                                      //将输出对象保存到本地和远程
+                componentConstant.putDataComponent(outputDataComponent);
+                redisService.setCacheObject(contextOwner.getOwnerIndex() + "_" + outputDataBeanId, outputDataComponent);
             }
         }
         System.out.println("输出参数：" + JSON.toJSONString(outputDataComponent));
 
-        if(resultCode.equals("END_S"))  return;                                                                      //流程出口（检测状态码，看是否结束）
+        if(resultCode.equals("END_S"))  return;                                                                       //流程出口（检测状态码，看是否结束）
 
         //4.带动下一个组件再来运行
         String nextComponentId = componentConstant.getFCIDByResultCode(resultCode);

@@ -9,14 +9,12 @@ import java.util.Map;
 
 public class ComponentConstant {
 
+    //**************************************************************************************3大核心数据存储容器
     /**
-     * 轨迹跟踪字符串Map
-     */
-    private Map<String, StringBuffer> traceSBMap = new HashMap<>();
-    /**
-     * 数据组件Map（以后用redis代替）
+     * 数据组件Map（每一次上下文都会往里面放入数据，最耗内存，故以后用redis代替）
      */
     private Map<String, DataComponent> dataBeanMap = new HashMap<>();
+
     /**
      * 功能组件Map
      */
@@ -25,6 +23,11 @@ public class ComponentConstant {
      * 流程关系Map
      */
     private static Map<String, String> nextComponentIdMap = new HashMap<>();
+
+    /**
+     * 轨迹跟踪字符串Map
+     */
+    private Map<String, StringBuffer> traceSBMap = new HashMap<>();
 
     /**
      * 针对数据Map的插入入口(对外接口)
@@ -73,8 +76,12 @@ public class ComponentConstant {
         return nextComponentIdMap.get(resultCode);
     }
 
+    /**
+     * 为上下文添加新的轨迹流程码
+     * @param contextOwnerIndex
+     * @param processCode
+     */
     public void setTraceByContextOwnerIndex(String contextOwnerIndex, String processCode){
-
         StringBuffer stringBuffer = traceSBMap.get(contextOwnerIndex);
         if(stringBuffer == null){
             stringBuffer = new StringBuffer("START");
@@ -83,6 +90,11 @@ public class ComponentConstant {
         stringBuffer.append("   --->    ").append(processCode);
     }
 
+    /**
+     * 获取某上下文的轨迹码
+     * @param contextOwnerIndex
+     * @return
+     */
     public String getTraceByContextOwnerIndex(String contextOwnerIndex){
         StringBuffer stringBuffer = traceSBMap.get(contextOwnerIndex);
         return stringBuffer.toString();

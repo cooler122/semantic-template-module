@@ -1,8 +1,10 @@
 package com.cooler.semantic.model;
 
+import com.cooler.semantic.entity.RRuleEntity;
+
 import java.util.List;
 
-public class SVRuleInfo implements Comparable<SVRuleInfo>{
+public class SVRuleInfo {
 
     //*****************************************************0.共有属性
     /**
@@ -55,7 +57,7 @@ public class SVRuleInfo implements Comparable<SVRuleInfo>{
 
     //*****************************************************4.此句子向量（分词方式）绑定的ruleId，后面能够去找对应的rule，跟这个句子向量进行匹配
     /**
-     * 规则ID
+     * 绑定的规则ID
      */
     private Integer ruleId;
 
@@ -63,6 +65,11 @@ public class SVRuleInfo implements Comparable<SVRuleInfo>{
      * 规则名称
      */
     private String ruleName;
+
+    /**
+     * 这个规则在匹配后，缺失的必须参数
+     */
+    private List<RRuleEntity> lackedRRuleEntities;
 
     public Integer getRuleId() {
         return ruleId;
@@ -152,12 +159,11 @@ public class SVRuleInfo implements Comparable<SVRuleInfo>{
         this.similarity = similarity;
     }
 
-    @Override
-    public int compareTo(SVRuleInfo o) {                                                                                //倒序排序，见"if(o_product > product) return 1;"
-        Double product = this.getPreRuleVolumeRateOccupancy() * this.getPreRuleWeightOccupancy();
-        Double o_product = o.getPreRuleVolumeRateOccupancy() * o.getPreRuleWeightOccupancy();
-        if(o_product > product) return 1;
-        else if(product == o_product) return 0;
-        else return -1;
+    public List<RRuleEntity> getLackedRRuleEntities() {
+        return lackedRRuleEntities;
+    }
+
+    public void setLackedRRuleEntities(List<RRuleEntity> lackedRRuleEntities) {
+        this.lackedRRuleEntities = lackedRRuleEntities;
     }
 }

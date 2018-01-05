@@ -2,6 +2,7 @@ package com.cooler.semantic.component.biz.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
+import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.Account;
 import com.cooler.semantic.entity.AccountConfiguration;
 import com.cooler.semantic.entity.SemanticParserRequest;
@@ -48,7 +49,7 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
 
         setAccountData(bizData);                                                     //设置用户配置参数
 
-        return new ComponentBizResult("VCC_S", 1, bizData);
+        return new ComponentBizResult("VCC_S", Constant.STORE_LOCAL, bizData);
     }
 
     private ComponentBizResult validate(SemanticParserRequest request) {

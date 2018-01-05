@@ -59,8 +59,8 @@
                 <entry key="D3_S" value="FPMC"/>
                 <entry key="D3_F" value="ENDC"/>
 
-                <entry key="FPMC_S" value="D4"/>
-                <entry key="FPMC_F" value="ENDC"/>
+                <entry key="FPMC_S" value="D6"/>
+                <entry key="FPMC_F" value="D10"/>
 
                 <entry key="D4_S" value="ENDC"/>
                 <entry key="D_F" value="ENDC"/>

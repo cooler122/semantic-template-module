@@ -2,6 +2,7 @@ package com.cooler.semantic.component.biz.impl;
 
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
+import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.model.ContextOwner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ public class ContextLPDataSearchComponentImpl extends FunctionComponentBase<Obje
     protected ComponentBizResult<Object> runBiz(ContextOwner contextOwner, Object bizData) {
         logger.info("SO_1.校验和配置");
 
-        return new ComponentBizResult("VCC_S",1, bizData);
+        return new ComponentBizResult("VCC_S", Constant.STORE_LOCAL, bizData);
     }
 
 }

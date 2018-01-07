@@ -114,20 +114,22 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
         int lastState = request.getLastState();
         if(lastState < 0){
             return new ComponentBizResult<>("D1_Y");
+
         }else{
             return new ComponentBizResult<>("D1_N");
+//            return new ComponentBizResult<>("D1_Y");                                                         //TODO：此行是测试代码，为了测试缺参匹配后面要删除此行
         }
     }
 
     private ComponentBizResult<O> d2() {
         System.out.println("D2 process...");
-        return new ComponentBizResult<>("D2_S");
+        return new ComponentBizResult<>("D2_Y");
     }
 
     private ComponentBizResult<O> d3() {
         System.out.println("D3 process...");
 //        if(true)    return new ComponentBizResult<>("D3_E", false, null);
-        return new ComponentBizResult<>("D3_S");
+        return new ComponentBizResult<>("D3_N");
     }
 
     private ComponentBizResult<O> d4() {

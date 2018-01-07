@@ -67,9 +67,21 @@ public class SVRuleInfo {
     private String ruleName;
 
     /**
+     * 此分词模式，选择并，匹配上的REW集合
+     */
+    private List<REntityWordInfo> matchedREntityWordInfos;
+
+    /**
+     * 匹配上的RRE集合
+     */
+    private List<RRuleEntity> matchedRRuleEntities;
+
+    /**
      * 这个规则在匹配后，缺失的必须参数
      */
     private List<RRuleEntity> lackedRRuleEntities;
+
+
 
     public Integer getRuleId() {
         return ruleId;
@@ -165,5 +177,21 @@ public class SVRuleInfo {
 
     public void setLackedRRuleEntities(List<RRuleEntity> lackedRRuleEntities) {
         this.lackedRRuleEntities = lackedRRuleEntities;
+    }
+
+    public List<REntityWordInfo> getMatchedREntityWordInfos() {
+        return matchedREntityWordInfos;
+    }
+
+    public void setMatchedREntityWordInfos(List<REntityWordInfo> matchedREntityWordInfos) {
+        this.matchedREntityWordInfos = matchedREntityWordInfos;
+    }
+
+    public List<RRuleEntity> getMatchedRRuleEntities() {
+        return matchedRRuleEntities;
+    }
+
+    public void setMatchedRRuleEntities(List<RRuleEntity> matchedRRuleEntities) {
+        this.matchedRRuleEntities = matchedRRuleEntities;
     }
 }

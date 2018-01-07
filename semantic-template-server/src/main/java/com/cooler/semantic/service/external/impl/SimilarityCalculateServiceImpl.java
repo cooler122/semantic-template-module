@@ -7,6 +7,7 @@ import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.external.SimilarityCalculateService;
 import com.cooler.semantic.util.AlgorithmUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -58,7 +59,9 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
 
             Integer ruleId = svRuleInfo.getRuleId();                                                                    //指向ruleId的这条rule
             Map<String, RRuleEntity> rRuleEntityMap = ruleId_RRuleEntityDataMap.get(ruleId);                            //获取这条rule下面保存的所有RRE对象Map
-            List<RRuleEntity> lackedRRuleEntities = new ArrayList<>();                                                  //创建一个缺失参数集合，用来装载哪些没有匹配上的参数
+            List<REntityWordInfo> matchedREntityWordInfos = new ArrayList<>();                                          //选择上的REW关系集合（不同分词模式选择的REW集合不同）
+            List<RRuleEntity> matchedRRuleEntities = new ArrayList<>();                                                 //匹配上的RRE关系集合
+            List<RRuleEntity> lackedRRuleEntities = new ArrayList<>();                                                  //没匹配上的RRE关系集合
             for (RRuleEntity rRuleEntity : rRuleEntityMap.values()) {
                 if(rRuleEntity.getIsNecessary() == (byte)1)
                     lackedRRuleEntities.add(rRuleEntity);                                                               //先将此rule下面的所有必须参数都装进去，后面一个个去除
@@ -86,6 +89,9 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                         Double sv_weight = weights.get(i);                                                                      //句子向量中，第i个word分词归属到的实体的权重
                         Double rule_weight = rRuleEntity.getWeight();                                                           //rule模板中，这个实体在rule中的权重
                         intersectionWeightOccupancy = intersectionWeightOccupancy + sv_weight + rule_weight;                    //积累权重比重
+
+                        matchedREntityWordInfos.add(rEntityWordInfo);                                                           //此分词模式--规则绑定体中，匹配上的REW，加入到这个集合中
+                        matchedRRuleEntities.add(rRuleEntity);                                                                  //将rRuleEntity添加到匹配上的 规则-实体关系 列表中
                         lackedRRuleEntities.remove(rRuleEntity);                                                                //匹配上的参数就不是缺失参数了
                     }
                 }
@@ -111,6 +117,9 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                 }
             }
             svRuleInfo.setSimilarity(similarity);
+
+            svRuleInfo.setMatchedREntityWordInfos(matchedREntityWordInfos);
+            svRuleInfo.setMatchedRRuleEntities(matchedRRuleEntities);
             svRuleInfo.setLackedRRuleEntities(lackedRRuleEntities);
         }
         return svRuleInfos;

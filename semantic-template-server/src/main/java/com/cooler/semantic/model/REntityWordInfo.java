@@ -40,6 +40,7 @@ public class REntityWordInfo {
      */
     private String entityTypeId;
 
+
     public String getWord() {
         return word;
     }

@@ -1,9 +1,11 @@
 package com.cooler.semantic.model;
 
+import java.io.Serializable;
+
 /**
  * Created by zhangsheng on 2017/12/31.
  */
-public class REntityWordInfo {
+public class REntityWordInfo implements Serializable{
 
     /**
      * 词语ID
@@ -14,6 +16,16 @@ public class REntityWordInfo {
      * 词语
      */
     private String word;
+
+    /**
+     * 句子端的设置权重
+     */
+    private Double weight;
+
+    /**
+     * 词性
+     */
+    private String nature;
 
     /**
      * 实体ID
@@ -55,6 +67,22 @@ public class REntityWordInfo {
 
     public void setWordId(Integer wordId) {
         this.wordId = wordId;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    public String getNature() {
+        return nature;
+    }
+
+    public void setNature(String nature) {
+        this.nature = nature;
     }
 
     public String getEntityName() {

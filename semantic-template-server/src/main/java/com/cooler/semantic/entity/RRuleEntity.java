@@ -1,8 +1,9 @@
 package com.cooler.semantic.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class RRuleEntity {
+public class RRuleEntity implements Serializable{
     private Integer id;
 
     private Integer ruleId;

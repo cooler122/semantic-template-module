@@ -50,6 +50,38 @@
             </map>
         </property>
 
+        <!--&lt;!&ndash; 关联映射声明 &ndash;&gt;-->
+        <!--<property name="nextComponentIdMap">-->
+            <!--<map>-->
+                <!--<entry key="VCC_S" value="SPC"/>-->
+                <!--<entry key="VCC_F" value="ENDC"/>-->
+
+                <!--<entry key="SPC_S" value="ESC"/>-->
+                <!--<entry key="SPC_F" value="ENDC"/>-->
+
+                <!--<entry key="ESC_S" value="D1"/>-->
+                <!--<entry key="ESC_F" value="ENDC"/>-->
+
+                <!--<entry key="D1_Y" value="LPMC"/>-->
+                <!--<entry key="D1_N" value="D3"/>-->
+
+                <!--<entry key="LPMC_S" value="D2"/>-->
+                <!--<entry key="LPMC_F" value="ENDC"/>-->
+
+                <!--<entry key="D2_Y" value="D3"/>-->
+                <!--&lt;!&ndash;<entry key="D2_N" value="D3"/>      D2否 到下面&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<entry key="D3_Y" value="FPMC"/>    D3是 到换参匹配&ndash;&gt;-->
+                <!--<entry key="D3_N" value="FPMC"/>-->
+
+                <!--<entry key="FPMC_S" value="D6"/>-->
+                <!--<entry key="FPMC_F" value="D10"/>-->
+
+                <!--<entry key="D4_S" value="ENDC"/>-->
+                <!--<entry key="D_F" value="ENDC"/>-->
+            <!--</map>-->
+        <!--</property>-->
+
         <!-- 关联映射声明 -->
         <property name="nextComponentIdMap">
             <map>
@@ -63,7 +95,7 @@
                 <entry key="ESC_F" value="ENDC"/>
 
                 <entry key="D1_Y" value="LPMC"/>
-                <entry key="D1_N" value="D2"/>
+                <entry key="D1_N" value="D3"/>
 
                 <entry key="LPMC_S" value="D2"/>
                 <entry key="LPMC_F" value="ENDC"/>
@@ -71,10 +103,10 @@
                 <entry key="D2_Y" value="D3"/>
                 <!--<entry key="D2_N" value="D3"/>      D2否 到下面-->
 
-                <!--<entry key="D3_Y" value="FPMC"/>-->
+                <!--<entry key="D3_Y" value="FPMC"/>    D3是 到换参匹配-->
                 <entry key="D3_N" value="FPMC"/>
 
-                <entry key="FPMC_S" value="D6"/>
+                <entry key="FPMC_S" value="LPMC"/>
                 <entry key="FPMC_F" value="D10"/>
 
                 <entry key="D4_S" value="ENDC"/>

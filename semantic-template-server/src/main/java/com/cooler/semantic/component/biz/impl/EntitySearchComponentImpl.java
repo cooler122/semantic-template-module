@@ -108,8 +108,15 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
         for (SentenceVector sentenceVector : sentenceVectors) {
             List<List<REntityWordInfo>> rEntityWordInfosList = new ArrayList<>();
             List<String> words = sentenceVector.getWords();
-            for (String word : words) {
+            List<Double> weights = sentenceVector.getWeights();
+            List<String> natures = sentenceVector.getNatures();
+            for(int i = 0; i < words.size(); i ++){
+                String word = words.get(i);
                 List<REntityWordInfo> rEntityWordInfos = rEntityWordInfosMap.get(word);
+                for (REntityWordInfo rEntityWordInfo : rEntityWordInfos) {
+                    rEntityWordInfo.setWeight(weights.get(i));                                                          //将weight和nature复制到rEntityWordInfo中
+                    rEntityWordInfo.setNature(natures.get(i));
+                }
                 rEntityWordInfosList.add(rEntityWordInfos);
             }
             sentenceVector.setrEntityWordInfosList(rEntityWordInfosList);

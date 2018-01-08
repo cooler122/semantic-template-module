@@ -65,7 +65,7 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
 
         //3.计算相似度，并选择最优集合
         Integer algorithmType = accountConfiguration.getAlgorithmType();                                                //由用户选择使用哪种算法（当前1~5种， 默认JACCARD_VOLUME_WEIGHT_RATE）
-        List<SVRuleInfo> svRuleInfosResult = similarityCalculateService.similarityCalculate(algorithmType, svRuleInfos, ruleId_RRuleEntityDataMap); //svRuleInfosResult不可能为null，且传进去多少，也返回多少
+        List<SVRuleInfo> svRuleInfosResult = similarityCalculateService.similarityCalculate_FPM(algorithmType, svRuleInfos, ruleId_RRuleEntityDataMap); //svRuleInfosResult不可能为null，且传进去多少，也返回多少
         Collections.sort(svRuleInfosResult, new Comparator<SVRuleInfo>() {
             @Override
             public int compare(SVRuleInfo o1, SVRuleInfo o2) {                                                        //倒序排序，见"if(similarity1 > similarity2) return -1;"
@@ -76,7 +76,9 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                 else return 0;
             }
         });
-        SVRuleInfo optimalSvRuleInfo = svRuleInfosResult.get(0);                                                        //获取相似度值最大的那一个（最优结果）
+        SVRuleInfo optimalSvRuleInfo = svRuleInfosResult.get(1);                                                        //TODO:此为测试代码，为了测试缺参匹配，故意传入一个缺参规则，测试后要删除
+//        SVRuleInfo optimalSvRuleInfo = svRuleInfosResult.get(0);                                                        //获取相似度值最大的那一个（最优结果）
+        optimalSvRuleInfo.setrEntityWordInfosList(null);                                                                //最优规则找到后，需要保存（本地、远程），此过程数据太大而且后续没有更多作用，故此处设置为null
 
         Double accuracyThreshold = accountConfiguration.getAccuracyThreshold();
         if(optimalSvRuleInfo.getSimilarity() > accuracyThreshold){

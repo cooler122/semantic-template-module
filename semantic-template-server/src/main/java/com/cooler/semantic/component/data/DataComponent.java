@@ -2,7 +2,9 @@ package com.cooler.semantic.component.data;
 
 import com.cooler.semantic.model.ContextOwner;
 
-public interface DataComponent<T> {
+import java.io.Serializable;
+
+public interface DataComponent<T> extends Serializable{
     /**
      * 获取此数据组件的ID
      * @return

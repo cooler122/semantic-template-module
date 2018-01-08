@@ -2,9 +2,10 @@ package com.cooler.semantic.model;
 
 import com.cooler.semantic.entity.RRuleEntity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class SVRuleInfo {
+public class SVRuleInfo implements Serializable{
 
     //*****************************************************0.共有属性
     /**

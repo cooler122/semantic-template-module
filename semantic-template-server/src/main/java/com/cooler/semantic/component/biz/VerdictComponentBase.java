@@ -67,7 +67,7 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
             case "D3" : componentBizResult = d3(); break;
             case "D4" : componentBizResult = d4(); break;
             case "D10" : componentBizResult = d10(contextOwner); break;
-            case "D11" : componentBizResult = d10(contextOwner); break;
+            case "D11" : componentBizResult = d11(contextOwner); break;
             default: componentBizResult = new ComponentBizResult<>("D_E");
         }
 

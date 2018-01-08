@@ -1,6 +1,8 @@
 package com.cooler.semantic.model;
 
-public class ContextOwner {
+import java.io.Serializable;
+
+public class ContextOwner implements Serializable{
 
     private Integer accountId;
 

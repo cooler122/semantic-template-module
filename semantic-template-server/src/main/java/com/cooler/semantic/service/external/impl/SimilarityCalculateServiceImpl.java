@@ -7,7 +7,6 @@ import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.external.SimilarityCalculateService;
 import com.cooler.semantic.util.AlgorithmUtil;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,29 +15,56 @@ import java.util.*;
 public class SimilarityCalculateServiceImpl implements SimilarityCalculateService {
 
     @Override
-    public List<SVRuleInfo> similarityCalculate(Integer algorithmType, List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap) {
+    public List<SVRuleInfo> similarityCalculate_FPM(Integer algorithmType, List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap) {
         switch (algorithmType){
             case Constant.JACCARD_VOLUME_RATE : {                                                                   //jaccard相似度（只关注实体数量占有率）
-                return jaccardSimilarity(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_VOLUME_RATE);
+                return jaccardSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_VOLUME_RATE);
             }
             case Constant.JACCARD_WEIGHT_RATE : {                                                                   //jaccard相似度（只关注实体权重占有率）
-                return jaccardSimilarity(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_WEIGHT_RATE);
+                return jaccardSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_WEIGHT_RATE);
             }
             case Constant.JACCARD_VOLUME_WEIGHT_RATE : {                                                           //jaccard相似度（实体数量和权重占有率之乘积）
-                return jaccardSimilarity(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_VOLUME_WEIGHT_RATE);            //TODO:jaccard算法的两个因子还可以用更复杂的组合方式进行调节
+                return jaccardSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_VOLUME_WEIGHT_RATE);            //TODO:jaccard算法的两个因子还可以用更复杂的组合方式进行调节
             }
             case Constant.COSINE : {                                                                                   //余弦相似度
-                return cosineSimilarity(svRuleInfos, ruleId_RRuleEntityDataMap);
+                return cosineSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap);
             }
             case Constant.PEARSON : {                                                                                 //皮尔逊相似度
-                return pearsonSimilarity(svRuleInfos, ruleId_RRuleEntityDataMap);
+                return pearsonSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap);
             }
             default:{
-                return jaccardSimilarity(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_VOLUME_WEIGHT_RATE);
+                return jaccardSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_VOLUME_WEIGHT_RATE);
             }
         }
     }
 
+    @Override
+    public SVRuleInfo similarityCalculate_LPM(Integer algorithmType, SVRuleInfo historySvRuleInfo, Map<String, RRuleEntity> rRuleEntityMap) {
+        switch (algorithmType){
+            case Constant.JACCARD_VOLUME_RATE : {                                                                   //jaccard相似度（只关注实体数量占有率）
+                return jaccardSimilarity_LMP(historySvRuleInfo, rRuleEntityMap, Constant.JACCARD_VOLUME_RATE);
+            }
+            case Constant.JACCARD_WEIGHT_RATE : {                                                                   //jaccard相似度（只关注实体权重占有率）
+                return jaccardSimilarity_LMP(historySvRuleInfo, rRuleEntityMap, Constant.JACCARD_WEIGHT_RATE);
+            }
+            case Constant.JACCARD_VOLUME_WEIGHT_RATE : {                                                           //jaccard相似度（实体数量和权重占有率之乘积）
+                return jaccardSimilarity_LMP(historySvRuleInfo, rRuleEntityMap, Constant.JACCARD_VOLUME_WEIGHT_RATE);            //TODO:jaccard算法的两个因子还可以用更复杂的组合方式进行调节
+            }
+            case Constant.COSINE : {                                                                                   //余弦相似度
+                return cosineSimilarity_LMP(historySvRuleInfo, rRuleEntityMap);
+            }
+            case Constant.PEARSON : {                                                                                 //皮尔逊相似度
+                return pearsonSimilarity_LMP(historySvRuleInfo, rRuleEntityMap);
+            }
+            default:{
+                return jaccardSimilarity_LMP(historySvRuleInfo, rRuleEntityMap, Constant.JACCARD_VOLUME_WEIGHT_RATE);
+            }
+        }
+    }
+
+
+
+//****************************************************************************************************************************全参匹配算法
     /**
      * Jaccard相似度算法
      * @param svRuleInfos
@@ -46,7 +72,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
      * @param typeId    JACCARD_VOLUME_RATE 只考虑实体数量占比率；JACCARD_WEIGHT_RATE 只考虑实体权重占比率； JACCARD_VOLUME_WEIGHT_RATE 考虑两则的乘积
      * @return
      */
-    private List<SVRuleInfo> jaccardSimilarity(List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap, int typeId){
+    private List<SVRuleInfo> jaccardSimilarity_FPM(List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap, int typeId){
         for (SVRuleInfo svRuleInfo : svRuleInfos) {                                                                     //下面是3层循环，所以svRuleInfos在前面做了优化，限定数量最多为5个
             //1.准备好两方数据：句子向量的的数据在svRuleInfo的rEntityWordInfosList里面和外面；其绑定的rule的数据，全部放在入参rRuleEntityMap里面
             String sentence = svRuleInfo.getSentence();
@@ -59,9 +85,11 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
 
             Integer ruleId = svRuleInfo.getRuleId();                                                                    //指向ruleId的这条rule
             Map<String, RRuleEntity> rRuleEntityMap = ruleId_RRuleEntityDataMap.get(ruleId);                            //获取这条rule下面保存的所有RRE对象Map
+
             List<REntityWordInfo> matchedREntityWordInfos = new ArrayList<>();                                          //选择上的REW关系集合（不同分词模式选择的REW集合不同）
             List<RRuleEntity> matchedRRuleEntities = new ArrayList<>();                                                 //匹配上的RRE关系集合
             List<RRuleEntity> lackedRRuleEntities = new ArrayList<>();                                                  //没匹配上的RRE关系集合
+
             for (RRuleEntity rRuleEntity : rRuleEntityMap.values()) {
                 if(rRuleEntity.getIsNecessary() == (byte)1)
                     lackedRRuleEntities.add(rRuleEntity);                                                               //先将此rule下面的所有必须参数都装进去，后面一个个去除
@@ -131,7 +159,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
      * @param ruleId_RRuleEntityDataMap
      * @return
      */
-    private List<SVRuleInfo> cosineSimilarity(List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap){
+    private List<SVRuleInfo> cosineSimilarity_FPM(List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap){
         for (SVRuleInfo svRuleInfo : svRuleInfos) {                                                                     //下面是3层循环，所以svRuleInfos在前面做了优化，限定数量最多为5个
             //1.准备好两方数据：句子向量的的数据在svRuleInfo的rEntityWordInfosList里面和外面；其绑定的rule的数据，全部放在入参rRuleEntityMap里面
             String sentence = svRuleInfo.getSentence();
@@ -143,7 +171,11 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
 
             Integer ruleId = svRuleInfo.getRuleId();                                                                    //指向ruleId的这条rule
             Map<String, RRuleEntity> rRuleEntityMap = ruleId_RRuleEntityDataMap.get(ruleId);                            //获取这条rule下面保存的所有RRE对象Map
-            List<RRuleEntity> lackedRRuleEntities = new ArrayList<>();                                                  //创建一个缺失参数集合，用来装载哪些没有匹配上的参数
+
+            List<REntityWordInfo> matchedREntityWordInfos = new ArrayList<>();                                          //选择上的REW关系集合（不同分词模式选择的REW集合不同）
+            List<RRuleEntity> matchedRRuleEntities = new ArrayList<>();                                                 //匹配上的RRE关系集合
+            List<RRuleEntity> lackedRRuleEntities = new ArrayList<>();                                                  //没匹配上的RRE关系集合
+
             for (RRuleEntity rRuleEntity : rRuleEntityMap.values()) {
                 if(rRuleEntity.getIsNecessary() == (byte)1)
                     lackedRRuleEntities.add(rRuleEntity);                                                               //先将此rule下面的所有必须参数都装进去，后面一个个去除
@@ -168,6 +200,9 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                         Double sv_weight = weights.get(i);                                                                      //句子向量中，第i个word分词归属到的实体的权重
                         Double rule_weight = rRuleEntity.getWeight();                                                           //rule模板中，这个实体在rule中的权重
                         numerator += sv_weight * rule_weight;
+
+                        matchedREntityWordInfos.add(rEntityWordInfo);                                                           //此分词模式--规则绑定体中，匹配上的REW，加入到这个集合中
+                        matchedRRuleEntities.add(rRuleEntity);                                                                  //将rRuleEntity添加到匹配上的 规则-实体关系 列表中
                         lackedRRuleEntities.remove(rRuleEntity);                                                                //匹配上的参数就不是缺失参数了
                     }
                 }
@@ -188,6 +223,9 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             }
             cosineValue = numerator / (Math.sqrt(sv_weight_square) * Math.sqrt(rule_weight_square));
             svRuleInfo.setSimilarity(cosineValue);
+
+            svRuleInfo.setMatchedREntityWordInfos(matchedREntityWordInfos);
+            svRuleInfo.setMatchedRRuleEntities(matchedRRuleEntities);
             svRuleInfo.setLackedRRuleEntities(lackedRRuleEntities);
         }
         return svRuleInfos;
@@ -199,7 +237,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
      * @param ruleId_RRuleEntityDataMap
      * @return
      */
-    private List<SVRuleInfo> pearsonSimilarity(List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>>  ruleId_RRuleEntityDataMap){
+    private List<SVRuleInfo> pearsonSimilarity_FPM(List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>>  ruleId_RRuleEntityDataMap){
         for (SVRuleInfo svRuleInfo : svRuleInfos) {                                                                     //下面是3层循环，所以svRuleInfos在前面做了优化，限定数量最多为5个
             //1.准备好两方数据：句子向量的的数据在svRuleInfo的rEntityWordInfosList里面和外面；其绑定的rule的数据，全部放在入参rRuleEntityMap里面
             String sentence = svRuleInfo.getSentence();
@@ -213,12 +251,15 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
 
             Integer ruleId = svRuleInfo.getRuleId();                                                                    //指向ruleId的这条rule
             Map<String, RRuleEntity> rRuleEntityMap = ruleId_RRuleEntityDataMap.get(ruleId);                            //获取这条rule下面保存的所有RRE对象Map
-            List<RRuleEntity> lackedRRuleEntities = new ArrayList<>();                                                  //创建一个缺失参数集合，用来装载哪些没有匹配上的参数
+
+            List<REntityWordInfo> matchedREntityWordInfos = new ArrayList<>();                                          //选择上的REW关系集合（不同分词模式选择的REW集合不同）
+            List<RRuleEntity> matchedRRuleEntities = new ArrayList<>();                                                 //匹配上的RRE关系集合
+            List<RRuleEntity> lackedRRuleEntities = new ArrayList<>();                                                  //没匹配上的RRE关系集合
+
             for (RRuleEntity rRuleEntity : rRuleEntityMap.values()) {
                 if(rRuleEntity.getIsNecessary() == (byte)1)
                     lackedRRuleEntities.add(rRuleEntity);                                                               //先将此rule下面的所有必须参数都装进去，后面一个个去除
             }
-            List<RRuleEntity> matchedRRuleEntities = new ArrayList<>();                                                 //匹配上了的RRuleEntity集合
 
             //2.构建两个数组用来装载两个向量
             List<Double> sv_weights = new ArrayList<>();
@@ -239,9 +280,10 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                         sv_weights.add(sv_weight);
                         rule_weights.add(rule_weight);
                         weightsClone.set(i, -1d);                                                                               //将第i个位置设置为-1，说明此位置已经匹配上了
-                        matchedRRuleEntities.add(rRuleEntity);                                                                  //记录匹配上了的这个rRuleEntity
-                        lackedRRuleEntities.remove(rRuleEntity);                                                                //匹配上的参数就不是缺失参数了
 
+                        matchedREntityWordInfos.add(rEntityWordInfo);                                                           //此分词模式--规则绑定体中，匹配上的REW，加入到这个集合中
+                        matchedRRuleEntities.add(rRuleEntity);                                                                  //将rRuleEntity添加到匹配上的 规则-实体关系 列表中
+                        lackedRRuleEntities.remove(rRuleEntity);                                                                //匹配上的参数就不是缺失参数了
                     }
                 }
             }
@@ -267,11 +309,88 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             //3.计算皮尔逊相似度值
             double pearsonSimilarity = AlgorithmUtil.pearson(sv_weights, rule_weights);
             svRuleInfo.setSimilarity(pearsonSimilarity);
+            svRuleInfo.setMatchedREntityWordInfos(matchedREntityWordInfos);
+            svRuleInfo.setMatchedRRuleEntities(matchedRRuleEntities);
             svRuleInfo.setLackedRRuleEntities(lackedRRuleEntities);
         }
         return svRuleInfos;
     }
 
+//****************************************************************************************************************************缺参匹配算法
 
+    /**
+     * 缺参匹配下的Jaccard相似度算法
+     * @param historySvRuleInfo
+     * @param rRuleEntityMap
+     * @param typeId
+     * @return
+     */
+    private SVRuleInfo jaccardSimilarity_LMP(SVRuleInfo historySvRuleInfo, Map<String, RRuleEntity> rRuleEntityMap, int typeId) {
+            //1.准备好两方数据：句子向量的的数据在svRuleInfo的rEntityWordInfosList里面和外面；其绑定的rule的数据，全部放在入参rRuleEntityMap里面
+            String sentence = historySvRuleInfo.getSentence();
+            List<String> words = historySvRuleInfo.getWords();
+            int wordsSize = words.size();
+
+            List<REntityWordInfo> matchedREntityWordInfos = historySvRuleInfo.getMatchedREntityWordInfos();             //选择上的REW关系集合（不同分词模式选择的REW集合不同）
+            List<RRuleEntity> matchedRRuleEntities = historySvRuleInfo.getMatchedRRuleEntities();                       //匹配上的RRE关系集合
+            List<RRuleEntity> lackedRRuleEntities = historySvRuleInfo.getLackedRRuleEntities();                         //没匹配上的RRE关系集合
+
+            //2.给予每个实体集合的每个实体一次机会，如果能匹配上，则 句子向量和实体本身的两端 的 单项数量占比和单项权重占 比都被积累进入 交集数量占比值和交集权重占比值中
+            Double similarity = 0d;
+            Double intersectionVolumeRateOccupancy = 0d;
+            Double intersectionWeightOccupancy = 0d;
+            for(int i = 0; i < matchedREntityWordInfos.size(); i ++){                                                  //遍历每一个分词段指定的实体集
+                REntityWordInfo rEntityWordInfo = matchedREntityWordInfos.get(i);
+                String entityTypeId = rEntityWordInfo.getEntityTypeId();
+                RRuleEntity rRuleEntity = rRuleEntityMap.get(entityTypeId);                                             //按照这个key，检索到，就表示被记录，表示能匹配上
+                if(rRuleEntity != null){
+                    //记录此句子向量中归属的实体成功匹配上绑定的规则中的一个实体了 //TODO: 那么规则中的rRuleEntity也可以在db中记录这一次匹配，可以统计一个rRuleEntity的匹配次数
+                    System.out.println("Matched！ : 原句" + sentence + ", 分词方式：" + Arrays.toString(words.toArray()) + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
+
+                    Double volumeRateItem = 1.0d / wordsSize;                                                           //这一项在句子中的数量比重
+                    Double volumeRate = rRuleEntity.getVolumeRate();                                                    //这一项在规则中的数量比重
+                    intersectionVolumeRateOccupancy = intersectionVolumeRateOccupancy + volumeRateItem + volumeRate;    //积累数量比重
+
+                    Double sv_weight = rEntityWordInfo.getWeight();                                                     //句子向量中，分词归属到的实体的权重
+                    Double rule_weight = rRuleEntity.getWeight();                                                       //rule模板中，这个实体在rule中的权重
+                    intersectionWeightOccupancy = intersectionWeightOccupancy + sv_weight + rule_weight;                //积累权重比重
+                }
+            }
+            intersectionVolumeRateOccupancy /= 2;
+            intersectionWeightOccupancy /= 2;
+
+            switch (typeId){
+                case Constant.JACCARD_VOLUME_RATE : {
+                    similarity = intersectionVolumeRateOccupancy;
+                    break;
+                }
+                case Constant.JACCARD_WEIGHT_RATE : {
+                    similarity = intersectionWeightOccupancy;
+                    break;
+                }
+                case Constant.JACCARD_VOLUME_WEIGHT_RATE : {
+                    similarity = intersectionVolumeRateOccupancy * intersectionWeightOccupancy;
+                    break;
+                }
+                default:{
+                    similarity = intersectionVolumeRateOccupancy * intersectionWeightOccupancy;
+                }
+            }
+        historySvRuleInfo.setSimilarity(similarity);
+
+        historySvRuleInfo.setMatchedREntityWordInfos(matchedREntityWordInfos);
+        historySvRuleInfo.setMatchedRRuleEntities(matchedRRuleEntities);
+        historySvRuleInfo.setLackedRRuleEntities(lackedRRuleEntities);
+
+        return historySvRuleInfo;
+    }
+
+    private SVRuleInfo cosineSimilarity_LMP(SVRuleInfo historySvRuleInfo, Map<String, RRuleEntity> rRuleEntityMap) {
+        return historySvRuleInfo;
+    }
+
+    private SVRuleInfo pearsonSimilarity_LMP(SVRuleInfo historySvRuleInfo, Map<String, RRuleEntity> rRuleEntityMap) {
+        return historySvRuleInfo;
+    }
 
 }

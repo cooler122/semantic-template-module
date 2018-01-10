@@ -1,5 +1,6 @@
 package com.cooler.semantic.service.external;
 
+import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.model.SentenceVector;
 
@@ -12,5 +13,5 @@ public interface RuleSearchService {
      * @param sentenceVectors   句子向量
      * @return  规则集合
      */
-    List<SVRuleInfo> getRulesBySentenceVectors(Integer accountId, List<SentenceVector> sentenceVectors);
+    List<SVRuleInfo> getRulesBySentenceVectors(ContextOwner contextOwner, List<SentenceVector> sentenceVectors);
 }

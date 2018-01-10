@@ -58,6 +58,7 @@ public class WeightCalculateServiceImpl implements WeightCalculateService {
 
         //2.对每一个词段先进行平均分配权重，再乘上词性乘数
         List<SentenceVector> sentenceVectors = new ArrayList<>();
+        int svId = 0;
         for (SentenceVectorParam sentenceVectorParam : sentenceVectorParams) {
             String sentence = sentenceVectorParam.getSentence();
             List<String> words = sentenceVectorParam.getWords();
@@ -88,6 +89,7 @@ public class WeightCalculateServiceImpl implements WeightCalculateService {
 
             //4.赋值
             SentenceVector sentenceVector = new SentenceVector();
+            sentenceVector.setId(svId ++);
             sentenceVector.setSentence(sentence);
             sentenceVector.setWords(words);
             sentenceVector.setNatures(natures);

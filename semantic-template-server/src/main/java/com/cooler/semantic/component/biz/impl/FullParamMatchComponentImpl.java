@@ -45,12 +45,11 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
 
         //1.通过各个分词段检索出的实体，将各个实体对应的rule数据（这一步主要获得各个实体对应的ruleId）检索出来，通过预估值计算，提取最佳的前5位规则，并封装成SVRuleInfo集合返回出来
         System.out.println(JSON.toJSONString(sentenceVectors));
-        Integer accountId = contextOwner.getAccountId();
-        List<SVRuleInfo> svRuleInfos = ruleSearchService.getRulesBySentenceVectors(accountId, sentenceVectors);
+        List<SVRuleInfo> svRuleInfos = ruleSearchService.getRulesBySentenceVectors(contextOwner, sentenceVectors);
         System.out.println(JSON.toJSONString(svRuleInfos));
 
         //2.通过svRuleInfo里面的ruleId，将每一个rule-entity关联数据检索出来，以备后续计算相似度
-        List<RRuleEntity> rRuleEntities = rRuleEntityService.selectBySVRuleInfos(accountId, svRuleInfos);            //这个list理应包含所有SVRuleInfo的所有实体相关数据
+        List<RRuleEntity> rRuleEntities = rRuleEntityService.selectBySVRuleInfos(contextOwner.getAccountId(), svRuleInfos);            //这个list理应包含所有SVRuleInfo的所有实体相关数据
         Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap = new HashMap<>();
         for (RRuleEntity rRuleEntity : rRuleEntities) {
             Integer ruleId = rRuleEntity.getRuleId();                                                                   //由于前面getRulesBySentenceVectors方法里面做过限定，此ruleId不会超过5个，所以下面新建里的小Map不会超过5个

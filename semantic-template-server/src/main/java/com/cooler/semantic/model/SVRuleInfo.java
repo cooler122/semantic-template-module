@@ -13,6 +13,11 @@ public class SVRuleInfo implements Serializable{
      */
     private Integer accountId;
 
+    /**
+     * 这个绑定的上下文版本号
+     */
+//    private Integer contextId;
+
     //*****************************************************1.作为第一次和第二次的初步规则筛选凭证参数：第一次筛选，preRuleWeightOccupancy和preRuleWeightOccupancy，必须达到一定阈值才能通过。 第二次筛选，按照preRuleVolumeRateOccupancy * preRuleWeightOccupancy的值进行竞争，前n（配置设置）名参与相似度计算，其他舍弃
     /**
      * 规则中 有效实体数量 预期占有率
@@ -31,6 +36,11 @@ public class SVRuleInfo implements Serializable{
     private Double similarity = 0d;
 
     //*****************************************************3.SentenceVector数据：此RuleInfo做为一个计算单元，以下是从句子向量SentenceVector中取出来的值，用来进行相似度计算的值
+    /**
+     * 句子向量的ID
+     */
+    private Integer sentenceVectorId;
+
     /**
      * 原始句子
      */
@@ -56,7 +66,7 @@ public class SVRuleInfo implements Serializable{
      */
     private List<List<REntityWordInfo>> rEntityWordInfosList = null;
 
-    //*****************************************************4.此句子向量（分词方式）绑定的ruleId，后面能够去找对应的rule，跟这个句子向量进行匹配
+    //*****************************************************4.绑定的rule相关数据，跟这个句子向量进行匹配
     /**
      * 绑定的规则ID
      */
@@ -82,7 +92,13 @@ public class SVRuleInfo implements Serializable{
      */
     private List<RRuleEntity> lackedRRuleEntities;
 
+    public Integer getSentenceVectorId() {
+        return sentenceVectorId;
+    }
 
+    public void setSentenceVectorId(Integer sentenceVectorId) {
+        this.sentenceVectorId = sentenceVectorId;
+    }
 
     public Integer getRuleId() {
         return ruleId;
@@ -195,4 +211,12 @@ public class SVRuleInfo implements Serializable{
     public void setMatchedRRuleEntities(List<RRuleEntity> matchedRRuleEntities) {
         this.matchedRRuleEntities = matchedRRuleEntities;
     }
+
+//    public Integer getContextId() {
+//        return contextId;
+//    }
+//
+//    public void setContextId(Integer contextId) {
+//        this.contextId = contextId;
+//    }
 }

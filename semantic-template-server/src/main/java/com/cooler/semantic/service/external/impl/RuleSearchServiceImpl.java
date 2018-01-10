@@ -3,6 +3,7 @@ package com.cooler.semantic.service.external.impl;
 import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.dao.RRuleEntityMapper;
 import com.cooler.semantic.entity.RRuleEntity;
+import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.model.SentenceVector;
@@ -19,12 +20,13 @@ public class RuleSearchServiceImpl implements RuleSearchService {
     private RRuleEntityMapper rRuleEntityMapper;
 
     @Override
-    public List<SVRuleInfo> getRulesBySentenceVectors(Integer accountId, List<SentenceVector> sentenceVectors) {
-
-        List<SVRuleInfo> svRuleInfosTopFive = new ArrayList<>();                                                            //（前5名）真正用来计算相似度的RuleInfo对象
-        List<SVRuleInfo> svRuleInfosBeyondFirstThreshold = new ArrayList<>();                                               //超过第一层规则端阈值的RuleInfo对象（收集了多种分词方式后形成的）
+    public List<SVRuleInfo> getRulesBySentenceVectors(ContextOwner contextOwner, List<SentenceVector> sentenceVectors) {
+        Integer accountId = contextOwner.getAccountId();
+        List<SVRuleInfo> svRuleInfosTopFive = new ArrayList<>();                                                        //（前5名）真正用来计算相似度的RuleInfo对象
+        List<SVRuleInfo> svRuleInfosBeyondFirstThreshold = new ArrayList<>();                                           //超过第一层规则端阈值的RuleInfo对象（收集了多种分词方式后形成的）
         for (int i = 0; i < sentenceVectors.size(); i ++) {
             SentenceVector sentenceVector = sentenceVectors.get(i);
+            Integer sentenceVectorId = sentenceVector.getId();
             String sentence = sentenceVector.getSentence();
             List<String> words = sentenceVector.getWords();
             List<String> natures = sentenceVector.getNatures();
@@ -51,6 +53,7 @@ public class RuleSearchServiceImpl implements RuleSearchService {
                     svRuleInfo.setRuleName(rRuleEntity.getRuleName());
                     svRuleInfo.setAccountId(rRuleEntity.getAccountId());
 
+                    svRuleInfo.setSentenceVectorId(sentenceVectorId);
                     svRuleInfo.setSentence(sentence);                                                                   //装载sentenceVector数据：sentence、words、natures、weights、rEntityWordInfosList，作为计算相似度的句子向量端数值
                     svRuleInfo.setWords(words);
                     svRuleInfo.setNatures(natures);

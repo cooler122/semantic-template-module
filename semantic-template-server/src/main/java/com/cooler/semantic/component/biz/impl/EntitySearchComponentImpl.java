@@ -38,6 +38,7 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
         logger.info("SO_3.词语-实体检索");
 
         Integer accountId = contextOwner.getAccountId();
+        Integer contextId = contextOwner.getContextId();
 
         Map<String, List<REntityWordInfo>> rEntityWordInfosMap = new HashMap<>();
 
@@ -47,12 +48,12 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
             List<String> words = sentenceVector.getWords();
             allWords.addAll(words);
         }
-        List<REntityWord> rEntityWords = rEntityWordService.selectByAIdWords(accountId, allWords);              //有一些词语可能查不出来，但要考虑处理这种情况
+        List<REntityWord> rEntityWords = rEntityWordService.selectByAIdWords(accountId, allWords);                   //有一些词语可能查不出来，但要考虑处理这种情况
         System.out.println(JSON.toJSONString(rEntityWords));
 
         //2.将这些词语设置到Map中，为每一个词语准备一个List
         for (String word : allWords) {
-            rEntityWordInfosMap.put(word, new ArrayList<REntityWordInfo>());                                    //为每一个分词段设置一个List<RWEI>
+            rEntityWordInfosMap.put(word, new ArrayList<REntityWordInfo>());                                            //为每一个分词段设置一个List<RWEI>
         }
 
         //3.将所有能归属到字符串实体的词语放置到Map中各个词语名下，作为其值
@@ -66,12 +67,13 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
             rEntityWordInfo.setEntityId(rEntityWord.getEntityId());
             rEntityWordInfo.setEntityName(rEntityWord.getEntityName());
             rEntityWordInfo.setNormalWord(rEntityWord.getNormalWord());
-            rEntityWordInfo.setEntityType(1);                                                   //1表示字符串实体
+            rEntityWordInfo.setEntityType(1);                                                                           //1表示字符串实体
             rEntityWordInfo.setEntityTypeId("1_" + rEntityWord.getEntityId());
+            rEntityWordInfo.setContextId(contextId);                                                                    //设置上下文版本号
 
             rEntityWordInfos.add(rEntityWordInfo);
 
-            allWords.remove(word);                                                              //删除掉查询出了实体的词语，剩下的词语查不到实体了
+            allWords.remove(word);                                                                                      //删除掉查询出了实体的词语，剩下的词语查不到实体了
         }
 
         if(allWords.size() > 0){
@@ -98,6 +100,8 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
                 rEntityWordInfo.setNormalWord(word);
                 rEntityWordInfo.setEntityType(0);
                 rEntityWordInfo.setEntityTypeId("0_" + wordId);
+                rEntityWordInfo.setContextId(contextId);
+
                 rEntityWordInfos.add(rEntityWordInfo);
 
                 rEntityWordInfosMap.put(word, rEntityWordInfos);
@@ -106,6 +110,7 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
 
         //6.将归属好的实体Map，一一取出来，放置到SentenceVector集合的REntityWordInfos里面
         for (SentenceVector sentenceVector : sentenceVectors) {
+            Integer sentenceVectorId = sentenceVector.getId();
             List<List<REntityWordInfo>> rEntityWordInfosList = new ArrayList<>();
             List<String> words = sentenceVector.getWords();
             List<Double> weights = sentenceVector.getWeights();
@@ -113,8 +118,10 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
             for(int i = 0; i < words.size(); i ++){
                 String word = words.get(i);
                 List<REntityWordInfo> rEntityWordInfos = rEntityWordInfosMap.get(word);
+
                 for (REntityWordInfo rEntityWordInfo : rEntityWordInfos) {
-                    rEntityWordInfo.setWeight(weights.get(i));                                                          //将weight和nature复制到rEntityWordInfo中
+                    Map<Integer, Double> weightMap = rEntityWordInfo.getWeightMap();
+                    weightMap.put(sentenceVectorId, weights.get(i));                                                    //将weight和nature复制到rEntityWordInfo中
                     rEntityWordInfo.setNature(natures.get(i));
                 }
                 rEntityWordInfosList.add(rEntityWordInfos);
@@ -123,6 +130,4 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
         }
         return new ComponentBizResult("ESC_S", Constant.STORE_LOCAL, sentenceVectors);
     }
-
-
 }

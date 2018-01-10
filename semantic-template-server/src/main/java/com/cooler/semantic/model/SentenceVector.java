@@ -5,6 +5,10 @@ import java.util.List;
 
 public class SentenceVector implements Serializable, Cloneable {
     /**
+     * 此句子向量的id标识
+     */
+    private Integer id;
+    /**
      * 原始句子
      */
     private String sentence;
@@ -28,6 +32,14 @@ public class SentenceVector implements Serializable, Cloneable {
      * （REntityWord关键数据）对象列表
      */
     private List<List<REntityWordInfo>> rEntityWordInfosList;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getSentence() {
         return sentence;

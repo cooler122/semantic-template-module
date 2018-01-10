@@ -63,7 +63,7 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
         ComponentBizResult<O> componentBizResult;
         switch (componentId){
             case "D1" : componentBizResult = d1(contextOwner); break;
-            case "D2" : componentBizResult = d2(); break;
+            case "D2" : componentBizResult = d2(contextOwner); break;
             case "D3" : componentBizResult = d3(); break;
             case "D4" : componentBizResult = d4(); break;
             case "D10" : componentBizResult = d10(contextOwner); break;
@@ -121,9 +121,14 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
         }
     }
 
-    private ComponentBizResult<O> d2() {
+    private ComponentBizResult<O> d2(ContextOwner contextOwner) {
         System.out.println("D2 process...");
-        return new ComponentBizResult<>("D2_Y");
+        DataComponent optimalSvRuleInfo = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner);
+        if(optimalSvRuleInfo == null){
+            return new ComponentBizResult<>("D2_Y");
+        }else{
+            return new ComponentBizResult<>("D2_N");
+        }
     }
 
     private ComponentBizResult<O> d3() {

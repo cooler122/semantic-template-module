@@ -1,6 +1,8 @@
 package com.cooler.semantic.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by zhangsheng on 2017/12/31.
@@ -18,9 +20,9 @@ public class REntityWordInfo implements Serializable{
     private String word;
 
     /**
-     * 句子端的设置权重
+     * 句子端的设置权重（针对于每一个分词模式下，每一个此REW的权重）
      */
-    private Double weight;
+    private Map<Integer, Double> weightMap = new HashMap<>();
 
     /**
      * 词性
@@ -52,6 +54,11 @@ public class REntityWordInfo implements Serializable{
      */
     private String entityTypeId;
 
+    /**
+     * 上下文编号（用此来标识，此RWE是当前本轮产生的还是历史对话产生的）
+     */
+    private Integer contextId;
+
 
     public String getWord() {
         return word;
@@ -69,12 +76,12 @@ public class REntityWordInfo implements Serializable{
         this.wordId = wordId;
     }
 
-    public Double getWeight() {
-        return weight;
+    public Map<Integer, Double> getWeightMap() {
+        return weightMap;
     }
 
-    public void setWeight(Double weight) {
-        this.weight = weight;
+    public void setWeightMap(Map<Integer, Double> weightMap) {
+        this.weightMap = weightMap;
     }
 
     public String getNature() {
@@ -125,4 +132,21 @@ public class REntityWordInfo implements Serializable{
         this.entityTypeId = entityTypeId;
     }
 
+    public Integer getContextId() {
+        return contextId;
+    }
+
+    public void setContextId(Integer contextId) {
+        this.contextId = contextId;
+    }
+
+    public REntityWordInfo clone(){
+        REntityWordInfo rEntityWordInfo = null;
+        try{
+            rEntityWordInfo = (REntityWordInfo)super.clone();
+        } catch(CloneNotSupportedException e) {
+            System.out.println(e.toString());
+        }
+        return rEntityWordInfo;
+    }
 }

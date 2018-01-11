@@ -12,15 +12,12 @@ import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.model.SentenceVector;
 import com.cooler.semantic.service.external.RedisService;
-import com.cooler.semantic.service.external.RuleSearchService;
 import com.cooler.semantic.service.external.SimilarityCalculateService;
 import com.cooler.semantic.service.internal.AccountConfigurationService;
-import com.cooler.semantic.service.internal.RRuleEntityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.*;
 
 @Component("lackParamMatchComponent")
@@ -56,7 +53,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
         Map<Integer, DataComponentBase<SVRuleInfo>> historyDataComponentMap = new HashMap<>();
         for(int i = 0;i < 5; i ++){                                                                                    //先查询出历史数据
             String lastI_OwnerIndex = contextOwner.getLastNOwnerIndex(i);
-            DataComponentBase<SVRuleInfo> historyData = redisService.getCacheObject(lastI_OwnerIndex + "_" + "optimalSvRuleInfo");
+            DataComponentBase<SVRuleInfo> historyData = redisService.getCacheObject(lastI_OwnerIndex + "_" + "optimalSvRuleInfo");//TODO：以后看看能否5次放到一起查出来
             if(historyData != null){
                 historyDataComponentMap.put(i, historyData);
             }

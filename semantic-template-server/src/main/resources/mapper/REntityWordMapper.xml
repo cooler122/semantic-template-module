@@ -166,10 +166,12 @@
     select
     <include refid="Base_Column_List" />
     from r_entity_word
-    where account_id = #{accountId,jdbcType=INTEGER} and word IN
-    <foreach collection="words" item="word" open="(" separator="," close=")">
-      #{word,jdbcType=VARCHAR}
-    </foreach>
+    where
+      account_id IN (1, #{accountId,jdbcType=INTEGER})
+      and
+      word IN <foreach collection="words" item="word" open="(" separator="," close=")">
+        #{word,jdbcType=VARCHAR}
+      </foreach>
   </select>
 
 </mapper>

@@ -3,6 +3,10 @@ package com.cooler.semantic.constant;
 
 public class Constant{
 
+    public static final int WORD_ENTITY = 0;                                           //词语实体
+    public static final int STRINGS_ENTIRY = 1;                                       //字符串集实体
+    public static final int ANAPHORA_ENTIRY = 2;                                      //指代实体
+
     public static final int NO_STORE = 0;                                              //不存储
     public static final int STORE_LOCAL = 1;                                          //本地存储
     public static final int STORE_REMOTE = 2;                                         //远程存储

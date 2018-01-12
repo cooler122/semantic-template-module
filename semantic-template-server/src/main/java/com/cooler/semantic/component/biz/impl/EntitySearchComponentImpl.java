@@ -6,9 +6,11 @@ import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.REntityWord;
 import com.cooler.semantic.entity.WordCN;
+import com.cooler.semantic.facade.CustomizedSemanticFacade;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SentenceVector;
+import com.cooler.semantic.service.external.AnaphoraResolutionService;
 import com.cooler.semantic.service.internal.REntityWordService;
 import com.cooler.semantic.service.internal.WordCNService;
 import org.slf4j.Logger;
@@ -29,6 +31,9 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
     @Autowired
     private WordCNService wordCNService;
 
+    @Autowired
+    private AnaphoraResolutionService anaphoraResolutionService;
+
     public EntitySearchComponentImpl() {
         super("ESC", "SO_3", "sentenceVectors", "sentenceVectors");
     }
@@ -48,13 +53,17 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
             List<String> words = sentenceVector.getWords();
             allWords.addAll(words);
         }
-        List<REntityWord> rEntityWords = rEntityWordService.selectByAIdWords(accountId, allWords);                   //有一些词语可能查不出来，但要考虑处理这种情况
-        System.out.println(JSON.toJSONString(rEntityWords));
 
         //2.将这些词语设置到Map中，为每一个词语准备一个List
         for (String word : allWords) {
             rEntityWordInfosMap.put(word, new ArrayList<REntityWordInfo>());                                            //为每一个分词段设置一个List<RWEI>
         }
+
+
+        List<REntityWord> rEntityWords = rEntityWordService.selectByAIdWords(accountId, allWords);
+        System.out.println(JSON.toJSONString(rEntityWords));
+
+
 
         //3.将所有能归属到字符串实体的词语放置到Map中各个词语名下，作为其值
         for (REntityWord rEntityWord : rEntityWords) {
@@ -67,8 +76,8 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
             rEntityWordInfo.setEntityId(rEntityWord.getEntityId());
             rEntityWordInfo.setEntityName(rEntityWord.getEntityName());
             rEntityWordInfo.setNormalWord(rEntityWord.getNormalWord());
-            rEntityWordInfo.setEntityType(1);                                                                           //1表示字符串实体
-            rEntityWordInfo.setEntityTypeId("1_" + rEntityWord.getEntityId());
+            rEntityWordInfo.setEntityType(Constant.STRINGS_ENTIRY);                                                   //表示字符串实体，实际值为1
+            rEntityWordInfo.setEntityTypeId(Constant.STRINGS_ENTIRY + "_" + rEntityWord.getEntityId());
             rEntityWordInfo.setContextId(contextId);                                                                    //设置上下文版本号
 
             rEntityWordInfos.add(rEntityWordInfo);
@@ -98,8 +107,8 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
                 rEntityWordInfo.setEntityId(wordId);                                                                    //这里是常量实体，则将entityId和entityName设置为wordID和word
                 rEntityWordInfo.setEntityName(word);
                 rEntityWordInfo.setNormalWord(word);
-                rEntityWordInfo.setEntityType(0);
-                rEntityWordInfo.setEntityTypeId("0_" + wordId);
+                rEntityWordInfo.setEntityType(Constant.WORD_ENTITY);                                                  //标识词语实体，实际值为0
+                rEntityWordInfo.setEntityTypeId(Constant.WORD_ENTITY + "_" + wordId);
                 rEntityWordInfo.setContextId(contextId);
 
                 rEntityWordInfos.add(rEntityWordInfo);
@@ -128,6 +137,10 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
             }
             sentenceVector.setrEntityWordInfosList(rEntityWordInfosList);
         }
+
+        //指代消解
+        sentenceVectors = anaphoraResolutionService.anaphoraResolution(contextOwner, sentenceVectors);
+
         return new ComponentBizResult("ESC_S", Constant.STORE_LOCAL, sentenceVectors);
     }
 }

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cooler.semantic.dao.AnaphoraWordMapper" >
+  <resultMap id="BaseResultMap" type="com.cooler.semantic.entity.AnaphoraWord" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="apaphora_word" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="anaphora_entity_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="state" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="account_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="crate_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, apaphora_word, anaphora_entity_id, state, account_id, crate_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from anaphora_word
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from anaphora_word
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cooler.semantic.entity.AnaphoraWord" >
+    insert into anaphora_word (id, apaphora_word, anaphora_entity_id, 
+      state, account_id, crate_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{apaphoraWord,jdbcType=VARCHAR}, #{anaphoraEntityId,jdbcType=INTEGER}, 
+      #{state,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{crateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cooler.semantic.entity.AnaphoraWord" >
+    insert into anaphora_word
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="apaphoraWord != null" >
+        apaphora_word,
+      </if>
+      <if test="anaphoraEntityId != null" >
+        anaphora_entity_id,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="crateTime != null" >
+        crate_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="apaphoraWord != null" >
+        #{apaphoraWord,jdbcType=VARCHAR},
+      </if>
+      <if test="anaphoraEntityId != null" >
+        #{anaphoraEntityId,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="crateTime != null" >
+        #{crateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.AnaphoraWord" >
+    update anaphora_word
+    <set >
+      <if test="apaphoraWord != null" >
+        apaphora_word = #{apaphoraWord,jdbcType=VARCHAR},
+      </if>
+      <if test="anaphoraEntityId != null" >
+        anaphora_entity_id = #{anaphoraEntityId,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="crateTime != null" >
+        crate_time = #{crateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.AnaphoraWord" >
+    update anaphora_word
+    set apaphora_word = #{apaphoraWord,jdbcType=VARCHAR},
+      anaphora_entity_id = #{anaphoraEntityId,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER},
+      account_id = #{accountId,jdbcType=INTEGER},
+      crate_time = #{crateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

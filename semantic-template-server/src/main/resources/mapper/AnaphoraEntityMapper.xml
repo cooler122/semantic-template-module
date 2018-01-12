@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cooler.semantic.dao.AnaphoraEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.cooler.semantic.entity.AnaphoraEntity" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="entity_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="entity_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="referred_entity_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="referred_entity_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="has_constraint" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="account_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="state" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, entity_id, entity_name, referred_entity_id, referred_entity_name, has_constraint, 
+    account_id, state, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from anaphora_entity
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from anaphora_entity
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cooler.semantic.entity.AnaphoraEntity" >
+    insert into anaphora_entity (id, entity_id, entity_name, 
+      referred_entity_id, referred_entity_name, has_constraint, 
+      account_id, state, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{entityId,jdbcType=INTEGER}, #{entityName,jdbcType=VARCHAR}, 
+      #{referredEntityId,jdbcType=INTEGER}, #{referredEntityName,jdbcType=VARCHAR}, #{hasConstraint,jdbcType=TINYINT}, 
+      #{accountId,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cooler.semantic.entity.AnaphoraEntity" >
+    insert into anaphora_entity
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="entityId != null" >
+        entity_id,
+      </if>
+      <if test="entityName != null" >
+        entity_name,
+      </if>
+      <if test="referredEntityId != null" >
+        referred_entity_id,
+      </if>
+      <if test="referredEntityName != null" >
+        referred_entity_name,
+      </if>
+      <if test="hasConstraint != null" >
+        has_constraint,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="entityId != null" >
+        #{entityId,jdbcType=INTEGER},
+      </if>
+      <if test="entityName != null" >
+        #{entityName,jdbcType=VARCHAR},
+      </if>
+      <if test="referredEntityId != null" >
+        #{referredEntityId,jdbcType=INTEGER},
+      </if>
+      <if test="referredEntityName != null" >
+        #{referredEntityName,jdbcType=VARCHAR},
+      </if>
+      <if test="hasConstraint != null" >
+        #{hasConstraint,jdbcType=TINYINT},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.AnaphoraEntity" >
+    update anaphora_entity
+    <set >
+      <if test="entityId != null" >
+        entity_id = #{entityId,jdbcType=INTEGER},
+      </if>
+      <if test="entityName != null" >
+        entity_name = #{entityName,jdbcType=VARCHAR},
+      </if>
+      <if test="referredEntityId != null" >
+        referred_entity_id = #{referredEntityId,jdbcType=INTEGER},
+      </if>
+      <if test="referredEntityName != null" >
+        referred_entity_name = #{referredEntityName,jdbcType=VARCHAR},
+      </if>
+      <if test="hasConstraint != null" >
+        has_constraint = #{hasConstraint,jdbcType=TINYINT},
+      </if>
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.AnaphoraEntity" >
+    update anaphora_entity
+    set entity_id = #{entityId,jdbcType=INTEGER},
+      entity_name = #{entityName,jdbcType=VARCHAR},
+      referred_entity_id = #{referredEntityId,jdbcType=INTEGER},
+      referred_entity_name = #{referredEntityName,jdbcType=VARCHAR},
+      has_constraint = #{hasConstraint,jdbcType=TINYINT},
+      account_id = #{accountId,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

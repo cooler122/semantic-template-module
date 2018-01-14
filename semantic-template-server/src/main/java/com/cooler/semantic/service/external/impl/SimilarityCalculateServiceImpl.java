@@ -483,8 +483,8 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
         rRuleEntitiesRecord.addAll(rRuleEntityMap.values());                                                            //rRuleEntityMap.values()自身只能读，不要让其改变，故而赋值给一个新的集合
         rRuleEntitiesRecord.removeAll(matchedRRuleEntities);                                                            //删掉匹配上了的RRuleEntity对象，剩下的就是规则中没有匹配上的（但还可能包含其他ruleId的RRE）
         for (RRuleEntity rRuleEntity : rRuleEntitiesRecord) {
-                sv_weights.add(0d);
-                rule_weights.add(rRuleEntity.getWeight());
+            sv_weights.add(0d);
+            rule_weights.add(rRuleEntity.getWeight());
         }
 
         //3.计算皮尔逊相似度值

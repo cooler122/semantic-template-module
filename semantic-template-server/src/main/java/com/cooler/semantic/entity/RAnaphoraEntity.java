@@ -2,7 +2,7 @@ package com.cooler.semantic.entity;
 
 import java.util.Date;
 
-public class AnaphoraEntity {
+public class RAnaphoraEntity {
     private Integer id;
 
     private Integer entityId;
@@ -21,7 +21,7 @@ public class AnaphoraEntity {
 
     private Date createTime;
 
-    public AnaphoraEntity(Integer id, Integer entityId, String entityName, Integer referredEntityId, String referredEntityName, Byte hasConstraint, Integer accountId, Integer state, Date createTime) {
+    public RAnaphoraEntity(Integer id, Integer entityId, String entityName, Integer referredEntityId, String referredEntityName, Byte hasConstraint, Integer accountId, Integer state, Date createTime) {
         this.id = id;
         this.entityId = entityId;
         this.entityName = entityName;
@@ -33,7 +33,7 @@ public class AnaphoraEntity {
         this.createTime = createTime;
     }
 
-    public AnaphoraEntity() {
+    public RAnaphoraEntity() {
         super();
     }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cooler.semantic.dao.AnaphoraWordMapper" >
+
   <resultMap id="BaseResultMap" type="com.cooler.semantic.entity.AnaphoraWord" >
     <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
@@ -11,19 +12,23 @@
       <arg column="crate_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
     </constructor>
   </resultMap>
+
   <sql id="Base_Column_List" >
     id, apaphora_word, anaphora_entity_id, state, account_id, crate_time
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from anaphora_word
     where id = #{id,jdbcType=INTEGER}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from anaphora_word
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <insert id="insert" parameterType="com.cooler.semantic.entity.AnaphoraWord" >
     insert into anaphora_word (id, apaphora_word, anaphora_entity_id, 
       state, account_id, crate_time
@@ -32,6 +37,7 @@
       #{state,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{crateTime,jdbcType=TIMESTAMP}
       )
   </insert>
+
   <insert id="insertSelective" parameterType="com.cooler.semantic.entity.AnaphoraWord" >
     insert into anaphora_word
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -75,6 +81,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.AnaphoraWord" >
     update anaphora_word
     <set >
@@ -96,6 +103,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.AnaphoraWord" >
     update anaphora_word
     set apaphora_word = #{apaphoraWord,jdbcType=VARCHAR},
@@ -105,4 +113,17 @@
       crate_time = #{crateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 业务相关 -->
+
+  <select id="selectByWords" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from anaphora_word
+    where state = 1 AND anaphora_word IN
+    <foreach collection="words" item="word" open="(" separator="," close=")">
+      #{word,jdbcType=VARCHAR}
+    </foreach>
+  </select>
+
 </mapper>

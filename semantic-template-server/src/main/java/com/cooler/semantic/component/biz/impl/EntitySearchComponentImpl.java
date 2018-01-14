@@ -1,12 +1,10 @@
 package com.cooler.semantic.component.biz.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.REntityWord;
 import com.cooler.semantic.entity.WordCN;
-import com.cooler.semantic.facade.CustomizedSemanticFacade;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SentenceVector;
@@ -27,10 +25,8 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
 
     @Autowired
     private REntityWordService rEntityWordService;
-
     @Autowired
     private WordCNService wordCNService;
-
     @Autowired
     private AnaphoraResolutionService anaphoraResolutionService;
 
@@ -59,13 +55,16 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
             rEntityWordInfosMap.put(word, new ArrayList<REntityWordInfo>());                                            //为每一个分词段设置一个List<RWEI>
         }
 
+        //3.1.指代性实体归属：查找指代性词语，归属指代性实体
+        Map<String, List<REntityWordInfo>> word_anaphoraEntitiesMap = anaphoraResolutionService.anaphoraResolution(contextOwner, allWords);
+        if(word_anaphoraEntitiesMap != null && word_anaphoraEntitiesMap.size() > 0){
+            Set<String> anaphoraWords = word_anaphoraEntitiesMap.keySet();                                              //已经归属好的指代性词语（实际上来源于上一轮的REW）
+            rEntityWordInfosMap.putAll(word_anaphoraEntitiesMap);                                                       //并入到总的map中
+            allWords.removeAll(anaphoraWords);                                                                          //删除已经归属好的词语
+        }
 
-        List<REntityWord> rEntityWords = rEntityWordService.selectByAIdWords(accountId, allWords);
-        System.out.println(JSON.toJSONString(rEntityWords));
-
-
-
-        //3.将所有能归属到字符串实体的词语放置到Map中各个词语名下，作为其值
+        //3.2.字符串实体归属：将所有能归属到字符串实体的词语放置到Map中各个词语名下，作为其值
+        List<REntityWord> rEntityWords = rEntityWordService.selectByAIdWords(accountId, allWords);                      //指代词语归属后，一定剩下一些词语，进行字符串实体归属
         for (REntityWord rEntityWord : rEntityWords) {
             String word = rEntityWord.getWord();
             List<REntityWordInfo> rEntityWordInfos = rEntityWordInfosMap.get(word);
@@ -76,7 +75,7 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
             rEntityWordInfo.setEntityId(rEntityWord.getEntityId());
             rEntityWordInfo.setEntityName(rEntityWord.getEntityName());
             rEntityWordInfo.setNormalWord(rEntityWord.getNormalWord());
-            rEntityWordInfo.setEntityType(Constant.STRINGS_ENTIRY);                                                   //表示字符串实体，实际值为1
+            rEntityWordInfo.setEntityType(Constant.STRINGS_ENTIRY);                                                     //表示字符串实体，实际值为1
             rEntityWordInfo.setEntityTypeId(Constant.STRINGS_ENTIRY + "_" + rEntityWord.getEntityId());
             rEntityWordInfo.setContextId(contextId);                                                                    //设置上下文版本号
 
@@ -86,10 +85,10 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
         }
 
         if(allWords.size() > 0){
-            //4.剩下的实体进行其他方式进行归属
-            //TODO:allWords现在剩下的词语是查询不到实体的词语，但也许这些词语归属于其他类型的实体，这里需要进行其他类型的实体归属过程，有待后续实现
+            //3.3.剩下的实体进行其他方式进行归属
+            //TODO:allWords现在剩下的词语是查询不到实体的词语，但也许这些词语归属于其他类型的实体，这里需要进行其他类型的实体归属过程，有待后续实现(例如有时间实体、日期实体、数值实体等）
 
-            //5.最终剩下的，只能作为常量实体存在于模板之中，实体类型为0。
+            //3.4.词语实体归属：最终剩下的，只能作为常量实体存在于模板之中，实体类型为0。
             // 这里分两种情况：a.这个词在词表中有，但在关系表中没有指定它是哪种实体；b.这个词在词表中也没有，你没办法判断其是否有意义，所以还是需要添加进去（宁滥勿缺）
             List<WordCN> wordCNs = wordCNService.selectByWords(accountId, allWords);
 
@@ -97,17 +96,14 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
                 Integer wordId = wordCN.getId();
                 String word = wordCN.getWord();
 
-                List<REntityWordInfo> rEntityWordInfos = rEntityWordInfosMap.get(word);
-                if(rEntityWordInfos == null) {
-                    rEntityWordInfos = new ArrayList<>();
-                }
+                List<REntityWordInfo> rEntityWordInfos = rEntityWordInfosMap.get(word);                                 //此集合已经在上面设置过集合对象，不可能为null
                 REntityWordInfo rEntityWordInfo = new REntityWordInfo();
                 rEntityWordInfo.setWordId(wordId);
                 rEntityWordInfo.setWord(word);
                 rEntityWordInfo.setEntityId(wordId);                                                                    //这里是常量实体，则将entityId和entityName设置为wordID和word
                 rEntityWordInfo.setEntityName(word);
                 rEntityWordInfo.setNormalWord(word);
-                rEntityWordInfo.setEntityType(Constant.WORD_ENTITY);                                                  //标识词语实体，实际值为0
+                rEntityWordInfo.setEntityType(Constant.WORD_ENTITY);                                                    //标识词语实体，实际值为0
                 rEntityWordInfo.setEntityTypeId(Constant.WORD_ENTITY + "_" + wordId);
                 rEntityWordInfo.setContextId(contextId);
 
@@ -117,7 +113,7 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
             }
         }
 
-        //6.将归属好的实体Map，一一取出来，放置到SentenceVector集合的REntityWordInfos里面
+        //4.将归属好的实体Map，一一取出来，放置到SentenceVector集合的REntityWordInfos里面
         for (SentenceVector sentenceVector : sentenceVectors) {
             Integer sentenceVectorId = sentenceVector.getId();
             List<List<REntityWordInfo>> rEntityWordInfosList = new ArrayList<>();
@@ -137,9 +133,6 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
             }
             sentenceVector.setrEntityWordInfosList(rEntityWordInfosList);
         }
-
-        //指代消解
-        sentenceVectors = anaphoraResolutionService.anaphoraResolution(contextOwner, sentenceVectors);
 
         return new ComponentBizResult("ESC_S", Constant.STORE_LOCAL, sentenceVectors);
     }

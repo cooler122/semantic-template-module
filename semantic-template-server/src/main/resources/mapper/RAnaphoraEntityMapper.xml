@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.cooler.semantic.dao.AnaphoraEntityMapper" >
-  <resultMap id="BaseResultMap" type="com.cooler.semantic.entity.AnaphoraEntity" >
+<mapper namespace="com.cooler.semantic.dao.RAnaphoraEntityMapper" >
+
+  <resultMap id="BaseResultMap" type="com.cooler.semantic.entity.RAnaphoraEntity" >
     <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="entity_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
@@ -14,22 +15,26 @@
       <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
     </constructor>
   </resultMap>
+
   <sql id="Base_Column_List" >
     id, entity_id, entity_name, referred_entity_id, referred_entity_name, has_constraint, 
     account_id, state, create_time
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from anaphora_entity
+    from r_anaphora_entity
     where id = #{id,jdbcType=INTEGER}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from anaphora_entity
+    delete from r_anaphora_entity
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.cooler.semantic.entity.AnaphoraEntity" >
-    insert into anaphora_entity (id, entity_id, entity_name, 
+
+  <insert id="insert" parameterType="com.cooler.semantic.entity.RAnaphoraEntity" >
+    insert into r_anaphora_entity (id, entity_id, entity_name, 
       referred_entity_id, referred_entity_name, has_constraint, 
       account_id, state, create_time
       )
@@ -38,8 +43,9 @@
       #{accountId,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.cooler.semantic.entity.AnaphoraEntity" >
-    insert into anaphora_entity
+
+  <insert id="insertSelective" parameterType="com.cooler.semantic.entity.RAnaphoraEntity" >
+    insert into r_anaphora_entity
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -99,8 +105,9 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.AnaphoraEntity" >
-    update anaphora_entity
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.RAnaphoraEntity" >
+    update r_anaphora_entity
     <set >
       <if test="entityId != null" >
         entity_id = #{entityId,jdbcType=INTEGER},
@@ -129,8 +136,9 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.AnaphoraEntity" >
-    update anaphora_entity
+
+  <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.RAnaphoraEntity" >
+    update r_anaphora_entity
     set entity_id = #{entityId,jdbcType=INTEGER},
       entity_name = #{entityName,jdbcType=VARCHAR},
       referred_entity_id = #{referredEntityId,jdbcType=INTEGER},
@@ -141,4 +149,17 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 业务相关 -->
+  <select id="selectByEntityIds" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from r_anaphora_entity
+    where accountId = #{account_id,jdbcType=INTEGER} and entity_id IN
+    <foreach collection="anaphoraEntityIds" item="anaphoraEntityId" open="(" separator="," close=")">
+      #{anaphoraEntityId,jdbcType=INTEGER}
+    </foreach>
+  </select>
+
+
 </mapper>

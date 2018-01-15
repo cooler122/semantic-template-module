@@ -19,13 +19,15 @@ public class Rule {
 
     private String ruleMsg;
 
+    private Integer referRuleId;
+
     private Integer state;
 
     private Date createTime;
 
     private Date updateTime;
 
-    public Rule(Integer id, String ruleName, Integer intentId, Integer senceId, Integer accountId, String originalSentence, String ruleTemplate, String ruleMsg, Integer state, Date createTime, Date updateTime) {
+    public Rule(Integer id, String ruleName, Integer intentId, Integer senceId, Integer accountId, String originalSentence, String ruleTemplate, String ruleMsg, Integer referRuleId, Integer state, Date createTime, Date updateTime) {
         this.id = id;
         this.ruleName = ruleName;
         this.intentId = intentId;
@@ -34,6 +36,7 @@ public class Rule {
         this.originalSentence = originalSentence;
         this.ruleTemplate = ruleTemplate;
         this.ruleMsg = ruleMsg;
+        this.referRuleId = referRuleId;
         this.state = state;
         this.createTime = createTime;
         this.updateTime = updateTime;
@@ -105,6 +108,14 @@ public class Rule {
 
     public void setRuleMsg(String ruleMsg) {
         this.ruleMsg = ruleMsg == null ? null : ruleMsg.trim();
+    }
+
+    public Integer getReferRuleId() {
+        return referRuleId;
+    }
+
+    public void setReferRuleId(Integer referRuleId) {
+        this.referRuleId = referRuleId;
     }
 
     public Integer getState() {

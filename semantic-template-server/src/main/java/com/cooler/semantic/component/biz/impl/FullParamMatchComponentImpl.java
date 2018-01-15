@@ -75,8 +75,7 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                 else return 0;
             }
         });
-        SVRuleInfo optimalSvRuleInfo = svRuleInfosResult.get(1);                                                        //TODO:此为测试代码，为了测试缺参匹配，故意传入一个缺参规则，测试后要删除
-//        SVRuleInfo optimalSvRuleInfo = svRuleInfosResult.get(0);                                                        //获取相似度值最大的那一个（最优结果）
+        SVRuleInfo optimalSvRuleInfo = svRuleInfosResult.get(0);                                                        //获取相似度值最大的那一个（最优结果）
         optimalSvRuleInfo.setrEntityWordInfosList(null);                                                                //最优规则找到后，需要保存（本地、远程），此过程数据太大而且后续没有更多作用，故此处设置为null
 
         Double accuracyThreshold = accountConfiguration.getAccuracyThreshold();

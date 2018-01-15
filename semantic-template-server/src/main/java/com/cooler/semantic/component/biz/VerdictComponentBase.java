@@ -6,12 +6,17 @@ import com.cooler.semantic.component.ComponentConstant;
 import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.component.data.DataComponentBase;
 import com.cooler.semantic.constant.Constant;
+import com.cooler.semantic.entity.RRuleEntity;
+import com.cooler.semantic.entity.Rule;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.ContextOwner;
+import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.external.RedisService;
+import com.cooler.semantic.service.internal.RuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component("verdictComponentBase")
@@ -47,6 +52,9 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
     @Autowired
     private RedisService<DataComponent> redisService;
 
+    @Autowired
+    private RuleService ruleService;
+
     @Override
     public int getType() {
         return 0;
@@ -66,7 +74,10 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
             case "D2" : componentBizResult = d2(contextOwner); break;
             case "D3" : componentBizResult = d3(); break;
             case "D4" : componentBizResult = d4(); break;
-            case "D10" : componentBizResult = d10(contextOwner); break;
+            case "D6" : componentBizResult = d6(contextOwner); break;
+            case "D7" : componentBizResult = d7(contextOwner); break;
+            case "D8" : componentBizResult = d8(contextOwner); break;
+            case "D9" : componentBizResult = d9(contextOwner); break;
             case "D11" : componentBizResult = d11(contextOwner); break;
             default: componentBizResult = new ComponentBizResult<>("D_E");
         }
@@ -114,7 +125,6 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
         int lastState = request.getLastState();
         if(lastState < 0){
             return new ComponentBizResult<>("D1_Y");
-
         }else{
             return new ComponentBizResult<>("D1_N");
 //            return new ComponentBizResult<>("D1_Y");                                                         //TODO：此行是测试代码，为了测试缺参匹配后面要删除此行
@@ -142,15 +152,50 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
         return new ComponentBizResult<>("D4_S");
     }
 
-    private ComponentBizResult<O> d10(ContextOwner contextOwner) {
-        System.out.println("D10 process...");
+    private ComponentBizResult<O> d6(ContextOwner contextOwner) {
+        System.out.println("D6 process...");
+        DataComponent<SVRuleInfo> optimalSvRuleInfo = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner);
+        if(optimalSvRuleInfo != null){
+            SVRuleInfo svRuleInfo = optimalSvRuleInfo.getData();
+            List<RRuleEntity> lackedRRuleEntities = svRuleInfo.getLackedRRuleEntities();
+            for (RRuleEntity lackedRRuleEntity : lackedRRuleEntities) {
+                Byte isNecessary = lackedRRuleEntity.getIsNecessary();
+                if(isNecessary == 1){                                                                                   //校验缺失参数中是否有参数为必须匹配的参数
+                    return new ComponentBizResult<>("D6_N");
+                }
+            }
+        }
+        return new ComponentBizResult<>("D6_Y");
+    }
+
+    private ComponentBizResult<O> d7(ContextOwner contextOwner) {
+        System.out.println("D7 process...");
+        DataComponent<SVRuleInfo> optimalSvRuleInfo = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner);
+        SVRuleInfo svRuleInfo = optimalSvRuleInfo.getData();
+        Integer ruleId = svRuleInfo.getRuleId();
+        Rule rule = ruleService.selectByPrimaryKey(ruleId);                      //TODO:这一部分还是放到外边的业务组件里面，将rule保存起来，这里就接受一个值即可
+        Integer referRuleId = rule.getReferRuleId();
+        if(referRuleId.intValue() == 0){
+            return new ComponentBizResult<>("D7_N");
+        }else{
+            return new ComponentBizResult<>("D7_Y");
+        }
+    }
+
+    private ComponentBizResult<O> d8(ContextOwner contextOwner) {
+        System.out.println("D8 process...");
+        return new ComponentBizResult<>("D8_N");
+    }
+
+    private ComponentBizResult<O> d9(ContextOwner contextOwner) {
+        System.out.println("D9 process...");
         DataComponent semanticParserRequest = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = (SemanticParserRequest)semanticParserRequest.getData();
         int lastState = request.getLastState();
         if(lastState < 0){
-            return new ComponentBizResult<>("D10_Y");
+            return new ComponentBizResult<>("D9_Y");
         }else{
-            return new ComponentBizResult<>("D10_N");
+            return new ComponentBizResult<>("D9_N");
         }
     }
 

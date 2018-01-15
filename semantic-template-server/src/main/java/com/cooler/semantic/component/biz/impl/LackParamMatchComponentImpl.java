@@ -43,7 +43,6 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
         Integer accountId = contextOwner.getAccountId();
         Integer userId = contextOwner.getUserId();
         Integer contextId = contextOwner.getContextId();
-        contextId = contextId + 1;                                                                                      //TODO:此为测试代码，以后记得删掉（为了模拟新一轮对话）
         AccountConfiguration accountConfiguration = accountConfigurationService.selectAIdUId(accountId, userId);
         Integer algorithmType = accountConfiguration.getAlgorithmType();                                                //算法类型
         SVRuleInfo lpm_optimalSvRuleInfo = null;                                                                       //选择的最匹配的历史记录
@@ -51,7 +50,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
 
         //1.准备好5轮的历史数据
         Map<Integer, DataComponentBase<SVRuleInfo>> historyDataComponentMap = new HashMap<>();
-        for(int i = 0;i < 5; i ++){                                                                                    //先查询出历史数据
+        for(int i = 1;i <= 5; i ++){                                                                                    //先查询出历史数据
             String lastI_OwnerIndex = contextOwner.getLastNOwnerIndex(i);
             DataComponentBase<SVRuleInfo> historyData = redisService.getCacheObject(lastI_OwnerIndex + "_" + "optimalSvRuleInfo");//TODO：以后看看能否5次放到一起查出来
             if(historyData != null){
@@ -67,13 +66,13 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
             List<List<REntityWordInfo>> rEntityWordInfosList = sentenceVector.getrEntityWordInfosList();                //句子向量中分词段归属的实体集群
             for (List<REntityWordInfo> rEntityWordInfos : rEntityWordInfosList) {
                 for (REntityWordInfo rEntityWordInfo : rEntityWordInfos) {
-                    rEntityWordInfo.setContextId(contextId);                                                            //TODO:此为测试代码，以后记得删掉（为了模拟新一轮对话）
+//                    rEntityWordInfo.setContextId(contextId);                                                            //TODO:此为测试代码，以后记得删掉（为了模拟新一轮对话）
                     rEntityWordInfoMap.put(rEntityWordInfo.getEntityTypeId(), rEntityWordInfo);
                 }
             }
 
             //2.2.开始逐一遍历近5轮上下文（当然是缺参状态下的上下文），来匹配当前每一个句子向量
-            for(int i = 0; i < 5; i ++){                                                                               //TODO：此处可能i从1开始，遍历的是上一轮对话，此处是测试将i设为0
+            for(int i = 1; i <= 5; i ++){                                                                               //TODO：此处可能i从1开始，遍历的是上一轮对话，此处是测试将i设为0
                 DataComponentBase<SVRuleInfo> historyData = historyDataComponentMap.get(i);                             //从历史对话记录Map里面取出数据
                 if(historyData != null) {
                     //2.2.1.取出历史上下文的SVRuleInfo绑定数据

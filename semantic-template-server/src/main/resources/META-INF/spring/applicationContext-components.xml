@@ -37,7 +37,9 @@
 
                 <entry key="D2" value-ref="verdictComponentBase"/>                                                      <!-- D2:    判断：缺参匹配无效 ? -->
                 <entry key="D3" value-ref="verdictComponentBase"/>                                                      <!-- D3:    可换参实体数 > 0 ? -->
-
+                <entry key="D6" value-ref="verdictComponentBase"/>                                                      <!-- D6:    必须参数是否完全匹配 ? -->
+                <entry key="D7" value-ref="verdictComponentBase"/>                                                      <!-- D7:    匹配规则是引导性规则 ? -->
+                <entry key="D8" value-ref="verdictComponentBase"/>                                                      <!-- D8:    规则的意图是运行中意图 ? -->
 
                 <entry key="CPMC" value-ref="changeParamMatchComponent"/>                                                 <!-- 换参匹配 -->
 
@@ -102,6 +104,17 @@
                 <entry key="D2_Y" value="D3"/>
                 <entry key="D2_N" value="D6"/>      <!-- 存储策略在各个组件会自己声明，不再成为流程图中的节点，直接跳过 -->
 
+                <entry key="D6_Y" value="D7"/>
+                <entry key="D6_N" value="D10"/>
+
+                <entry key="D7_N" value="D8"/>
+                <!--<entry key="D7_Y" value="SO-12"/>-->
+
+                <entry key="D8_N" value="SO-13"/>
+
+                <!--<entry key="D10_Y" value="SO-17"/>-->
+                <!--<entry key="D10_N" value="SO-15"/>-->
+
                 <entry key="D3_Y" value="CPMC"/>
                 <entry key="D3_N" value="FPMC"/>
 
@@ -117,7 +130,6 @@
                 <entry key="D_F" value="ENDC"/>
             </map>
         </property>
-
     </bean>
 
 

@@ -8,11 +8,11 @@
     <properties resource="generator.properties"></properties>
 
     <!--指定特定数据库的jdbc驱动jar包的位置-->
-    <!--<classPathEntry location="C:\\Program Files\\MySQL\\mysql-connector-java-5.1.40.jar"/>-->
+    <classPathEntry location="C:\\Program Files\\MySQL\\mysql-connector-java-5.1.40.jar"/>
 
 
     <!--mac下指定特定数据库的jdbc驱动jar包的位置-->
-    <classPathEntry location="/Users/zhangsheng/javaspace/localfiles/mysql-connector-java-5.1.40.jar"/>
+    <!--<classPathEntry location="/Users/zhangsheng/javaspace/localfiles/mysql-connector-java-5.1.40.jar"/>-->
 
 
     <context id="default" targetRuntime="MyBatis3">
@@ -75,9 +75,9 @@
         <!--<table tableName="word_cn" domainObjectName="WordCN" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="r_entity_word" domainObjectName="REntityWord" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="entity" domainObjectName="Entity" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
-        <!--<table tableName="rule" domainObjectName="Rule" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+        <table tableName="rule" domainObjectName="Rule" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         <!--<table tableName="r_rule_entity" domainObjectName="RRuleEntity" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
-        <table tableName="r_anaphora_entity" domainObjectName="RAnaphoraEntity" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <!--<table tableName="r_anaphora_entity" domainObjectName="RAnaphoraEntity" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="anaphora_word" domainObjectName="AnaphoraWord" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
 
     </context>

@@ -7,9 +7,9 @@ import java.util.Objects;
  */
 public class CoordinateKey {
     /**
-     * 上下文编号
+     * 句子向量编号
      */
-    private Integer contextId;
+    private Integer sentenceVectorId;
 
     /**
      * 实体类型
@@ -21,12 +21,12 @@ public class CoordinateKey {
      */
     private Integer entityId;
 
-    public Integer getContextId() {
-        return contextId;
+    public Integer getSentenceVectorId() {
+        return sentenceVectorId;
     }
 
-    public void setContextId(Integer contextId) {
-        this.contextId = contextId;
+    public void setSentenceVectorId(Integer sentenceVectorId) {
+        this.sentenceVectorId = sentenceVectorId;
     }
 
     public Integer getEntityType() {
@@ -45,8 +45,8 @@ public class CoordinateKey {
         this.entityId = entityId;
     }
 
-    public CoordinateKey(Integer contextId, Integer entityType, Integer entityId) {
-        this.contextId = contextId;
+    public CoordinateKey(Integer sentenceVectorId, Integer entityType, Integer entityId) {
+        this.sentenceVectorId = sentenceVectorId;
         this.entityType = entityType;
         this.entityId = entityId;
     }
@@ -56,12 +56,13 @@ public class CoordinateKey {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CoordinateKey that = (CoordinateKey) o;
-        return Objects.equals(entityType, that.entityType) &&
+        return Objects.equals(sentenceVectorId, that.sentenceVectorId) &&
+                Objects.equals(entityType, that.entityType) &&
                 Objects.equals(entityId, that.entityId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(contextId, entityType, entityId);
+        return Objects.hash(sentenceVectorId, entityType, entityId);
     }
 }

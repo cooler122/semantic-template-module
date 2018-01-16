@@ -1,5 +1,7 @@
 package com.cooler.semantic.client;
 
+import com.alibaba.fastjson.JSON;
+import com.cooler.semantic.entity.SemanticParserResponse;
 import com.cooler.semantic.facade.SemanticParserFacade;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import org.slf4j.Logger;
@@ -15,36 +17,33 @@ public class SemanticParserClient {
     private static Logger logger = LoggerFactory.getLogger(SemanticParserClient.class.getName());
 
     public static void main(String[] args) throws IOException {
+        String[] sentences = {
+                "天气怎么样？",
+                "今天",
+                "北京"
+        };
 
         Integer contextId = 1;
+        Integer state = 0;
+        for (String sentence : sentences) {
+            SemanticParserResponse semanticParserResponse = buildRequest(sentence, contextId, state);
+            state = semanticParserResponse.getState();
 
-        logger.info("客户端，开始访问...");
+            contextId ++;
+            System.out.println("人   -------------------    " + sentence);
+            System.out.println("机   -------------------    " + semanticParserResponse.getResponseMsg());
+            System.out.println(JSON.toJSONString(semanticParserResponse));
+        }
+    }
+
+    public static SemanticParserResponse buildRequest(String sentence, Integer contextId, Integer state){
         SemanticParserRequest request = new SemanticParserRequest();
-        request.setCmd("北京天气怎么样？");                   //添加一个句子
+        request.setCmd(sentence);                   //添加一个句子
         request.setAccountIds(Arrays.asList(1));                     //添加一个测试账户
         request.setPassword("123456");
         request.setUserId(2);                                       //添加一个用户标号
-        request.setContextId(contextId ++);                                    //添加一个上下文编号
-        semanticParserFacade.semanticParse(request);
-
-        int state = -1;
-
-        SemanticParserRequest request2 = new SemanticParserRequest();
-        request2.setCmd("今天");                   //添加一个句子
-        request2.setAccountIds(Arrays.asList(1));                     //添加一个测试账户
-        request2.setPassword("123456");
-        request2.setUserId(2);                                       //添加一个用户标号
-        request2.setContextId(contextId ++);                                    //添加一个上下文编号
-        request2.setLastState(state);
-        semanticParserFacade.semanticParse(request2);
-
-//        SemanticParserRequest request3 = new SemanticParserRequest();
-//        request3.setCmd("它的稻花香");                   //添加一个句子
-//        request3.setAccountIds(Arrays.asList(1));                     //添加一个测试账户
-//        request3.setPassword("123456");
-//        request3.setUserId(2);                                       //添加一个用户标号
-//        request3.setContextId(1);                                    //添加一个上下文编号
-//
-//        semanticParserFacade.semanticParse(request3);
+        request.setContextId(contextId);                                    //添加一个上下文编号
+        request.setLastState(state);
+        return semanticParserFacade.semanticParse(request);
     }
 }

@@ -36,8 +36,6 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
 
     @Override
     protected ComponentBizResult<List<SentenceVector>> runBiz(ContextOwner contextOwner, List<SentenceVector> sentenceVectors) {
-        logger.info("SO_3.词语-实体检索");
-
         Integer accountId = contextOwner.getAccountId();
         Integer contextId = contextOwner.getContextId();
 

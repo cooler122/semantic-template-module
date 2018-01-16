@@ -105,7 +105,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                     RRuleEntity rRuleEntity = rRuleEntityMap.get(entityTypeId);                                                  //按照这个key，检索到，就表示被记录，表示能匹配上
                     if(rRuleEntity != null){
                         //记录此句子向量中归属的实体成功匹配上绑定的规则中的一个实体了 //TODO: 那么规则中的rRuleEntity也可以在db中记录这一次匹配，可以统计一个rRuleEntity的匹配次数
-                        System.out.println("Matched！ : 原句" + sentence + ", 分词方式：" + Arrays.toString(words.toArray()) + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
+//                        System.out.println("Matched！ : 原句" + sentence + ", 分词方式：" + Arrays.toString(words.toArray()) + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
 
                         Double volumeRateItem = 1.0d / entitySize;                                                              //这一项在句子中的数量比重
                         Double volumeRate = rRuleEntity.getVolumeRate();                                                        //这一项在规则中的数量比重
@@ -193,7 +193,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                     RRuleEntity rRuleEntity = rRuleEntityMap.get(entityTypeId);                                                  //按照这个key，检索到，就表示被记录，表示能匹配上
                     if(rRuleEntity != null){
                         //记录此句子向量中归属的实体成功匹配上绑定的规则中的一个实体了 //TODO: 那么规则中的rRuleEntity也可以在db中记录这一次匹配，可以统计一个rRuleEntity的匹配次数
-                        System.out.println("Matched！ : 原句" + sentence + ", 分词方式：" + Arrays.toString(words.toArray()) + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
+//                        System.out.println("Matched！ : 原句" + sentence + ", 分词方式：" + Arrays.toString(words.toArray()) + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
                         Double sv_weight = weights.get(i);                                                                      //句子向量中，第i个word分词归属到的实体的权重
                         Double rule_weight = rRuleEntity.getWeight();                                                           //rule模板中，这个实体在rule中的权重
                         numerator += sv_weight * rule_weight;
@@ -270,7 +270,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                     RRuleEntity rRuleEntity = rRuleEntityMap.get(entityTypeId);                                                  //按照这个key，检索到，就表示被记录，表示能匹配上
                     if(rRuleEntity != null){
                         //记录此句子向量中归属的实体成功匹配上绑定的规则中的一个实体了 //TODO: 那么规则中的rRuleEntity也可以在db中记录这一次匹配，可以统计一个rRuleEntity的匹配次数
-                        System.out.println("Matched！ : 原句" + sentence + ", 分词方式：" + Arrays.toString(words.toArray()) + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
+//                        System.out.println("Matched！ : 原句" + sentence + ", 分词方式：" + Arrays.toString(words.toArray()) + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
 
                         Double sv_weight = weights.get(i);                                                                      //句子向量中，第i个word分词归属到的实体的权重
                         Double rule_weight = rRuleEntity.getWeight();                                                           //rule模板中，这个实体在rule中的权重
@@ -339,7 +339,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             RRuleEntity rRuleEntity = rRuleEntityMap.get(entityTypeId);                                                 //按照这个entityTypeId，检索到，就表示被记录，表示能匹配上
             if(rRuleEntity != null){
                 //记录此句子向量中归属的实体成功匹配上绑定的规则中的一个实体了 //TODO: 那么规则中的rRuleEntity也可以在db中记录这一次匹配，可以统计一个rRuleEntity的匹配次数
-                System.out.println("Matched！ : 原句" + sentence + ",补充后：" + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
+//                System.out.println("Matched！ : 原句" + sentence + ",补充后：" + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
 
                 Double volumeRateItem = 1.0d / sectionSize;                                                               //这一项在句子中的数量比重
                 Double volumeRate = rRuleEntity.getVolumeRate();                                                        //这一项在规则中的数量比重
@@ -404,7 +404,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             RRuleEntity rRuleEntity = rRuleEntityMap.get(entityTypeId);                                                 //按照这个key，检索到，就表示被记录，表示能匹配上
             if(rRuleEntity != null){
                 //记录此句子向量中归属的实体成功匹配上绑定的规则中的一个实体了 //TODO: 那么规则中的rRuleEntity也可以在db中记录这一次匹配，可以统计一个rRuleEntity的匹配次数
-                System.out.println("Matched！ : 原句" + sentence + ", 分词方式：" + Arrays.toString(words.toArray()) + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
+//                System.out.println("Matched！ : 原句" + sentence + ", 分词方式：" + Arrays.toString(words.toArray()) + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
                 Map<Integer, Double> weightMap = rEntityWordInfo.getWeightMap();
                 Double sv_weight = weightMap.get(sentenceVectorId);                                                     //句子向量中，分词归属到的实体的权重
                 Double rule_weight = rRuleEntity.getWeight();                                                           //rule模板中，这个实体在rule中的权重
@@ -460,7 +460,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             RRuleEntity rRuleEntity = rRuleEntityMap.get(entityTypeId);                                                 //按照这个key，检索到，就表示被记录，表示能匹配上
             if(rRuleEntity != null){
                 //记录此句子向量中归属的实体成功匹配上绑定的规则中的一个实体了 //TODO: 那么规则中的rRuleEntity也可以在db中记录这一次匹配，可以统计一个rRuleEntity的匹配次数
-                System.out.println("Matched！ : 原句" + sentence + ", 分词方式：" + Arrays.toString(words.toArray()) + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
+//                System.out.println("Matched！ : 原句" + sentence + ", 分词方式：" + Arrays.toString(words.toArray()) + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
                 Map<Integer, Double> weightMap = rEntityWordInfo.getWeightMap();
                 Double sv_weight = weightMap.get(sentenceVectorId);                                                     //句子向量中，分词归属到的实体的权重
                 Double rule_weight = rRuleEntity.getWeight();                                                           //rule模板中，这个实体在rule中的权重

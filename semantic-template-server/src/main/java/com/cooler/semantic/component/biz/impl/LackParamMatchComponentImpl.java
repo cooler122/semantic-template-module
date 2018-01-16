@@ -37,7 +37,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
 
     @Override
     protected ComponentBizResult<Object> runBiz(ContextOwner contextOwner, List<SentenceVector> sentenceVectors) {
-        logger.info("lackParamMatch.缺参匹配");
+        logger.debug("缺参匹配");
 
         //0.准备好用户配置数据
         Integer accountId = contextOwner.getAccountId();
@@ -143,7 +143,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                                 Double rewWeight = weightMap.get(sentenceVectorId);                                     //找出针对当前句子向量的此REW的权重
 
                                 historyMatchedREntityWeightMap.put(sentenceVectorId, rewWeight * (1 - (amnesiacCoefficient * totalUsedHistoryRuleWeights)) / totalUsedCurrSVInfoWeights);   //从新为此REW设置针对当前句子向量的权重值（此有公式）
-                                System.out.println(rewWeight + "*" + "(1 - (" + amnesiacCoefficient + " * " + totalUsedHistoryRuleWeights + " )) / " +  totalUsedCurrSVInfoWeights);
+                                logger.debug(rewWeight + "*" + "(1 - (" + amnesiacCoefficient + " * " + totalUsedHistoryRuleWeights + " )) / " +  totalUsedCurrSVInfoWeights);
                             }
                             //2.2.6.3.如果这个REW是历史对话中存储的REW
                             else{                                                                                      //如果此REW版本不等于本轮对话版本号，那么它就是历史对话产生的REW（它来源于历史对话的半匹配规则rule）
@@ -151,12 +151,11 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                                 Double historyMatchedRRuleEntityWeight = historyMatchedRRuleEntity.getWeight();         //获取其权重
 
                                 historyMatchedREntityWeightMap.put(sentenceVectorId, historyMatchedRRuleEntityWeight * amnesiacCoefficient);        //从新为此REW设置针对当前句子向量的权重值（此有公式）
-                                System.out.println(historyMatchedRRuleEntityWeight + " * " + amnesiacCoefficient);
+                                logger.debug(historyMatchedRRuleEntityWeight + " * " + amnesiacCoefficient);
                             }
                         }
 
                         //2.2.7.计算缺参相似度
-                        System.out.println(JSON.toJSONString(historySvRuleInfo) + " --- " + JSON.toJSONString(historyMatchedRRuleEntityMap));
                         SVRuleInfo historySVRuleInfo = similarityCalculateService.similarityCalculate_LPM(algorithmType, historySvRuleInfo, historyMatchedRRuleEntityMap);      //计算相似度，此输出参数只有一个结果
                         Double currentSimilarity = historySVRuleInfo.getSimilarity();
 

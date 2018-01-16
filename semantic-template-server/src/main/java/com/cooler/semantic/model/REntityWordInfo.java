@@ -3,11 +3,14 @@ package com.cooler.semantic.model;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Created by zhangsheng on 2017/12/31.
  */
 public class REntityWordInfo implements Serializable{
+
+    private Logger logger = LoggerFactory.getLogger(REntityWordInfo.class);
 
     /**
      * 词语ID
@@ -145,7 +148,7 @@ public class REntityWordInfo implements Serializable{
         try{
             rEntityWordInfo = (REntityWordInfo)super.clone();
         } catch(CloneNotSupportedException e) {
-            System.out.println(e.toString());
+            logger.error(e.toString());
         }
         return rEntityWordInfo;
     }

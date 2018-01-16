@@ -3,16 +3,21 @@ package com.cooler.semantic.component.biz;
 import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.ComponentConstant;
+import com.cooler.semantic.component.biz.impl.ValidateConfComponentImpl;
 import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.component.data.DataComponentBase;
 import com.cooler.semantic.constant.Constant;
+import com.cooler.semantic.entity.AccountConfiguration;
 import com.cooler.semantic.entity.RRuleEntity;
 import com.cooler.semantic.entity.Rule;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.external.RedisService;
+import com.cooler.semantic.service.internal.AccountConfigurationService;
 import com.cooler.semantic.service.internal.RuleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.HashMap;
@@ -21,6 +26,8 @@ import java.util.Map;
 
 @Component("verdictComponentBase")
 public class VerdictComponentBase<I, O> implements SemanticComponent{
+
+    private static Logger logger = LoggerFactory.getLogger(VerdictComponentBase.class);
     /**
      * 组件ID
      */
@@ -55,6 +62,9 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
     @Autowired
     private RuleService ruleService;
 
+    @Autowired
+    private AccountConfigurationService accountConfigurationService;
+
     @Override
     public int getType() {
         return 0;
@@ -78,6 +88,7 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
             case "D7" : componentBizResult = d7(contextOwner); break;
             case "D8" : componentBizResult = d8(contextOwner); break;
             case "D9" : componentBizResult = d9(contextOwner); break;
+            case "D10" : componentBizResult = d10(contextOwner); break;
             case "D11" : componentBizResult = d11(contextOwner); break;
             default: componentBizResult = new ComponentBizResult<>("D_E");
         }
@@ -98,15 +109,14 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
                 redisService.setCacheObject(contextOwner.getOwnerIndex() + "_" + outputDataBeanId, outputDataComponent);
             }
         }
-        System.out.println("输出参数：" + JSON.toJSONString(outputDataComponent));
 
         if(resultCode.equals("END_S"))  return;                                                                      //流程出口（检测状态码，看是否结束）
 
         //4.带动下一个组件再来运行
         String nextComponentId = componentConstant.getFCIDByResultCode(resultCode);
         SemanticComponent nextComponent = componentConstant.getFunctionComponent(nextComponentId);
-        System.out.println("转换 ：" + resultCode + "     --->    " + nextComponentId);
         componentConstant.setTraceByContextOwnerIndex(contextOwner.getOwnerIndex(), resultCode);
+        logger.debug(componentConstant.getTraceByContextOwnerIndex(contextOwner.getOwnerIndex()));
 
         if(nextComponent != null)  {
             if(nextComponent.getType() == 1){
@@ -115,11 +125,9 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
                 nextComponent.verdictRun(contextOwner, nextComponentId);
             }
         }
-
     }
 
     private ComponentBizResult<O> d1(ContextOwner contextOwner) {
-        System.out.println("D1 process...");
         DataComponent semanticParserRequest = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = (SemanticParserRequest)semanticParserRequest.getData();
         int lastState = request.getLastState();
@@ -132,7 +140,6 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
     }
 
     private ComponentBizResult<O> d2(ContextOwner contextOwner) {
-        System.out.println("D2 process...");
         DataComponent optimalSvRuleInfo = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner);
         if(optimalSvRuleInfo == null){
             return new ComponentBizResult<>("D2_Y");
@@ -142,18 +149,19 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
     }
 
     private ComponentBizResult<O> d3() {
-        System.out.println("D3 process...");
 //        if(true)    return new ComponentBizResult<>("D3_E", false, null);
         return new ComponentBizResult<>("D3_N");
     }
 
     private ComponentBizResult<O> d4() {
-        System.out.println("D4 process...");
-        return new ComponentBizResult<>("D4_S");
+        if(true){                                                                                                      //TODO：判断换参匹配是否有效，当前测试阶段，让其固定无效，后续补充
+            return new ComponentBizResult<>("D4_N");
+        }else{
+            return new ComponentBizResult<>("D4_Y");
+        }
     }
 
     private ComponentBizResult<O> d6(ContextOwner contextOwner) {
-        System.out.println("D6 process...");
         DataComponent<SVRuleInfo> optimalSvRuleInfo = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner);
         if(optimalSvRuleInfo != null){
             SVRuleInfo svRuleInfo = optimalSvRuleInfo.getData();
@@ -169,7 +177,6 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
     }
 
     private ComponentBizResult<O> d7(ContextOwner contextOwner) {
-        System.out.println("D7 process...");
         DataComponent<SVRuleInfo> optimalSvRuleInfo = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner);
         SVRuleInfo svRuleInfo = optimalSvRuleInfo.getData();
         Integer ruleId = svRuleInfo.getRuleId();
@@ -183,12 +190,14 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
     }
 
     private ComponentBizResult<O> d8(ContextOwner contextOwner) {
-        System.out.println("D8 process...");
-        return new ComponentBizResult<>("D8_N");
+        if(true){                                                                                                      //TODO;匹配的意图是否是运行中意图
+            return new ComponentBizResult<>("D8_N");
+        }else{
+            return new ComponentBizResult<>("D8_Y");
+        }
     }
 
     private ComponentBizResult<O> d9(ContextOwner contextOwner) {
-        System.out.println("D9 process...");
         DataComponent semanticParserRequest = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = (SemanticParserRequest)semanticParserRequest.getData();
         int lastState = request.getLastState();
@@ -199,8 +208,15 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
         }
     }
 
+    private ComponentBizResult<O> d10(ContextOwner contextOwner) {
+        if(false){
+            return new ComponentBizResult<>("D10_Y");
+        }else{
+            return new ComponentBizResult<>("D10_N");
+        }
+    }
+
     private ComponentBizResult<O> d11(ContextOwner contextOwner) {
-        System.out.println("D11 process...");
         DataComponent semanticParserRequest = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = (SemanticParserRequest)semanticParserRequest.getData();
 

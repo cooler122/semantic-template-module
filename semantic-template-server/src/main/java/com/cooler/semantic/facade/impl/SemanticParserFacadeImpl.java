@@ -1,5 +1,6 @@
 package com.cooler.semantic.facade.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentConstant;
 import com.cooler.semantic.component.biz.SemanticComponent;
 import com.cooler.semantic.component.data.DataComponent;
@@ -28,8 +29,6 @@ public class SemanticParserFacadeImpl implements SemanticParserFacade {
     private ComponentConstant componentConstant;
 
     public SemanticParserResponse semanticParse(SemanticParserRequest request) {
-        logger.info("开始解析...");
-
         //1.构建用户上下文坐标
         List<Integer> accountIds = request.getAccountIds();
         Integer coreAccountId = accountIds.get(0);                                                                     //用户账号
@@ -37,17 +36,22 @@ public class SemanticParserFacadeImpl implements SemanticParserFacade {
         Integer contextId = request.getContextId();                                                                    //上下文编号
         ContextOwner contextOwner = new ContextOwner(coreAccountId, userId, contextId);                                //上下文拥有者对象
 
+        componentConstant.clearTraceByContextOwnerIndex(contextOwner.getOwnerIndex());                               //TODO:清空当前上下文的轨迹标记，此为测试代码，上线后需要删掉
+
         //2.加载数据
-        DataComponent<SemanticParserRequest> dataComponent = new DataComponentBase<>("semanticParserRequest", contextOwner, "SemanticParserRequest", request);     //初始用户的瞬时数据到数据组件
-        componentConstant.putDataComponent(dataComponent);                                                          //加载初始数据组件
+        DataComponent<SemanticParserRequest> initDataComponent = new DataComponentBase<>("semanticParserRequest", contextOwner, "SemanticParserRequest", request);     //初始用户的瞬时数据到数据组件
+        componentConstant.putDataComponent(initDataComponent);                                                          //加载初始数据组件
 
         //3.执行链式流程
         startComponent.functionRun(contextOwner);                                                                    //执行
 
+        DataComponent<SemanticParserResponse> resultComponent = componentConstant.getDataComponent("semanticParserResponse", contextOwner);
+        SemanticParserResponse semanticParserResponse = resultComponent.getData();
+
         //4.记录轨迹
         String traceByContextOwnerIndex = componentConstant.getTraceByContextOwnerIndex(contextOwner.getOwnerIndex());
-        System.out.println(traceByContextOwnerIndex);
+        System.out.println(contextOwner.getOwnerIndex() + " : " + traceByContextOwnerIndex);
 
-        return null;
+        return semanticParserResponse;
     }
 }

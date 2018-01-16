@@ -40,12 +40,19 @@
                 <entry key="D6" value-ref="verdictComponentBase"/>                                                      <!-- D6:    必须参数是否完全匹配 ? -->
                 <entry key="D7" value-ref="verdictComponentBase"/>                                                      <!-- D7:    匹配规则是引导性规则 ? -->
                 <entry key="D8" value-ref="verdictComponentBase"/>                                                      <!-- D8:    规则的意图是运行中意图 ? -->
+                <entry key="D9" value-ref="verdictComponentBase"/>                                                      <!-- D9:    暂时没用到 -->
+                <entry key="D10" value-ref="verdictComponentBase"/>                                                      <!-- D10:    判断循环次数是否超限和时间是否超时，本判断体可能可以不要 -->
 
                 <entry key="CPMC" value-ref="changeParamMatchComponent"/>                                                 <!-- 换参匹配 -->
 
                 <entry key="D4" value-ref="verdictComponentBase"/>                                                      <!-- D4:    换参匹配无效 ？ -->
 
                 <entry key="FPMC" value-ref="fullParamMatchComponent"/>                                                 <!-- 全参匹配 -->
+
+                <entry key="RPC4NR" value-ref="resultPack4NoRunningComponent" />
+                <entry key="RPC4R" value-ref="resultPack4RunningComponent" />
+                <entry key="RPC4M" value-ref="resultPack4MissingComponent" />
+                <entry key="RPC4F" value-ref="resultPack4FailComponent" />
 
                 <entry key="ENDC" value-ref="eNDComponent"/>                                                            <!-- 结束节点 -->
 
@@ -97,28 +104,37 @@
                 <entry key="ESC_F" value="ENDC"/>
 
                 <entry key="D1_Y" value="LPMC"/>
-                <entry key="D1_N" value="D3"/>
+                <entry key="D1_N" value="CPMC"/>
 
                 <entry key="LPMC_S" value="D2"/>
 
-                <entry key="D2_Y" value="D3"/>
+                <entry key="D2_Y" value="CPMC"/>
                 <entry key="D2_N" value="D6"/>      <!-- 存储策略在各个组件会自己声明，不再成为流程图中的节点，直接跳过 -->
+
+                <entry key="CPMC_S" value="D4"/>
 
                 <entry key="D6_Y" value="D7"/>
                 <entry key="D6_N" value="D10"/>
 
                 <entry key="D7_N" value="D8"/>
-                <!--<entry key="D7_Y" value="SO-12"/>-->
+                <entry key="D7_Y" value="RPC4M"/>       <!-- SO-12可以在RPC4M里面做，SO-15，可以在BaseComponent里面定义存储，故直接指向到RPC4M -->
 
-                <entry key="D8_N" value="SO-13"/>
+                <entry key="D8_N" value="RPC4NR"/>
+                <entry key="D8_Y" value="RPC4R"/>
 
-                <!--<entry key="D10_Y" value="SO-17"/>-->
-                <!--<entry key="D10_N" value="SO-15"/>-->
+                <entry key="RPC4NR_S" value="ENDC"/>
+                <entry key="RPC4R_S" value="ENDC"/>
+                <entry key="RPC4M_S" value="ENDC"/>
+                <entry key="RPC4F_S" value="ENDC"/>
+
+                <entry key="D9_Y" value="D10"/>
+                <entry key="D9_N" value="RPC4F"/>
+
+                <entry key="D10_Y" value="RPC4F"/>
+                <entry key="D10_N" value="RPC4M"/>
 
                 <entry key="D3_Y" value="CPMC"/>
                 <entry key="D3_N" value="FPMC"/>
-
-                <entry key="CPMC_S" value="D4"/>
 
                 <entry key="D4_Y" value="D6"/>
                 <entry key="D4_N" value="FPMC"/>

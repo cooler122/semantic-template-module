@@ -100,6 +100,17 @@ public class ComponentConstant {
         return stringBuffer.toString();
     }
 
+    /**
+     * 根据上下文，清空轨迹上下文的轨迹标记
+     * @param contextOwnerIndex
+     */
+    public void clearTraceByContextOwnerIndex(String contextOwnerIndex){
+        StringBuffer stringBuffer = traceSBMap.get(contextOwnerIndex);
+        if(stringBuffer != null){
+            stringBuffer.delete(0, stringBuffer.length());
+        }
+    }
+
     public void setDataBeanMap(Map<String, DataComponent> dataBeanMap) {
         this.dataBeanMap = dataBeanMap;
     }

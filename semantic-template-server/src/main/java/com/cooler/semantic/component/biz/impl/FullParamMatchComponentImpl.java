@@ -40,11 +40,10 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
 
     @Override
     protected ComponentBizResult<Object> runBiz(ContextOwner contextOwner, List<SentenceVector> sentenceVectors) {
-        logger.info("fullParamMatch.全参匹配");
+        logger.debug("全参匹配");
         AccountConfiguration accountConfiguration = accountConfigurationService.selectAIdUId(contextOwner.getAccountId(), contextOwner.getUserId());
 
         //1.通过各个分词段检索出的实体，将各个实体对应的rule数据（这一步主要获得各个实体对应的ruleId）检索出来，通过预估值计算，提取最佳的前5位规则，并封装成SVRuleInfo集合返回出来
-        System.out.println(JSON.toJSONString(sentenceVectors));
         List<SVRuleInfo> svRuleInfos = ruleSearchService.getRulesBySentenceVectors(contextOwner, sentenceVectors);
         System.out.println(JSON.toJSONString(svRuleInfos));
 

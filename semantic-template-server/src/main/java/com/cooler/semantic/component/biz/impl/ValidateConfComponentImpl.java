@@ -39,7 +39,7 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
 
     @Override
     protected ComponentBizResult<SemanticParserRequest> runBiz(ContextOwner contextOwner, SemanticParserRequest bizData) {
-        logger.info("SO_1.校验和配置");
+        logger.debug("校验和配置");
 
         ComponentBizResult validateResult = validate(bizData);                       //校验请求体
         if (validateResult != null) return validateResult;
@@ -53,7 +53,7 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
     }
 
     private ComponentBizResult validate(SemanticParserRequest request) {
-        logger.info("SO-1-1.请求体校验...");
+        logger.debug("请求体校验...");
         String cmd = request.getCmd();
         List<Integer> accountIds = request.getAccountIds();
         Integer userId = request.getUserId();
@@ -72,7 +72,7 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
 
 
     private ComponentBizResult checkIn(SemanticParserRequest request) {
-        logger.info("SO-1-2.账户权限校验...");
+        logger.debug("SO-1-2.账户权限校验...");
         Integer accountId = request.getAccountIds().get(0);
         String password = request.getPassword();
 
@@ -106,12 +106,11 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
     }
 
     private void setAccountData(SemanticParserRequest request) {
-        logger.info("SO-1-3.账户自定义参数设置...");
+        logger.debug("SO-1-3.账户自定义参数设置...");
         Integer coreAccountId = request.getAccountIds().get(0);
         Integer userId = request.getUserId();
 
         AccountConfiguration accountConfiguration = accountConfigurationService.selectAIdUId(coreAccountId, userId);
-        logger.info(JSON.toJSONString(accountConfiguration));
 
         if(accountConfiguration != null){
             request.setCanBreakContext(accountConfiguration.getCanBreakContext());

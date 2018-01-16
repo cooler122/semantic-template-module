@@ -34,10 +34,9 @@ public class SentenceProcessComponentImpl extends FunctionComponentBase<Semantic
 
     @Override
     protected ComponentBizResult<List<SentenceVector>> runBiz(ContextOwner contextOwner, SemanticParserRequest bizData) {
-        logger.info("SO_2.句子处理");
+        logger.debug("SO_2.句子处理");
 
         //SO-2-1.多重分词（包含标词）
-        logger.info("SO-2-1.分词...");
         Integer accountId = contextOwner.getAccountId();                                                                //取出第一个accountId，进行分词
         String cmd = bizData.getCmd();
         List<SentenceVectorParam> sentenceVectorParams = customizedSemanticFacade.semanticParse(cmd, accountId, Arrays.asList(1), true);
@@ -48,7 +47,6 @@ public class SentenceProcessComponentImpl extends FunctionComponentBase<Semantic
         }
 
         //SO-2-2.计算权重
-        logger.info("SO-2-2.计算权重...");
         List<SentenceVector> sentenceVectors = weightCalculateService.calculateWeight(accountId, sentenceVectorParams);  //此方法为分词段设置权重，并返回权重数组，如果分词不成功，则返回默认分词权重数组(此为句子内部各个此的权重值，可以作为后续相似度计算标准)
 
         return new ComponentBizResult("SPC_S", Constant.STORE_LOCAL, sentenceVectors);

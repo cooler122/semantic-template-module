@@ -26,7 +26,10 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
 
     @Override
     protected ComponentBizResult<Object> runBiz(ContextOwner contextOwner, List<SentenceVector> sentenceVectors) {
-        logger.info("changeParamMatch.换参匹配");
+        logger.debug("换参匹配");
+        if(true){
+            return new ComponentBizResult("CPMC_S");
+        }
 
         //1.准备好5轮的历史数据
         Map<String, List<REntityWordInfo>> historyREWIMap = new HashMap<>();                                            //将每一轮的REWI放入Map<entityTypeId, List<REWI>>
@@ -120,6 +123,6 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
 
         SVRuleInfo optimalSvRuleInfo = null;
 
-        return new ComponentBizResult("FPMC_S", Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo);             //此结果在本地和远程都要存储
+        return new ComponentBizResult("CPMC_S", Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo);             //此结果在本地和远程都要存储
     }
 }

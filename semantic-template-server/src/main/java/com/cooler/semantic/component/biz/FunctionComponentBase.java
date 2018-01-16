@@ -8,10 +8,12 @@ import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.external.RedisService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class FunctionComponentBase<I, O> implements SemanticComponent {
-
+    private static Logger logger = LoggerFactory.getLogger(FunctionComponentBase.class);
     /**
      * 组件ID
      */
@@ -89,15 +91,14 @@ public abstract class FunctionComponentBase<I, O> implements SemanticComponent {
                 redisService.setCacheObject(contextOwner.getOwnerIndex() + "_" + outputDataBeanId, outputDataComponent);
             }
         }
-        System.out.println("输出参数：" + JSON.toJSONString(outputDataComponent));
 
         if(resultCode.equals("END_S"))  return;                                                                       //流程出口（检测状态码，看是否结束）
 
         //4.带动下一个组件再来运行
         String nextComponentId = componentConstant.getFCIDByResultCode(resultCode);
         SemanticComponent nextComponent = componentConstant.getFunctionComponent(nextComponentId);
-        System.out.println("转换 ：" + resultCode + "     --->    " + nextComponentId);
         componentConstant.setTraceByContextOwnerIndex(contextOwner.getOwnerIndex(), resultCode);
+        logger.debug(componentConstant.getTraceByContextOwnerIndex(contextOwner.getOwnerIndex()));
 
         if(nextComponent != null)  {
             if(nextComponent.getType() == 1){

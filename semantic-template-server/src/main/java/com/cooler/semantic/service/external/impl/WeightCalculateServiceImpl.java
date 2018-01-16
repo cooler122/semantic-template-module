@@ -45,7 +45,6 @@ public class WeightCalculateServiceImpl implements WeightCalculateService {
 
     @Override
     public List<SentenceVector> calculateWeight(Integer accountId, List<SentenceVectorParam> sentenceVectorParams) {
-        logger.info("设置权重，并转存句子向量");
         //1.取出此账号下的自定义词性乘数
         List<WordNatureRate> wordNatureRates = wordNatureRateMapper.selectByAccountId(accountId);
         Map<String, Double> wordClassRateMap4User = new HashMap<>();

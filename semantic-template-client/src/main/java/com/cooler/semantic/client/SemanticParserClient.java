@@ -14,7 +14,6 @@ import java.util.Arrays;
 public class SemanticParserClient {
     private static ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath*:applicationContext-consumer.xml");
     private static SemanticParserFacade semanticParserFacade = (SemanticParserFacade)context.getBean("semanticParserFacade", SemanticParserFacade.class);
-    private static Logger logger = LoggerFactory.getLogger(SemanticParserClient.class.getName());
 
     public static void main(String[] args) throws IOException {
         String[] sentences = {

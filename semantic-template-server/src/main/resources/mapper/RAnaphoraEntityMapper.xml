@@ -155,7 +155,7 @@
     select
     <include refid="Base_Column_List" />
     from r_anaphora_entity
-    where accountId = #{account_id,jdbcType=INTEGER} and entity_id IN
+    where account_id = #{accountId,jdbcType=INTEGER} and entity_id IN
     <foreach collection="anaphoraEntityIds" item="anaphoraEntityId" open="(" separator="," close=")">
       #{anaphoraEntityId,jdbcType=INTEGER}
     </foreach>

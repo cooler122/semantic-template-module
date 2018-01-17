@@ -5,7 +5,7 @@
   <resultMap id="BaseResultMap" type="com.cooler.semantic.entity.AnaphoraWord" >
     <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="apaphora_word" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="anaphora_word" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="anaphora_entity_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="state" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="account_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
@@ -14,7 +14,7 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, apaphora_word, anaphora_entity_id, state, account_id, crate_time
+    id, anaphora_word, anaphora_entity_id, state, account_id, crate_time
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -30,10 +30,10 @@
   </delete>
 
   <insert id="insert" parameterType="com.cooler.semantic.entity.AnaphoraWord" >
-    insert into anaphora_word (id, apaphora_word, anaphora_entity_id, 
+    insert into anaphora_word (id, anaphora_word, anaphora_entity_id, 
       state, account_id, crate_time
       )
-    values (#{id,jdbcType=INTEGER}, #{apaphoraWord,jdbcType=VARCHAR}, #{anaphoraEntityId,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{anaphoraWord,jdbcType=VARCHAR}, #{anaphoraEntityId,jdbcType=INTEGER}, 
       #{state,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{crateTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -44,8 +44,8 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="apaphoraWord != null" >
-        apaphora_word,
+      <if test="anaphoraWord != null" >
+        anaphora_word,
       </if>
       <if test="anaphoraEntityId != null" >
         anaphora_entity_id,
@@ -64,8 +64,8 @@
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="apaphoraWord != null" >
-        #{apaphoraWord,jdbcType=VARCHAR},
+      <if test="anaphoraWord != null" >
+        #{anaphoraWord,jdbcType=VARCHAR},
       </if>
       <if test="anaphoraEntityId != null" >
         #{anaphoraEntityId,jdbcType=INTEGER},
@@ -85,8 +85,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.AnaphoraWord" >
     update anaphora_word
     <set >
-      <if test="apaphoraWord != null" >
-        apaphora_word = #{apaphoraWord,jdbcType=VARCHAR},
+      <if test="anaphoraWord != null" >
+        anaphora_word = #{anaphoraWord,jdbcType=VARCHAR},
       </if>
       <if test="anaphoraEntityId != null" >
         anaphora_entity_id = #{anaphoraEntityId,jdbcType=INTEGER},
@@ -106,7 +106,7 @@
 
   <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.AnaphoraWord" >
     update anaphora_word
-    set apaphora_word = #{apaphoraWord,jdbcType=VARCHAR},
+    set anaphora_word = #{anaphoraWord,jdbcType=VARCHAR},
       anaphora_entity_id = #{anaphoraEntityId,jdbcType=INTEGER},
       state = #{state,jdbcType=INTEGER},
       account_id = #{accountId,jdbcType=INTEGER},

@@ -5,7 +5,7 @@ import java.util.Date;
 public class AnaphoraWord {
     private Integer id;
 
-    private String apaphoraWord;
+    private String anaphoraWord;
 
     private Integer anaphoraEntityId;
 
@@ -15,9 +15,9 @@ public class AnaphoraWord {
 
     private Date crateTime;
 
-    public AnaphoraWord(Integer id, String apaphoraWord, Integer anaphoraEntityId, Integer state, Integer accountId, Date crateTime) {
+    public AnaphoraWord(Integer id, String anaphoraWord, Integer anaphoraEntityId, Integer state, Integer accountId, Date crateTime) {
         this.id = id;
-        this.apaphoraWord = apaphoraWord;
+        this.anaphoraWord = anaphoraWord;
         this.anaphoraEntityId = anaphoraEntityId;
         this.state = state;
         this.accountId = accountId;
@@ -36,12 +36,12 @@ public class AnaphoraWord {
         this.id = id;
     }
 
-    public String getApaphoraWord() {
-        return apaphoraWord;
+    public String getAnaphoraWord() {
+        return anaphoraWord;
     }
 
-    public void setApaphoraWord(String apaphoraWord) {
-        this.apaphoraWord = apaphoraWord == null ? null : apaphoraWord.trim();
+    public void setAnaphoraWord(String anaphoraWord) {
+        this.anaphoraWord = anaphoraWord == null ? null : anaphoraWord.trim();
     }
 
     public Integer getAnaphoraEntityId() {

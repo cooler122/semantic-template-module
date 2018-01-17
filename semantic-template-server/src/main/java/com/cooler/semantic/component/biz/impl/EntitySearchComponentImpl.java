@@ -57,7 +57,22 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
         Map<String, List<REntityWordInfo>> word_anaphoraEntitiesMap = anaphoraResolutionService.anaphoraResolution(contextOwner, allWords);
         if(word_anaphoraEntitiesMap != null && word_anaphoraEntitiesMap.size() > 0){
             Set<String> anaphoraWords = word_anaphoraEntitiesMap.keySet();                                              //已经归属好的指代性词语（实际上来源于上一轮的REW）
-            rEntityWordInfosMap.putAll(word_anaphoraEntitiesMap);                                                       //并入到总的map中
+            for (String anaphoraWord : anaphoraWords) {
+                List<REntityWordInfo> rEntityWordInfos = word_anaphoraEntitiesMap.get(anaphoraWord);
+                String wordModified = rEntityWordInfos.get(0).getWord();                                                //第一，此rEntityWordInfos必然有元素；第二，里面所有元素的word相同
+                rEntityWordInfosMap.put(wordModified, rEntityWordInfos);
+            }
+            for (SentenceVector sentenceVector : sentenceVectors){                                                      //修改原句中的word词组，改变它的指代词语
+                List<String> words = sentenceVector.getWords();
+                for (int i = 0; i < words.size(); i ++) {
+                    String sentenceWord = words.get(i);
+                    if(anaphoraWords.contains(sentenceWord)){
+                        List<REntityWordInfo> rEntityWordInfos = word_anaphoraEntitiesMap.get(sentenceWord);
+                        String wordModified = rEntityWordInfos.get(0).getWord();
+                        words.set(i, wordModified);
+                    }
+                }
+            }
             allWords.removeAll(anaphoraWords);                                                                          //删除已经归属好的词语
         }
 

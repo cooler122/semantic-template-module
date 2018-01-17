@@ -1,5 +1,6 @@
 package com.cooler.semantic.service.external.impl;
 
+import com.cooler.semantic.component.data.DataComponentBase;
 import com.cooler.semantic.dao.AnaphoraWordMapper;
 import com.cooler.semantic.dao.RAnaphoraEntityMapper;
 import com.cooler.semantic.entity.AnaphoraWord;
@@ -30,15 +31,16 @@ public class AnaphoraResolutionServiceImpl implements AnaphoraResolutionService 
         String last1OwnerIndex = contextOwner.getLast1OwnerIndex();
 
         //2.获取上轮对话数据
-        SVRuleInfo svRuleInfo = redisService.getCacheObject(last1OwnerIndex);                                           //获取上一轮对话数据
-        if(svRuleInfo != null){                                                                                         //上轮对话数据没有，直接返回空
+        DataComponentBase<SVRuleInfo> dataComponentBase = redisService.getCacheObject(last1OwnerIndex + "_optimalSvRuleInfo");                                           //获取上一轮对话数据
+        if(dataComponentBase != null && dataComponentBase.getData() != null){                                         //上轮对话数据没有，直接返回空
+            SVRuleInfo svRuleInfo = dataComponentBase.getData();
             Map<Integer, String> anaphoraEntityId_WordMap = new HashMap<>();                                            //指代词语对应的指代实体ID
             List<Integer> hitAnaphoraEntityIds = new ArrayList<>();                                                     //收集被用上的指代性实体ID
 
             //3.查询指代性词语对象，并将其各个相关字段收集起来
             List<AnaphoraWord> anaphoraWords = anaphoraWordMapper.selectByWords(words);                                 //传入各个词语，看看是否能搜索出指代词语
             for (AnaphoraWord anaphoraWord : anaphoraWords) {
-                String apaphoraWord = anaphoraWord.getApaphoraWord();                                                   //能命中的指代词语
+                String apaphoraWord = anaphoraWord.getAnaphoraWord();                                                   //能命中的指代词语
                 Integer anaphoraEntityId = anaphoraWord.getAnaphoraEntityId();                                          //指代词语隶属的指代实体ID
                 hitAnaphoraEntityIds.add(anaphoraEntityId);                                                             //收集指代实体ID
                 anaphoraEntityId_WordMap.put(anaphoraEntityId, apaphoraWord);                                           //将指代词语--指代实体ID，放入Map中

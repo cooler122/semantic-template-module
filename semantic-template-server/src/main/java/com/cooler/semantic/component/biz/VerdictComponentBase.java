@@ -140,8 +140,8 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
     }
 
     private ComponentBizResult<O> d2(ContextOwner contextOwner) {
-        DataComponent optimalSvRuleInfo = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner);
-        if(optimalSvRuleInfo == null){
+        DataComponent<SVRuleInfo> dataComponent = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner);
+        if(dataComponent != null && dataComponent.getData() != null){
             return new ComponentBizResult<>("D2_Y");
         }else{
             return new ComponentBizResult<>("D2_N");
@@ -166,11 +166,8 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
         if(optimalSvRuleInfo != null){
             SVRuleInfo svRuleInfo = optimalSvRuleInfo.getData();
             List<RRuleEntity> lackedRRuleEntities = svRuleInfo.getLackedRRuleEntities();
-            for (RRuleEntity lackedRRuleEntity : lackedRRuleEntities) {
-                Byte isNecessary = lackedRRuleEntity.getIsNecessary();
-                if(isNecessary == 1){                                                                                   //校验缺失参数中是否有参数为必须匹配的参数
-                    return new ComponentBizResult<>("D6_N");
-                }
+            if(lackedRRuleEntities != null && lackedRRuleEntities.size() > 0){                                         //lackedRRuleEntities里面的RRE必须都是必须实体
+                return new ComponentBizResult<>("D6_N");
             }
         }
         return new ComponentBizResult<>("D6_Y");
@@ -208,11 +205,11 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
         }
     }
 
-    private ComponentBizResult<O> d10(ContextOwner contextOwner) {
-        if(false){
-            return new ComponentBizResult<>("D10_Y");
-        }else{
+    private ComponentBizResult<O> d10(ContextOwner contextOwner) {                                                     //TODO:这一个还是要放一些判断逻辑的，但是用不用积累询问次数，现在还不能确定，以后的测试看效果吧
+        if(true){
             return new ComponentBizResult<>("D10_N");
+        }else{
+            return new ComponentBizResult<>("D10_Y");
         }
     }
 

@@ -47,6 +47,11 @@ public class SVRuleInfo implements Serializable{
     private String sentence;
 
     /**
+     * 经过修改了的句子（可能会和原句一样）
+     */
+    private String sentenceModified;
+
+    /**
      * 分好词的字符串数组
      */
     private List<String> words;
@@ -212,6 +217,13 @@ public class SVRuleInfo implements Serializable{
         this.matchedRRuleEntities = matchedRRuleEntities;
     }
 
+    public String getSentenceModified() {
+        return sentenceModified;
+    }
+
+    public void setSentenceModified(String sentenceModified) {
+        this.sentenceModified = sentenceModified;
+    }
 //    public Integer getContextId() {
 //        return contextId;
 //    }

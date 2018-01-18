@@ -12,6 +12,7 @@ import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.internal.AccountConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,6 +34,8 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
         Double similarity = svRuleInfo.getSimilarity();
         List<RRuleEntity> lackedRRuleEntities = svRuleInfo.getLackedRRuleEntities();
         int lackedSize = lackedRRuleEntities.size();
+        String sentenceModified = StringUtils.collectionToDelimitedString(svRuleInfo.getWords(), "");
+        svRuleInfo.setSentenceModified(sentenceModified);
 
         String responseMsg = "您问的是 ";
         if(lackedRRuleEntities != null && lackedSize > 1){                                                             //1.如果缺失实体问题数量 > 1
@@ -79,6 +82,7 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
         SemanticParserResponse semanticParserResponse = new SemanticParserResponse();
         semanticParserResponse.setResponseMsg(responseMsg);
         semanticParserResponse.setSentence(sentence);
+        semanticParserResponse.setSentenceModified(sentenceModified);
         semanticParserResponse.setResponseType(-1 * lackedSize);
         semanticParserResponse.setScore(similarity);
         semanticParserResponse.setResponseTimestamp(responseTimestamp);

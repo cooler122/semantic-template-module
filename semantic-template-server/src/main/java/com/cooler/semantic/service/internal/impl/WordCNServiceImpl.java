@@ -1,6 +1,5 @@
 package com.cooler.semantic.service.internal.impl;
 
-import com.cooler.semantic.component.biz.impl.EntitySearchComponentImpl;
 import com.cooler.semantic.dao.WordCNMapper;
 import com.cooler.semantic.entity.WordCN;
 import com.cooler.semantic.service.internal.WordCNService;
@@ -9,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 

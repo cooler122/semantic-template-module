@@ -6,6 +6,9 @@ public class SemanticParserResponse implements Serializable {
     //原始句子
     private String sentence;
 
+    //修改后的句子
+    private String sentenceModified;
+
     //响应类型
     private int responseType = 0;
 
@@ -30,6 +33,14 @@ public class SemanticParserResponse implements Serializable {
 
     public void setSentence(String sentence) {
         this.sentence = sentence;
+    }
+
+    public String getSentenceModified() {
+        return sentenceModified;
+    }
+
+    public void setSentenceModified(String sentenceModified) {
+        this.sentenceModified = sentenceModified;
     }
 
     public int getResponseType() {

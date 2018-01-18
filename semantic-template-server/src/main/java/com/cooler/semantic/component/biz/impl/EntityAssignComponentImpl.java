@@ -18,10 +18,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-@Component("entitySearchComponent")
-public class EntitySearchComponentImpl extends FunctionComponentBase<List<SentenceVector>, List<SentenceVector>> {
+@Component("entityAssignComponent")
+public class EntityAssignComponentImpl extends FunctionComponentBase<List<SentenceVector>, List<SentenceVector>> {
 
-    private static Logger logger = LoggerFactory.getLogger(EntitySearchComponentImpl.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(EntityAssignComponentImpl.class.getName());
 
     @Autowired
     private REntityWordService rEntityWordService;
@@ -30,8 +30,8 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
     @Autowired
     private AnaphoraResolutionService anaphoraResolutionService;
 
-    public EntitySearchComponentImpl() {
-        super("ESC", "SO_3", "sentenceVectors", "sentenceVectors");
+    public EntityAssignComponentImpl() {
+        super("EAC", "SO_3", "sentenceVectors", "sentenceVectors");
     }
 
     @Override
@@ -147,6 +147,6 @@ public class EntitySearchComponentImpl extends FunctionComponentBase<List<Senten
             sentenceVector.setrEntityWordInfosList(rEntityWordInfosList);
         }
 
-        return new ComponentBizResult("ESC_S", Constant.STORE_LOCAL, sentenceVectors);
+        return new ComponentBizResult("EAC_S", Constant.STORE_LOCAL, sentenceVectors);
     }
 }

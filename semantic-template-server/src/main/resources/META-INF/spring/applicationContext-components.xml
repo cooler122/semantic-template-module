@@ -29,7 +29,7 @@
             <map>
                 <entry key="VCC" value-ref="validateConfComponent"/>                                            <!-- 校验和配置 -->
                 <entry key="SPC" value-ref="sentenceProcessComponent"/>                                         <!-- 句子处理 -->
-                <entry key="ESC" value-ref="entitySearchComponent"/>                                            <!-- 实体归属 -->
+                <entry key="EAC" value-ref="entityAssignComponent"/>                                            <!-- 实体归属 -->
 
                 <entry key="D1" value-ref="verdictComponentBase"/>                                              <!-- D1:    CS.S < 0 ? -->
                 <entry key="D2" value-ref="verdictComponentBase"/>                                              <!-- D2:    判断：缺参匹配无效 ? -->
@@ -62,11 +62,11 @@
                 <entry key="VCC_S" value="SPC"/>
                 <entry key="VCC_F" value="ENDC"/>
 
-                <entry key="SPC_S" value="ESC"/>
+                <entry key="SPC_S" value="EAC"/>
                 <entry key="SPC_F" value="ENDC"/>
 
-                <entry key="ESC_S" value="D1"/>
-                <entry key="ESC_F" value="ENDC"/>
+                <entry key="EAC_S" value="D1"/>
+                <entry key="EAC_F" value="ENDC"/>
 
                 <entry key="D1_Y" value="LPMC"/>
                 <entry key="D1_N" value="CPMC"/>

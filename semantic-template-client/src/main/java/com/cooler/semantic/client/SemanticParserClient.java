@@ -16,23 +16,23 @@ public class SemanticParserClient {
     private static SemanticParserFacade semanticParserFacade = (SemanticParserFacade)context.getBean("semanticParserFacade", SemanticParserFacade.class);
 
     public static void main(String[] args) throws IOException {
-//        String[] sentences = { "北京今天天气怎么样？" };                                                            //测试全参匹配
+//        String[] sentences = { "北京今天天气怎么样？" };                                                              //测试全参匹配
 
-//        String[] sentences = { "天气怎么样？", "今天", "北京" };                                               //测试缺参匹配
+//        String[] sentences = { "天气怎么样？", "今天", "北京" };                                                      //测试缺参匹配
 
-//        String[] sentences = { "天气怎么样？", "哈哈", "哈哈", "哈哈", "今天", "北京" };                          //测试打断上下文的缺参匹配1
+//        String[] sentences = { "天气怎么样？", "哈哈", "哈哈", "哈哈", "今天", "北京" };                              //测试打断上下文的缺参匹配1
 
-//        String[] sentences = { "天气怎么样？", "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京" };                 //测试打断上下文的缺参匹配2
+//        String[] sentences = { "天气怎么样？", "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京" };                     //测试打断上下文的缺参匹配2
 
-//        String[] sentences = {  "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京" };                            //测试匹配失败
+//        String[] sentences = {  "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京" };                                    //测试匹配失败
 
-//        String[] sentences = {  "唱周杰伦的双节棍" };                                                         //另一场景，测试全参匹配
+//        String[] sentences = {  "唱周杰伦的双节棍" };                                                                 //另一场景，测试全参匹配
 
-//         String[] sentences = {  "唱周杰伦的听妈妈的话" };                                                         //另一场景，测试全参匹配（自定义分词）
+//        String[] sentences = {  "唱周杰伦的听妈妈的话" };                                                             //另一场景，测试全参匹配（自定义分词）
 
-//        String[] sentences = {  "唱周杰伦的歌" , "听妈妈的话" };                                             //另一场景，测试缺参匹配（自定义分词）
+//        String[] sentences = {  "唱周杰伦的歌" , "听妈妈的话" };                                                      //另一场景，测试缺参匹配（自定义分词）
 
-        String[] sentences = {  "唱周杰伦的听妈妈的话" , "唱他的双节棍"};                           //另一场景，测试缺参匹配（自定义分词 + 指代消解）
+        String[] sentences = {  "唱周杰伦的歌" , "唱他的双节棍", "播放他的听妈妈的话", "唱林俊杰的江南", "唱他的美人鱼"};     //另一场景，测试缺参匹配（自定义分词 + 指代消解）
 
         Integer contextId = 1;
         Integer state = 0;

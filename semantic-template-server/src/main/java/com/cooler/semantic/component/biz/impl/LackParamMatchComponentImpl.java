@@ -169,6 +169,17 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                 }
             }
         }
+
+        //3.此处缺参匹配已经匹配成功，既然已经选定了一个SVRuleInfo对象作为lpm_optimalSvRuleInfo，那么要完善此处的lpm_optimalSvRuleInfo内部结构体
+        if(lpm_optimalSvRuleInfo != null){
+            List<REntityWordInfo> matchedREntityWordInfos = lpm_optimalSvRuleInfo.getMatchedREntityWordInfos();
+            List<String> wordsModified = new ArrayList<>();
+            for (REntityWordInfo matchedREntityWordInfo : matchedREntityWordInfos) {
+                wordsModified.add(matchedREntityWordInfo.getWord());
+            }
+            lpm_optimalSvRuleInfo.setWords(wordsModified);
+        }
+
         return new ComponentBizResult("LPMC_S", Constant.STORE_LOCAL_REMOTE, lpm_optimalSvRuleInfo);      //无论结果是否为null，都要保存，此结果在本地和远程都要存储;
     }
 

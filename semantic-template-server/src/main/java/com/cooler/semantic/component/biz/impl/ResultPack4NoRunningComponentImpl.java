@@ -7,6 +7,9 @@ import com.cooler.semantic.entity.SemanticParserResponse;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.SVRuleInfo;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import java.util.Arrays;
 
 @Component("resultPack4NoRunningComponent")
 public class ResultPack4NoRunningComponentImpl extends FunctionComponentBase<SVRuleInfo, SemanticParserResponse> {
@@ -20,9 +23,12 @@ public class ResultPack4NoRunningComponentImpl extends FunctionComponentBase<SVR
         String sentence = svRuleInfo.getSentence();
         Double similarity = svRuleInfo.getSimilarity();
         long responseTimestamp = System.currentTimeMillis();
+        String sentenceModified = StringUtils.collectionToDelimitedString(svRuleInfo.getWords(), "");
+        svRuleInfo.setSentenceModified(sentenceModified);
 
         SemanticParserResponse semanticParserResponse = new SemanticParserResponse();
         semanticParserResponse.setSentence(sentence);
+        semanticParserResponse.setSentenceModified(sentenceModified);
         semanticParserResponse.setResponseType(0);
         semanticParserResponse.setScore(similarity);
         semanticParserResponse.setResponseTimestamp(responseTimestamp);

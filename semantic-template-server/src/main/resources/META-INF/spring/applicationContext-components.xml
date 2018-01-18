@@ -76,7 +76,8 @@
                 <entry key="D2_Y" value="D6"/>      <!-- 存储策略在各个组件会自己声明，不再成为流程图中的节点，直接跳过 -->
                 <entry key="D2_N" value="CPMC"/>
 
-                <entry key="CPMC_S" value="D4"/>
+                <entry key="CPMC_S" value="D6"/>
+                <entry key="CPMC_F" value="FPMC"/>
 
                 <entry key="D6_Y" value="D7"/>
                 <entry key="D6_N" value="D10"/>
@@ -103,9 +104,6 @@
 
                 <entry key="D3_Y" value="CPMC"/>
                 <entry key="D3_N" value="FPMC"/>
-
-                <entry key="D4_Y" value="D6"/>
-                <entry key="D4_N" value="FPMC"/>
 
                 <entry key="FPMC_S" value="D6"/>
                 <entry key="FPMC_F" value="D9"/>

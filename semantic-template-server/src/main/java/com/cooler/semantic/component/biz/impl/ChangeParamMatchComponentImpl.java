@@ -91,6 +91,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                             Double volumeIncrement = historyVolumeIncrementMap.get(contextId);                          //获得此会话的数量单元增量
                             Map<Integer, Double> weightMap = historyREntityWordInfo.getWeightMap();
                             Double historyWeight = weightMap.get(sentenceVectorId);                                     //获得此实体在这个会话里面的权重
+                            historyWeight = historyWeight != null ? historyWeight : 0d;                                 //排除historyWeight为null的情况
 
                             double productValueIncrement = 1d / currentSVSize * currentWeight * volumeIncrement * historyWeight;//当前句子REWI和历史REWI的积值增量
                             Double productValue = svIdcontextId_productValueMap.get(sentenceVectorId + "_" + contextId);
@@ -118,12 +119,14 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                 REntityWordInfo matchedREntityWordInfo = matchedREntityWordInfos.get(i);
                 Integer entityType = matchedREntityWordInfo.getEntityType();
                 Integer entityId = matchedREntityWordInfo.getEntityId();
+                Map<Integer, Double> historyWeightMap = matchedREntityWordInfo.getWeightMap();
                 CoordinateKey coordinateKey = new CoordinateKey(maxValueSentenceVectorId, entityType, entityId);
-                REntityWordInfo hitCurrentREntityWordInfos = hitCurrentREntityWordInfoMap.get(coordinateKey);
-                if(hitCurrentREntityWordInfos != null){
-                    hitCurrentREntityWordInfos.setContextId(currentContextId);
-                    matchedREntityWordInfosModified.add(hitCurrentREntityWordInfos);
-                    words.set(i, hitCurrentREntityWordInfos.getWord());
+                REntityWordInfo hitCurrentREntityWordInfo = hitCurrentREntityWordInfoMap.get(coordinateKey);
+                if(hitCurrentREntityWordInfo != null){
+                    hitCurrentREntityWordInfo.setContextId(currentContextId);
+                    hitCurrentREntityWordInfo.setWeightMap(historyWeightMap);                                           //注意权重还是要用历史规则里面REWI里面的权重
+                    matchedREntityWordInfosModified.add(hitCurrentREntityWordInfo);
+                    words.set(i, hitCurrentREntityWordInfo.getWord());
                 }else{
                     matchedREntityWordInfo.setContextId(currentContextId);
                     matchedREntityWordInfosModified.add(matchedREntityWordInfo);

@@ -2,7 +2,9 @@ package com.cooler.semantic.component.biz.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
+import com.cooler.semantic.component.ComponentConstant;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
+import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.AccountConfiguration;
 import com.cooler.semantic.entity.RRuleEntity;
@@ -33,6 +35,8 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
     private SimilarityCalculateService similarityCalculateService;
     @Autowired
     private AccountConfigurationService accountConfigurationService;
+    @Autowired
+    private ComponentConstant componentConstant;
 
     public FullParamMatchComponentImpl() {
         super("FPMC", "SO-8 ~ SO-10", "sentenceVectors", "optimalSvRuleInfo");
@@ -74,12 +78,37 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                     else return 0;
                 }
             });
-            SVRuleInfo optimalSvRuleInfo = svRuleInfosResult.get(0);                                                        //获取相似度值最大的那一个（最优结果）
-            optimalSvRuleInfo.setrEntityWordInfosList(null);                                                                //最优规则找到后，需要保存（本地、远程），此过程数据太大而且后续没有更多作用，故此处设置为null
+            SVRuleInfo fullParamOptimalSvRuleInfo = svRuleInfosResult.get(0);                                                        //获取相似度值最大的那一个（最优结果）
+            fullParamOptimalSvRuleInfo.setrEntityWordInfosList(null);                                                                //最优规则找到后，需要保存（本地、远程），此过程数据太大而且后续没有更多作用，故此处设置为null
+            Double fullParamSimilarity = fullParamOptimalSvRuleInfo.getSimilarity();
 
-            Double accuracyThreshold = accountConfiguration.getAccuracyThreshold();
-            if(optimalSvRuleInfo.getSimilarity() > accuracyThreshold){
-                return new ComponentBizResult("FPMC_S", Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo);      //此结果在本地和远程都要存储
+            //4.下面是全参匹配和换参匹配的最优值赋予机会争夺，谁的值高，用谁的SVRuleInfo作为optimalSvRuleInfo（原本这个争夺过程跟全参匹配没有关系，但不变放到判断体里面进行）
+            SVRuleInfo optimalSvRuleInfo = null;
+            boolean fullParamMatchIsUsed = true;                                                                      //全参匹配得到的结果使用了吗？默认使用了
+            DataComponent<SVRuleInfo> dataComponent = componentConstant.getDataComponent("changeParamOptimalSvRuleInfo", contextOwner);
+            if(dataComponent != null && dataComponent.getData() != null){
+                SVRuleInfo changeParamOptimalSvRuleInfo = dataComponent.getData();
+                Double changeParamSimilarity = changeParamOptimalSvRuleInfo.getSimilarity();
+                if(fullParamSimilarity >= changeParamSimilarity){                                                       //争夺成功
+                    optimalSvRuleInfo = fullParamOptimalSvRuleInfo;
+                    fullParamMatchIsUsed = true;
+                }else{                                                                                                  //争夺失败
+                    optimalSvRuleInfo = changeParamOptimalSvRuleInfo;
+                    fullParamMatchIsUsed = false;
+                }
+            }else{                                                                                                     //无需争夺
+                optimalSvRuleInfo = fullParamOptimalSvRuleInfo;
+                fullParamMatchIsUsed = true;
+            }
+            Double optimalSimilarity = optimalSvRuleInfo.getSimilarity();                                               //最终选定的最优结果的相似度值
+            Double accuracyThreshold = accountConfiguration.getAccuracyThreshold();                                     //用户设定的相似度值门槛
+
+            if(optimalSimilarity > accuracyThreshold){
+                if(fullParamMatchIsUsed){
+                    return new ComponentBizResult("FPMC_S_F", Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo);      //此结果在本地和远程都要存储
+                }else{
+                    return new ComponentBizResult("FPMC_S_C", Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo);      //此结果在本地和远程都要存储
+                }
             }else{
                 return new ComponentBizResult("FPMC_F", "FPMC_F_SimilarityNotBeyond");      //此结果在本地和远程都要存储
             }

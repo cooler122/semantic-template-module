@@ -35,6 +35,23 @@ public class SVRuleInfo implements Serializable{
      */
     private Double similarity = 0d;
 
+    /**
+     * 此值的含义：确定它是最优结果值吗？
+     * 为何有此字段？因为换参匹配在全参匹配之前，换参匹配有时候得到一个SVRuleInfo结构体但不一定是最佳的，这个时候如果再进行全参匹配，可能能得到一个分值
+     * 更高的SVRuleInfo，为了保险起见，还是要走全参匹配生成一个SVRuleInfo来跟换参匹配的进行对比，哪个分高用哪个作为optimalSvRuleInfo。
+     * 但也不能每次都走全参匹配，这样会降低性能，只要换参匹配能达到一定情况的时候，就无须走全参匹配了（否决全参匹配）。
+     *
+     * 基于上面的两类不确定的情况，就设置了此字段，此字段为false，代表不确定它是否为最终optimalSvRuleInfo，还要走全参匹配；如果为true，代表已经确定换参匹配得到的SVRuleInfo为
+     * optimalSvRuleInfo了，无须走全参匹配了。
+     *
+     * 那么如何确定此字段的值呢？此值应该在换参匹配的逻辑体中确定，如果：
+     * 1.）换参匹配中得到的 历史规则实体数 <= 当前实体数
+     * 2.）如果当前句子向量的名词性实体 > 2
+     * 3.）如果可换参数 在句子向量中权重利用率 < 60%
+     * 中任意一个被满足，那么就设置为false，说明当前换参匹配得到的SVRuleInfo不保险， 就要让它走全参匹配流程，看看能否得到一个更高值的SVRuleInfo对象作为optimalSvRuleInfo。
+     */
+    private boolean ensureFinal = false;
+
     //*****************************************************3.SentenceVector数据：此RuleInfo做为一个计算单元，以下是从句子向量SentenceVector中取出来的值，用来进行相似度计算的值
     /**
      * 句子向量的ID
@@ -224,7 +241,16 @@ public class SVRuleInfo implements Serializable{
     public void setSentenceModified(String sentenceModified) {
         this.sentenceModified = sentenceModified;
     }
-//    public Integer getContextId() {
+
+    public boolean isEnsureFinal() {
+        return ensureFinal;
+    }
+
+    public void setEnsureFinal(boolean ensureFinal) {
+        this.ensureFinal = ensureFinal;
+    }
+
+    //    public Integer getContextId() {
 //        return contextId;
 //    }
 //

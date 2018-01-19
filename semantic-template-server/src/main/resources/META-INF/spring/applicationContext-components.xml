@@ -65,7 +65,8 @@
                 <entry key="SPC_S" value="EAC"/>
                 <entry key="SPC_F" value="ENDC"/>
 
-                <entry key="EAC_S" value="D1"/>
+                <entry key="EAC_S_N" value="D1"/>    <!-- 没有经过指代消解 -->
+                <entry key="EAC_S_Y" value="D1"/>    <!-- 经过了指代消解 -->
                 <entry key="EAC_F" value="ENDC"/>
 
                 <entry key="D1_Y" value="LPMC"/>
@@ -76,7 +77,9 @@
                 <entry key="D2_Y" value="D6"/>      <!-- 存储策略在各个组件会自己声明，不再成为流程图中的节点，直接跳过 -->
                 <entry key="D2_N" value="CPMC"/>
 
-                <entry key="CPMC_S" value="D6"/>
+                <entry key="CPMC_S" value="D3"/>
+                <entry key="D3_Y" value="D6"/>
+                <entry key="D3_N" value="FPMC"/>
                 <entry key="CPMC_F" value="FPMC"/>
 
                 <entry key="D6_Y" value="D7"/>
@@ -99,13 +102,15 @@
                 <entry key="D10_Y" value="RPC4F"/>
                 <entry key="D10_N" value="LRRC"/>
 
-                <entry key="LRRC_S" value="RPC4M"/>
-                <entry key="LRRC_F" value="RPC4F"/>
+                <entry key="LRRC_S1" value="RPC4M"/>    <!-- LRRC_S1，代表已经产生了最优规则，故历史缺参规则无需后移，就没有后移 -->
+                <entry key="LRRC_S2" value="RPC4M"/>   <!-- LRRC_S2，代表没有产生了最优规则，但历史缺参规则后移成功 -->
+                <entry key="LRRC_F" value="RPC4F"/>    <!-- LRRC_F，代表没有产生了最优规则，但历史缺参规则尝试过后移但失败（没有历史缺参规则） -->
 
                 <entry key="D3_Y" value="CPMC"/>
                 <entry key="D3_N" value="FPMC"/>
 
-                <entry key="FPMC_S" value="D6"/>
+                <entry key="FPMC_S_F" value="D6"/>      <!-- FPMC_S_F，全参匹配完成，而且在与换参匹配结果比较中获胜，使用全参匹配的结果作为最优结果 -->
+                <entry key="FPMC_S_C" value="D6"/>      <!-- FPMC_S_C，全参匹配完成，但是在与换参匹配结果比较中失败，使用换参匹配的结果作为最优结果 -->
                 <entry key="FPMC_F" value="D9"/>
 
                 <entry key="D4_S" value="ENDC"/>

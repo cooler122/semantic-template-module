@@ -82,7 +82,7 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
         switch (componentId){
             case "D1" : componentBizResult = d1(contextOwner); break;
             case "D2" : componentBizResult = d2(contextOwner); break;
-            case "D3" : componentBizResult = d3(); break;
+            case "D3" : componentBizResult = d3(contextOwner); break;
             case "D6" : componentBizResult = d6(contextOwner); break;
             case "D7" : componentBizResult = d7(contextOwner); break;
             case "D8" : componentBizResult = d8(contextOwner); break;
@@ -147,8 +147,16 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
         }
     }
 
-    private ComponentBizResult<O> d3() {
-//        if(true)    return new ComponentBizResult<>("D3_E", false, null);
+    private ComponentBizResult<O> d3(ContextOwner contextOwner) {
+        DataComponent<SVRuleInfo> dataComponent = componentConstant.getDataComponent("changeParamOptimalSvRuleInfo", contextOwner);
+        if(dataComponent != null && dataComponent.getData() != null){
+            SVRuleInfo changeParamOptimalSvRuleInfo = dataComponent.getData();
+            if(changeParamOptimalSvRuleInfo.isEnsureFinal()){                                                           //判断换参匹配结果是否确定为最终最优结果
+                return new ComponentBizResult<>("D3_Y");
+            }else{
+                return new ComponentBizResult<>("D3_N");
+            }
+        }
         return new ComponentBizResult<>("D3_N");
     }
 

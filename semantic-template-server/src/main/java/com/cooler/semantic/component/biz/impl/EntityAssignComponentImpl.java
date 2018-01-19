@@ -38,7 +38,7 @@ public class EntityAssignComponentImpl extends FunctionComponentBase<List<Senten
     protected ComponentBizResult<List<SentenceVector>> runBiz(ContextOwner contextOwner, List<SentenceVector> sentenceVectors) {
         Integer accountId = contextOwner.getAccountId();
         Integer contextId = contextOwner.getContextId();
-
+        boolean hadAnaphoraResolution = false;
         Map<String, List<REntityWordInfo>> rEntityWordInfosMap = new HashMap<>();
 
         //1.先将所有分词组合出现的分词段收集起来，这里使用Set就直接去重了，查询出这些词语的REntityWord对象集合
@@ -73,6 +73,7 @@ public class EntityAssignComponentImpl extends FunctionComponentBase<List<Senten
                     }
                 }
             }
+            hadAnaphoraResolution = true;                                                                              //标记已经经过指代消解了
             allWords.removeAll(anaphoraWords);                                                                          //删除已经归属好的词语
         }
 
@@ -147,6 +148,11 @@ public class EntityAssignComponentImpl extends FunctionComponentBase<List<Senten
             sentenceVector.setrEntityWordInfosList(rEntityWordInfosList);
         }
 
-        return new ComponentBizResult("EAC_S", Constant.STORE_LOCAL, sentenceVectors);
+        if(!hadAnaphoraResolution){                                                                                     //没有经过指代消解
+            return new ComponentBizResult("EAC_S_N", Constant.STORE_LOCAL, sentenceVectors);
+        }else{
+            return new ComponentBizResult("EAC_S_Y", Constant.STORE_LOCAL, sentenceVectors);
+        }
+
     }
 }

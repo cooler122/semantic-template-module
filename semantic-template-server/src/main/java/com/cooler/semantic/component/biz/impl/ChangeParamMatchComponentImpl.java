@@ -21,7 +21,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
     private RedisService<SVRuleInfo> redisService;
 
     public ChangeParamMatchComponentImpl() {
-        super("CPMC", "SO-6 ~ SO-7", "sentenceVectors", "optimalSvRuleInfo");
+        super("CPMC", "SO-6 ~ SO-7", "sentenceVectors", "changeParamOptimalSvRuleInfo");
     }
 
     @Override
@@ -60,13 +60,16 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
             }
         }
 
+        if(contextId_svRuleInfoMap.size() == 0) return new ComponentBizResult("CPMC_F");                 //如果没有收集到历史规则，就跳出去吧
+
         Map<CoordinateKey, REntityWordInfo> hitCurrentREntityWordInfoMap = new HashMap<>();                             //关联数据Map<{sentenceVectorId, currentEntityType, currentEntityId}, hitCurrentREWI>
         Map<String, Double> svIdcontextId_productValueMap = new HashMap<>();                                            //统计值Map<sentenceVectorId_contextId, 统计数据值>
         Integer maxValueSentenceVectorId = null;                                                                        //最高匹配值的sentenceVectorId（和下面的contextId绑定）
         Integer maxValueContextId = null;                                                                               //最高匹配值的ContextId
-        Double maxValue = 0d;                                                                                           //最高匹配值
+        Double maxValue = 0d;                                                                                           //最高匹配值（此值是匹配上的实体的(1d / currentSVSize * currentWeight) * 3 + (volumeIncrement * historyWeight)的和值）
 
-        //2.准备好关联数据，选好最高得分的contextId，确定换参匹配，匹配哪个历史上下文
+
+        //2.计算最佳上下文：准备好关联数据，选好最高得分的contextId，确定换参匹配，匹配哪个历史上下文
         for (SentenceVector sentenceVector : sentenceVectors) {                                                         //句子端：查询本次检索出来的句子向量
             Integer sentenceVectorId = sentenceVector.getId();                                                          //句子向量ID
             List<List<REntityWordInfo>> currentREntityWordInfosList = sentenceVector.getrEntityWordInfosList();         //遍历当前句子向量里面的各个REWIs
@@ -93,10 +96,17 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                             Double historyWeight = weightMap.get(sentenceVectorId);                                     //获得此实体在这个会话里面的权重
                             historyWeight = historyWeight != null ? historyWeight : 0d;                                 //排除historyWeight为null的情况
 
-                            double productValueIncrement = 1d / currentSVSize * currentWeight * volumeIncrement * historyWeight;//当前句子REWI和历史REWI的积值增量
+                            double productValueIncrement = (1d / currentSVSize * currentWeight) * 3 + (volumeIncrement * historyWeight);//当前句子REWI积值*3 和历史REWI积值 之和
+                            double currentEntityWeightRateIncrement = 1d / currentSVSize * currentWeight;                               //此处只记录句子向量端的 量比重 * 权重比重
+
                             Double productValue = svIdcontextId_productValueMap.get(sentenceVectorId + "_" + contextId);
                             productValue = (productValue != null ? productValue : 0d) + productValueIncrement;          //将上面的统计数据体放到统计数据Map中
-                            svIdcontextId_productValueMap.put(sentenceVectorId + "_" + contextId, productValue);
+
+                            Double currentEntityWeightRate = svIdcontextId_productValueMap.get(sentenceVectorId + "_" + contextId + "_currentEntityWeight");
+                            currentEntityWeightRate = (currentEntityWeightRate != null ? currentEntityWeightRate : 0d) + currentEntityWeightRateIncrement;
+
+                            svIdcontextId_productValueMap.put(sentenceVectorId + "_" + contextId, productValue);        //两个值都放到Map中，第一个值作为比较标准，找到最优SVRuleInfo，第二个值作为是否进入全参匹配过程的参考值
+                            svIdcontextId_productValueMap.put(sentenceVectorId + "_" + contextId + "_currentEntityWeight", currentEntityWeightRate);
 
                             if(productValue > maxValue || (productValue == maxValue && contextId > maxValueContextId)){ //比较，更新当前最大值的sentenceVectorId、contextId、maxValue（最终会找到最佳svId、contextId匹配结果）
                                 maxValueSentenceVectorId = sentenceVectorId;
@@ -109,12 +119,12 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
             }
         }
 
-        //3.替换最佳optimalSvRuleInfo，并修改里面替换的参数，包括words和matchedREntityWordInfos
         if(maxValueContextId != null){
-            SVRuleInfo optimalSvRuleInfo = contextId_svRuleInfoMap.get(maxValueContextId);                              //这里通过maxValueContextId获取的SVRuleInfo对象就作为最终返回的optimalSvRuleInfo
-            List<String> words = optimalSvRuleInfo.getWords();
+            //3.换参，设置历史规则为当前匹配规则：设置changeParamOptimalSvRuleInfo，并修改里面替换的参数，包括words和matchedREntityWordInfos
+            SVRuleInfo changeParamOptimalSvRuleInfo = contextId_svRuleInfoMap.get(maxValueContextId);                   //这里通过maxValueContextId获取的SVRuleInfo对象作为换参匹配返回的changeParamOptimalSvRuleInfo，有待后面对比全参匹配进行选择
+            List<String> words = changeParamOptimalSvRuleInfo.getWords();
             List<REntityWordInfo> matchedREntityWordInfosModified = new ArrayList<>();                                  //准备一个新的REWI集合，作为换参SVRuleInfo的匹配REWI集合
-            List<REntityWordInfo> matchedREntityWordInfos = optimalSvRuleInfo.getMatchedREntityWordInfos();             //获取旧的REWI集合
+            List<REntityWordInfo> matchedREntityWordInfos = changeParamOptimalSvRuleInfo.getMatchedREntityWordInfos();             //获取旧的REWI集合
             for(int i = 0; i < matchedREntityWordInfos.size(); i ++){
                 REntityWordInfo matchedREntityWordInfo = matchedREntityWordInfos.get(i);
                 Integer entityType = matchedREntityWordInfo.getEntityType();
@@ -132,9 +142,35 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                     matchedREntityWordInfosModified.add(matchedREntityWordInfo);
                 }
             }
-            optimalSvRuleInfo.setMatchedREntityWordInfos(matchedREntityWordInfosModified);                              //重新设置修改的REWI集合
+            changeParamOptimalSvRuleInfo.setMatchedREntityWordInfos(matchedREntityWordInfosModified);                   //重新设置修改的REWI集合
 
-            return new ComponentBizResult("CPMC_S", Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo);          //此结果在本地和远程都要存储
+            //4.计算相关判断标准：看是否changeParamOptimalSvRuleInfo，作为最终optimalSvRuleInfo，如果确定是，则无需走全参匹配过程，反之则走
+            int historyEntitiesCount = 0;                                                                               //历史规则里的实体数量
+            int currentEntitiesCount = 0;                                                                               //当前句子向量里的实体数量
+            int currentCoreEntitiesCount = 0;                                                                           //当前核心实体数
+            double currentHitEntityWeightRate = 0d;                                                                    //可换参数所占的权重在句子向量中权重的占比
+            historyEntitiesCount = matchedREntityWordInfos.size();
+            for (SentenceVector sentenceVector : sentenceVectors) {
+                Integer sentenceVectorId = sentenceVector.getId();
+                if(sentenceVectorId.intValue() == maxValueSentenceVectorId.intValue()){
+                    List<String> natures = sentenceVector.getNatures();
+                    currentEntitiesCount = natures.size();
+                    for (String nature : natures) {
+                        if(nature.startsWith("n")){
+                            currentCoreEntitiesCount ++;
+                        }
+                    }
+                    break;
+                }
+            }
+            currentHitEntityWeightRate = svIdcontextId_productValueMap.get(maxValueSentenceVectorId + "_" + maxValueContextId + "_currentEntityWeight");
+
+            if(historyEntitiesCount <= currentEntitiesCount || currentCoreEntitiesCount > 2 || currentHitEntityWeightRate < 0.6d){  //满足这3个条件之一的，我心里就不踏实了，就强制它走一遍全参匹配
+                changeParamOptimalSvRuleInfo.setEnsureFinal(false);
+            }else{
+                changeParamOptimalSvRuleInfo.setEnsureFinal(true);
+            }
+            return new ComponentBizResult("CPMC_S", Constant.STORE_LOCAL_REMOTE, changeParamOptimalSvRuleInfo);          //此结果在本地和远程都要存储
         }else{
             return new ComponentBizResult("CPMC_F");
         }

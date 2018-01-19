@@ -29,24 +29,27 @@ public class LackResultRetrocessionComponentImpl extends FunctionComponentBase<S
 
     @Override
     protected ComponentBizResult<SVRuleInfo> runBiz(ContextOwner contextOwner, SVRuleInfo svRuleInfo) {
+        if(svRuleInfo != null){
+            return new ComponentBizResult("LRRC_S1");
+        }
+
         Integer contextId = contextOwner.getContextId();
         SVRuleInfo optimalSvRuleInfo = svRuleInfo;                                                                      //先不管当前会话是否得到最优结果，先准备一个返回体。
-        if(optimalSvRuleInfo == null){                                                                                 //当前返回体没有值，就要给它准备一个值，就从历史结果中找一个值
-            for(int i = 1; i <= 5; i ++){
-                String lastI_OwnerIndex = contextOwner.getLastNOwnerIndex(i);
-                DataComponentBase<SVRuleInfo> historyData = redisService.getCacheObject(lastI_OwnerIndex + "_" + "optimalSvRuleInfo");
-                if(historyData != null && historyData.getData() != null){
-                    optimalSvRuleInfo = historyData.getData();
-                    List<REntityWordInfo> matchedREntityWordInfos = optimalSvRuleInfo.getMatchedREntityWordInfos();     //将所有匹配上的REWI修改对话编号，变为本轮对话编号后进行存储
-                    for (REntityWordInfo matchedREntityWordInfo : matchedREntityWordInfos) {
-                        matchedREntityWordInfo.setContextId(contextId);
-                    }
-                    break;                                                                                             //找到最近的一个历史数据记录即可，就不用找其他更远的版本了
+        for(int i = 1; i <= 5; i ++){
+            String lastI_OwnerIndex = contextOwner.getLastNOwnerIndex(i);
+            DataComponentBase<SVRuleInfo> historyData = redisService.getCacheObject(lastI_OwnerIndex + "_optimalSvRuleInfo");
+            if(historyData != null && historyData.getData() != null){
+                optimalSvRuleInfo = historyData.getData();
+                List<REntityWordInfo> matchedREntityWordInfos = optimalSvRuleInfo.getMatchedREntityWordInfos();     //将所有匹配上的REWI修改对话编号，变为本轮对话编号后进行存储
+                for (REntityWordInfo matchedREntityWordInfo : matchedREntityWordInfos) {
+                    matchedREntityWordInfo.setContextId(contextId);
                 }
+                break;                                                                                             //找到最近的一个历史数据记录即可，就不用找其他更远的版本了
             }
         }
+
         if(optimalSvRuleInfo != null){                                                                                 //如果当前有了值，则返回成功
-            return new ComponentBizResult("LRRC_S", Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo);
+            return new ComponentBizResult("LRRC_S2", Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo);
         }else{                                                                                                          //如果入参为空，经过上面历史赋值都失败了，那么就返回失败
             return new ComponentBizResult("LRRC_F");
         }

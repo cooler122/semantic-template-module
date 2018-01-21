@@ -85,9 +85,9 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
             //4.下面是全参匹配和换参匹配的最优值赋予机会争夺，谁的值高，用谁的SVRuleInfo作为optimalSvRuleInfo（原本这个争夺过程跟全参匹配没有关系，但不变放到判断体里面进行）
             SVRuleInfo optimalSvRuleInfo = null;
             boolean fullParamMatchIsUsed = true;                                                                      //全参匹配得到的结果使用了吗？默认使用了
-            DataComponent<SVRuleInfo> dataComponent = componentConstant.getDataComponent("changeParamOptimalSvRuleInfo", contextOwner);
-            if(dataComponent != null && dataComponent.getData() != null){
-                SVRuleInfo changeParamOptimalSvRuleInfo = dataComponent.getData();
+            DataComponent<SVRuleInfo> changeParamDataComponent = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner); //尝试取出前面得到的换参匹配得到的SVRuleInfo
+            if(changeParamDataComponent != null && changeParamDataComponent.getData() != null){
+                SVRuleInfo changeParamOptimalSvRuleInfo = changeParamDataComponent.getData();
                 Double changeParamSimilarity = changeParamOptimalSvRuleInfo.getSimilarity();
                 if(fullParamSimilarity >= changeParamSimilarity){                                                       //争夺成功
                     optimalSvRuleInfo = fullParamOptimalSvRuleInfo;

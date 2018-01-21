@@ -21,7 +21,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
     private RedisService<SVRuleInfo> redisService;
 
     public ChangeParamMatchComponentImpl() {
-        super("CPMC", "SO-6 ~ SO-7", "sentenceVectors", "changeParamOptimalSvRuleInfo");
+        super("CPMC", "SO-6 ~ SO-7", "sentenceVectors", "optimalSvRuleInfo");
     }
 
     @Override
@@ -92,6 +92,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                             //2.获取此historyREWI的相关数据，对其值累计到统计数据中
                             Integer contextId = historyREntityWordInfo.getContextId();                                  //这个小历史REWI集合虽然共有一个相同的entityTypeId，但有不同的contextId，即会话版本不同
                             Double volumeIncrement = historyVolumeIncrementMap.get(contextId);                          //获得此会话的数量单元增量
+                            volumeIncrement = volumeIncrement != null ? volumeIncrement : 0d;                           //volumeIncrement确保有值
                             Map<Integer, Double> weightMap = historyREntityWordInfo.getWeightMap();
                             Double historyWeight = weightMap.get(sentenceVectorId);                                     //获得此实体在这个会话里面的权重
                             historyWeight = historyWeight != null ? historyWeight : 0d;                                 //排除historyWeight为null的情况

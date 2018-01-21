@@ -106,9 +106,6 @@
                 <entry key="LRRC_S2" value="RPC4M"/>   <!-- LRRC_S2，代表没有产生了最优规则，但历史缺参规则后移成功 -->
                 <entry key="LRRC_F" value="RPC4F"/>    <!-- LRRC_F，代表没有产生了最优规则，但历史缺参规则尝试过后移但失败（没有历史缺参规则） -->
 
-                <entry key="D3_Y" value="CPMC"/>
-                <entry key="D3_N" value="FPMC"/>
-
                 <entry key="FPMC_S_F" value="D6"/>      <!-- FPMC_S_F，全参匹配完成，而且在与换参匹配结果比较中获胜，使用全参匹配的结果作为最优结果 -->
                 <entry key="FPMC_S_C" value="D6"/>      <!-- FPMC_S_C，全参匹配完成，但是在与换参匹配结果比较中失败，使用换参匹配的结果作为最优结果 -->
                 <entry key="FPMC_F" value="D9"/>

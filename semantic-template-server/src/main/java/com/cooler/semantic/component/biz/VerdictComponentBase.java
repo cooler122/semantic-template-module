@@ -37,14 +37,14 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
      * 组件类型（1功能组件、2判断组件）
      */
     protected int type = 2;
-    /**
-     * 可变输入输出参数类型映射表
-     */
-    protected Map<String, String[]> inOutDataComponentIdMap = new HashMap<>();
-    /**
-     * 输入数据组件
-     */
-    protected String inputDataBeanId;
+//    /**
+//     * 可变输入输出参数类型映射表
+//     */
+//    protected Map<String, String[]> inOutDataComponentIdMap = new HashMap<>();
+//    /**
+//     * 输入数据组件
+//     */
+//    protected String inputDataBeanId;
     /**
      * 输出数据组件
      */
@@ -78,6 +78,7 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
      */
     public void verdictRun(ContextOwner contextOwner, String componentId) {
 
+        System.out.println(componentConstant.getTraceByContextOwnerIndex(contextOwner.getOwnerIndex()));
         ComponentBizResult<O> componentBizResult;
         switch (componentId){
             case "D1" : componentBizResult = d1(contextOwner); break;
@@ -181,7 +182,7 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
     }
 
     private ComponentBizResult<O> d7(ContextOwner contextOwner) {
-        DataComponent<SVRuleInfo> optimalSvRuleInfo = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner);
+        DataComponent<SVRuleInfo> optimalSvRuleInfo = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner); //此时optimalSvRuleInfo一定不为空
         SVRuleInfo svRuleInfo = optimalSvRuleInfo.getData();
         Integer ruleId = svRuleInfo.getRuleId();
         Rule rule = ruleService.selectByPrimaryKey(ruleId);                      //TODO:这一部分还是放到外边的业务组件里面，将rule保存起来，这里就接受一个值即可

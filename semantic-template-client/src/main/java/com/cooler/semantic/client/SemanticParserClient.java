@@ -20,25 +20,29 @@ public class SemanticParserClient {
 
 //        String[] sentences = { "天气怎么样？", "今天", "北京" };                                                         //测试缺参匹配
 
-//        String[] sentences = { "北京今天天气怎么样？", "上海呢？", "天津呢？" };                                          //测试全参情况下的换参匹配
+//        String[] sentences = { "北京今天天气怎么样？", "上海呢？", "天津呢？" };                                           //测试全参情况下的换参匹配
 
-//        String[] sentences = { "北京天气怎么样？", "上海呢？", "天津呢？", "今天"};                                       //测试缺参情况下的换参匹配
+//        String[] sentences = { "北京天气怎么样？", "上海呢？", "天津呢？", "今天"};                                        //测试缺参情况下的换参匹配
 
-//        String[] sentences = { "天气怎么样？", "哈哈", "哈哈", "哈哈", "今天", "北京" };                                  //测试打断上下文的缺参匹配1
+//        String[] sentences = { "天气怎么样？", "哈哈", "哈哈", "哈哈", "今天", "北京" };                                   //测试打断上下文的缺参匹配1
 
-//        String[] sentences = { "天气怎么样？", "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京" };                         //测试打断上下文的缺参匹配2
+//        String[] sentences = { "天气怎么样？", "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京" };                          //测试打断上下文的缺参匹配2
 
-//        String[] sentences = {  "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京" };                                        //测试匹配失败
+//        String[] sentences = {  "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京" };                                       //测试匹配失败
 
-//        String[] sentences = {  "唱周杰伦的双节棍" };                                                                     //另一场景，测试全参匹配
+//        String[] sentences = {  "唱周杰伦的双节棍" };                                                                   //另一场景，测试全参匹配
 
 //        String[] sentences = {  "唱周杰伦的听妈妈的话" };                                                                //另一场景，测试全参匹配（自定义分词）
 
 //        String[] sentences = {  "唱周杰伦的歌" , "听妈妈的话" };                                                         //另一场景，测试缺参匹配（自定义分词）
 
-        String[] sentences = {  "唱周杰伦的歌" , "唱他的双节棍", "播放他的听妈妈的话", "唱林俊杰的歌", "唱他的美人鱼"};       //另一场景，测试缺参匹配（自定义分词 + 指代消解 + 换参匹配）
+//        String[] sentences = {  "唱林俊杰的歌", "美人鱼", "江南"};                                                       //另一场景，测试换参匹配（连续指代消解 + 换参匹配）
 
-        Integer contextId = 1;
+        String[] sentences = {  "唱周杰伦的歌" , "唱他的双节棍", "播放他的听妈妈的话", "唱林俊杰的歌", "美人鱼", "江南"};        //另一场景，测试缺参匹配（自定义分词 + 连续指代消解 + 换参匹配）
+
+        Integer contextId = (int)(Math.random() * 10000000 + 1);
+        System.out.println("对话编号：" + contextId);
+
         Integer state = 0;
         for (String sentence : sentences) {
             SemanticParserResponse semanticParserResponse = buildRequest(sentence, contextId, state);
@@ -55,7 +59,7 @@ public class SemanticParserClient {
         SemanticParserRequest request = new SemanticParserRequest();
         request.setCmd(sentence);                                                                                       //添加一个句子
         request.setAccountIds(Arrays.asList(1));                                                                        //添加一个测试账户
-        request.setPassword("123456");
+        request.setPassword("123456");                    //TODO:看看密码有没有效果
         request.setUserId(2);                                                                                           //添加一个用户标号
         request.setContextId(contextId);                                                                                //添加一个上下文编号
         request.setLastState(state);

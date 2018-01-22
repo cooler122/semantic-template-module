@@ -27,9 +27,20 @@
         <!-- 功能组件声明 -->
         <property name="functionComponentMap">
             <map>
+                <entry key="STARTC" value-ref="startComponent"/>                                                 <!-- 开始节点 -->
                 <entry key="VCC" value-ref="validateConfComponent"/>                                            <!-- 校验和配置 -->
                 <entry key="SPC" value-ref="sentenceProcessComponent"/>                                         <!-- 句子处理 -->
                 <entry key="EAC" value-ref="entityAssignComponent"/>                                            <!-- 实体归属 -->
+                <entry key="LPMC" value-ref="lackParamMatchComponent"/>                                        <!-- 缺参匹配 -->
+                <entry key="CPMC" value-ref="changeParamMatchComponent"/>                                      <!-- 换参匹配 -->
+                <entry key="FPMC" value-ref="fullParamMatchComponent"/>                                        <!-- 全参匹配 -->
+                <entry key="RRSC" value-ref="referenceRuleSearchComponent"/>                                  <!-- 引导性规则检索 -->
+                <entry key="LRRC" value-ref="lackResultRetrocessionComponent"/>                               <!-- 缺失结果后移 -->
+                <entry key="RPC4NR" value-ref="resultPack4NoRunningComponent" />                              <!-- 非运行中意图结果包装 -->
+                <entry key="RPC4R" value-ref="resultPack4RunningComponent" />                                  <!-- 运行中意图结果包装 -->
+                <entry key="RPC4M" value-ref="resultPack4MissingComponent" />                                  <!-- 缺参结果包装 -->
+                <entry key="RPC4F" value-ref="resultPack4FailComponent" />                                     <!-- 失败结果包装 -->
+                <entry key="ENDC" value-ref="endComponent"/>                                                     <!-- 结束节点 -->
 
                 <entry key="D1" value-ref="verdictComponentBase"/>                                              <!-- D1:    CS.S < 0 ? -->
                 <entry key="D2" value-ref="verdictComponentBase"/>                                              <!-- D2:    判断：缺参匹配无效 ? -->
@@ -39,26 +50,14 @@
                 <entry key="D7" value-ref="verdictComponentBase"/>                                              <!-- D7:    匹配规则是引导性规则 ? -->
                 <entry key="D8" value-ref="verdictComponentBase"/>                                              <!-- D8:    规则的意图是运行中意图 ? -->
                 <entry key="D9" value-ref="verdictComponentBase"/>                                              <!-- D9:    暂时没用到 -->
-                <entry key="D10" value-ref="verdictComponentBase"/>                                             <!-- D10:    判断循环次数是否超限和时间是否超时，本判断体可能可以不要 -->
-
-                <entry key="LPMC" value-ref="lackParamMatchComponent"/>                                        <!-- 缺参匹配 -->
-                <entry key="CPMC" value-ref="changeParamMatchComponent"/>                                      <!-- 换参匹配 -->
-                <entry key="FPMC" value-ref="fullParamMatchComponent"/>                                        <!-- 全参匹配 -->
-                <entry key="LRRC" value-ref="lackResultRetrocessionComponent"/>                               <!-- 缺失结果后移 -->
-
-                <entry key="RPC4NR" value-ref="resultPack4NoRunningComponent" />                              <!-- 非运行中意图结果包装 -->
-                <entry key="RPC4R" value-ref="resultPack4RunningComponent" />                                  <!-- 运行中意图结果包装 -->
-                <entry key="RPC4M" value-ref="resultPack4MissingComponent" />                                  <!-- 缺参结果包装 -->
-                <entry key="RPC4F" value-ref="resultPack4FailComponent" />                                     <!-- 失败结果包装 -->
-
-                <entry key="ENDC" value-ref="eNDComponent"/>                                                     <!-- 结束节点 -->
-
+                <entry key="D10" value-ref="verdictComponentBase"/>                                             <!-- D10:   判断循环次数是否超限和时间是否超时，本判断体可能可以不要 -->
             </map>
         </property>
 
         <!-- 关联映射声明 -->
         <property name="nextComponentIdMap">
             <map>
+                <entry key="START" value="VCC"/>
                 <entry key="VCC_S" value="SPC"/>
                 <entry key="VCC_F" value="ENDC"/>
 
@@ -74,7 +73,7 @@
 
                 <entry key="LPMC_S" value="D2"/>
 
-                <entry key="D2_Y" value="D6"/>      <!-- 存储策略在各个组件会自己声明，不再成为流程图中的节点，直接跳过 -->
+                <entry key="D2_Y" value="D6"/>          <!-- 存储策略在各个组件会自己声明，不再成为流程图中的节点，直接跳过 -->
                 <entry key="D2_N" value="CPMC"/>
 
                 <entry key="CPMC_S" value="D3"/>
@@ -82,11 +81,17 @@
                 <entry key="D3_N" value="FPMC"/>
                 <entry key="CPMC_F" value="FPMC"/>
 
+                <entry key="FPMC_S_F" value="D6"/>      <!-- FPMC_S_F，全参匹配完成，而且在与换参匹配结果比较中获胜，使用全参匹配的结果作为最优结果 -->
+                <entry key="FPMC_S_C" value="D6"/>      <!-- FPMC_S_C，全参匹配完成，但是在与换参匹配结果比较中失败，使用换参匹配的结果作为最优结果 -->
+                <entry key="FPMC_F" value="D9"/>
+
                 <entry key="D6_Y" value="D7"/>
                 <entry key="D6_N" value="D10"/>
 
                 <entry key="D7_N" value="D8"/>
-                <entry key="D7_Y" value="RPC4M"/>       <!-- SO-12可以在RPC4M里面做，SO-15，可以在BaseComponent里面定义存储，故直接指向到RPC4M -->
+                <entry key="D7_Y" value="RRSC"/>        <!-- SO-12可以在RPC4M里面做，SO-15，可以在BaseComponent里面定义存储，故直接指向到RPC4M -->
+
+                <entry key="RRSC_S" value="RPC4M"/>
 
                 <entry key="D8_N" value="RPC4NR"/>
                 <entry key="D8_Y" value="RPC4R"/>
@@ -103,19 +108,11 @@
                 <entry key="D10_N" value="LRRC"/>
 
                 <entry key="LRRC_S1" value="RPC4M"/>    <!-- LRRC_S1，代表已经产生了最优规则，故历史缺参规则无需后移，就没有后移 -->
-                <entry key="LRRC_S2" value="RPC4M"/>   <!-- LRRC_S2，代表没有产生了最优规则，但历史缺参规则后移成功 -->
-                <entry key="LRRC_F" value="RPC4F"/>    <!-- LRRC_F，代表没有产生了最优规则，但历史缺参规则尝试过后移但失败（没有历史缺参规则） -->
-
-                <entry key="FPMC_S_F" value="D6"/>      <!-- FPMC_S_F，全参匹配完成，而且在与换参匹配结果比较中获胜，使用全参匹配的结果作为最优结果 -->
-                <entry key="FPMC_S_C" value="D6"/>      <!-- FPMC_S_C，全参匹配完成，但是在与换参匹配结果比较中失败，使用换参匹配的结果作为最优结果 -->
-                <entry key="FPMC_F" value="D9"/>
-
-                <entry key="D4_S" value="ENDC"/>
-                <entry key="D_F" value="ENDC"/>
+                <entry key="LRRC_S2" value="RPC4M"/>    <!-- LRRC_S2，代表没有产生了最优规则，但历史缺参规则后移成功 -->
+                <entry key="LRRC_F" value="RPC4F"/>     <!-- LRRC_F，代表没有产生了最优规则，但历史缺参规则尝试过后移但失败（没有历史缺参规则） -->
             </map>
         </property>
     </bean>
-
 
 </beans>
 

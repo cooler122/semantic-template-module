@@ -1,13 +1,10 @@
 package com.cooler.semantic.component.biz;
 
-import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.ComponentConstant;
-import com.cooler.semantic.component.biz.impl.ValidateConfComponentImpl;
 import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.component.data.DataComponentBase;
 import com.cooler.semantic.constant.Constant;
-import com.cooler.semantic.entity.AccountConfiguration;
 import com.cooler.semantic.entity.RRuleEntity;
 import com.cooler.semantic.entity.Rule;
 import com.cooler.semantic.entity.SemanticParserRequest;
@@ -20,9 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component("verdictComponentBase")
 public class VerdictComponentBase<I, O> implements SemanticComponent{
@@ -36,7 +31,7 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
     /**
      * 组件类型（1功能组件、2判断组件）
      */
-    protected int type = 2;
+    protected int type = Constant.VERDICT_COMPONENT;
 //    /**
 //     * 可变输入输出参数类型映射表
 //     */
@@ -62,12 +57,9 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
     @Autowired
     private RuleService ruleService;
 
-    @Autowired
-    private AccountConfigurationService accountConfigurationService;
-
     @Override
     public int getType() {
-        return 0;
+        return type;
     }
 
     @Override
@@ -77,8 +69,6 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
      * 此方法为组件的核心调配方法，能够让组件按照设定次序依次进行
      */
     public void verdictRun(ContextOwner contextOwner, String componentId) {
-
-        System.out.println(componentConstant.getTraceByContextOwnerIndex(contextOwner.getOwnerIndex()));
         ComponentBizResult<O> componentBizResult;
         switch (componentId){
             case "D1" : componentBizResult = d1(contextOwner); break;
@@ -119,7 +109,7 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
         logger.debug(componentConstant.getTraceByContextOwnerIndex(contextOwner.getOwnerIndex()));
 
         if(nextComponent != null)  {
-            if(nextComponent.getType() == 1){
+            if(nextComponent.getType() == Constant.FUNCTION_COMPONENT){
                 nextComponent.functionRun(contextOwner);
             }else{
                 nextComponent.verdictRun(contextOwner, nextComponentId);

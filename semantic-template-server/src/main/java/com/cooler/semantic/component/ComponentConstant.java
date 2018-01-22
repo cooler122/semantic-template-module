@@ -84,7 +84,7 @@ public class ComponentConstant {
     public void setTraceByContextOwnerIndex(String contextOwnerIndex, String processCode){
         StringBuffer stringBuffer = traceSBMap.get(contextOwnerIndex);
         if(stringBuffer == null){
-            stringBuffer = new StringBuffer("START");
+            stringBuffer = new StringBuffer();
             traceSBMap.put(contextOwnerIndex, stringBuffer);
         }
         stringBuffer.append("   --->    ").append(processCode);

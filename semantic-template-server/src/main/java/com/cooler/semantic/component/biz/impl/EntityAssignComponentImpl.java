@@ -31,7 +31,7 @@ public class EntityAssignComponentImpl extends FunctionComponentBase<List<Senten
     private AnaphoraResolutionService anaphoraResolutionService;
 
     public EntityAssignComponentImpl() {
-        super("EAC", "SO_3", "sentenceVectors", "sentenceVectors");
+        super("EAC", "sentenceVectors", "sentenceVectors");
     }
 
     @Override

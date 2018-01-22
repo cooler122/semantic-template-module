@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 public class ResultPack4RunningComponentImpl extends FunctionComponentBase<SVRuleInfo, SemanticParserResponse> {
 
     public ResultPack4RunningComponentImpl() {
-        super("RPC4R", "SO-13", "optimalSvRuleInfo", "semanticParserResponse");
+        super("RPC4R", "optimalSvRuleInfo", "semanticParserResponse");
     }
 
     @Override

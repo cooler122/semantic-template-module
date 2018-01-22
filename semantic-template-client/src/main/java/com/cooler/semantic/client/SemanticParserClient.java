@@ -38,9 +38,12 @@ public class SemanticParserClient {
 
 //        String[] sentences = {  "唱林俊杰的歌", "美人鱼", "江南"};                                                       //另一场景，测试换参匹配（连续指代消解 + 换参匹配）
 
-        String[] sentences = {  "唱周杰伦的歌" , "唱他的双节棍", "播放他的听妈妈的话", "唱林俊杰的歌", "美人鱼", "江南"};        //另一场景，测试缺参匹配（自定义分词 + 连续指代消解 + 换参匹配）
+//        String[] sentences = {  "唱周杰伦的歌" , "唱他的双节棍", "播放他的听妈妈的话", "唱林俊杰的歌", "美人鱼", "江南"};        //另一场景，测试缺参匹配（自定义分词 + 连续指代消解 + 换参匹配）
 
-        Integer contextId = (int)(Math.random() * 10000000 + 1);
+        String[] sentences = {  "唱周杰伦的歌" , "唱他的双节棍", "播放他的听妈妈的话", "唱林俊杰的美人鱼", "江南"};        //另一场景，测试缺参匹配（自定义分词 + 连续指代消解 + 换参匹配）
+
+//        Integer contextId = (int)(Math.random() * 10000000 + 1);
+        Integer contextId = 11;
         System.out.println("对话编号：" + contextId);
 
         Integer state = 0;

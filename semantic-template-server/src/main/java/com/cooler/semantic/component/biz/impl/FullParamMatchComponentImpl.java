@@ -39,7 +39,7 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
     private ComponentConstant componentConstant;
 
     public FullParamMatchComponentImpl() {
-        super("FPMC", "SO-8 ~ SO-10", "sentenceVectors", "optimalSvRuleInfo");
+        super("FPMC", "sentenceVectors", "optimalSvRuleInfo");
     }
 
     @Override

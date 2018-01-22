@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class ResultPack4NoRunningComponentImpl extends FunctionComponentBase<SVRuleInfo, SemanticParserResponse> {
 
     public ResultPack4NoRunningComponentImpl() {
-        super("RPC4NR", "SO-13", "optimalSvRuleInfo", "semanticParserResponse");
+        super("RPC4NR", "optimalSvRuleInfo", "semanticParserResponse");
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.cooler.semantic.service.external.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.RRuleEntity;
 import com.cooler.semantic.model.REntityWordInfo;

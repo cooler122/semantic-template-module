@@ -23,7 +23,7 @@ public class ResultPack4FailComponentImpl extends FunctionComponentBase<SVRuleIn
 
 
     public ResultPack4FailComponentImpl() {
-        super("RPC4F", "SO-13", "optimalSvRuleInfo", "semanticParserResponse");
+        super("RPC4F", "optimalSvRuleInfo", "semanticParserResponse");
     }
 
     @Override

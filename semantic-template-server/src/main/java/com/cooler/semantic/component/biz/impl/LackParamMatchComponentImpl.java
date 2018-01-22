@@ -32,7 +32,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
     private AccountConfigurationService accountConfigurationService;
 
     public LackParamMatchComponentImpl() {
-        super("LPMC", "SO-4 ~ SO-5", "sentenceVectors", "optimalSvRuleInfo");
+        super("LPMC", "sentenceVectors", "optimalSvRuleInfo");
     }
 
     @Override
@@ -66,13 +66,12 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
             List<List<REntityWordInfo>> rEntityWordInfosList = sentenceVector.getrEntityWordInfosList();                //句子向量中分词段归属的实体集群
             for (List<REntityWordInfo> rEntityWordInfos : rEntityWordInfosList) {
                 for (REntityWordInfo rEntityWordInfo : rEntityWordInfos) {
-//                    rEntityWordInfo.setContextId(contextId);                                                            //TODO:此为测试代码，以后记得删掉（为了模拟新一轮对话）
                     rEntityWordInfoMap.put(rEntityWordInfo.getEntityTypeId(), rEntityWordInfo);
                 }
             }
 
             //2.2.开始逐一遍历近5轮上下文（当然是缺参状态下的上下文），来匹配当前每一个句子向量
-            for(int i = 1; i <= 5; i ++){                                                                               //TODO：此处可能i从1开始，遍历的是上一轮对话，此处是测试将i设为0
+            for(int i = 1; i <= 5; i ++){
                 DataComponentBase<SVRuleInfo> historyData = historyDataComponentMap.get(i);                             //从历史对话记录Map里面取出数据
                 if(historyData != null) {
                     //2.2.1.取出历史上下文的SVRuleInfo绑定数据
@@ -126,7 +125,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                             historyMatchedRRuleEntityMap.put(entityTypeId, historyMatchedRRuleEntity);
                         }
 
-                        //2.2.5.计算次历史上下文的失忆系数
+                        //2.2.5.计算历史上下文的失忆系数
                         double amnesiacCoefficient = getAmnesiacCoefficient(-1 * i);               //失忆系数
 
                         //2.2.6.（关键代码，重设合并句子权重）遍历添加了新REW后的历史REW集合，为每一个REW设置合并分词段后的权重
@@ -143,7 +142,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                                 Double rewWeight = weightMap.get(sentenceVectorId);                                     //找出针对当前句子向量的此REW的权重
 
                                 historyMatchedREntityWeightMap.put(sentenceVectorId, rewWeight * (1 - (amnesiacCoefficient * totalUsedHistoryRuleWeights)) / totalUsedCurrSVInfoWeights);   //从新为此REW设置针对当前句子向量的权重值（此有公式）
-                                logger.debug(rewWeight + "*" + "(1 - (" + amnesiacCoefficient + " * " + totalUsedHistoryRuleWeights + " )) / " +  totalUsedCurrSVInfoWeights);
+                                logger.debug("contextId: " + contextId + "  " + historyMatchedREntityWordInfo.getEntityName() + " : " + rewWeight + "*" + "(1 - (" + amnesiacCoefficient + " * " + totalUsedHistoryRuleWeights + " )) / " +  totalUsedCurrSVInfoWeights);
                             }
                             //2.2.6.3.如果这个REW是历史对话中存储的REW
                             else{                                                                                      //如果此REW版本不等于本轮对话版本号，那么它就是历史对话产生的REW（它来源于历史对话的半匹配规则rule）
@@ -151,7 +150,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                                 Double historyMatchedRRuleEntityWeight = historyMatchedRRuleEntity.getWeight();         //获取其权重
 
                                 historyMatchedREntityWeightMap.put(sentenceVectorId, historyMatchedRRuleEntityWeight * amnesiacCoefficient);        //从新为此REW设置针对当前句子向量的权重值（此有公式）
-                                logger.debug(historyMatchedRRuleEntityWeight + " * " + amnesiacCoefficient);
+                                logger.debug("contextId: " + contextId + "  " + historyMatchedREntityWordInfo.getEntityName() + " : " + historyMatchedRRuleEntityWeight + " * " + amnesiacCoefficient);
                             }
                         }
 

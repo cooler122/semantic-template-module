@@ -1,6 +1,5 @@
 package com.cooler.semantic.component.biz.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.Account;
@@ -34,7 +33,7 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
     private AccountConfigurationService accountConfigurationService = null;
 
     public ValidateConfComponentImpl() {
-        super("VCC", "SO_1", "semanticParserRequest", "semanticParserRequest");
+        super("VCC", "semanticParserRequest", "semanticParserRequest");
     }
 
     @Override
@@ -125,7 +124,6 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
     }
 
     public static void main(String args[]) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-
         String password = "123456";
 
         //确定计算方法

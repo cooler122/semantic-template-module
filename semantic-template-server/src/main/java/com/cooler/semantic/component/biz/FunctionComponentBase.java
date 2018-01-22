@@ -21,11 +21,7 @@ public abstract class FunctionComponentBase<I, O> implements SemanticComponent {
     /**
      * 组件类型（1功能组件、2判断组件）
      */
-    protected int type = 1;
-    /**
-     * 组件位置标记
-     */
-    protected String processCode;
+    protected int type = Constant.FUNCTION_COMPONENT;
     /**
      * 输入数据组件
      */
@@ -42,16 +38,10 @@ public abstract class FunctionComponentBase<I, O> implements SemanticComponent {
 
     @Autowired
     private RedisService<DataComponent> redisService;
-    /**
-     * 此组件中的逻辑是否执行成功
-     */
-    protected boolean isSuccess = false;
 
-
-    public FunctionComponentBase(String id, String processCode, String inputDataBeanId, String outputDataBeanId) {
+    public FunctionComponentBase(String id, String inputDataBeanId, String outputDataBeanId) {
         this.id = id;
-        this.type = 1;
-        this.processCode = processCode;
+        this.type = Constant.FUNCTION_COMPONENT;
         this.inputDataBeanId = inputDataBeanId;
         this.outputDataBeanId = outputDataBeanId;
     }
@@ -72,7 +62,7 @@ public abstract class FunctionComponentBase<I, O> implements SemanticComponent {
         }
 
         //2.运行业务
-        System.out.println("\n组件ID：" + this.id + "，流程编号：" + this.processCode + "，入参：" + JSON.toJSONString(inputDataComponent) + "，开始运行...");
+        System.out.println("\n组件ID：" + this.id + "，流程编号：" + "，入参：" + JSON.toJSONString(inputDataComponent) + "，开始运行...");
         I inputBizData = inputDataComponent != null ? inputDataComponent.getData() : null;
         ComponentBizResult<O> componentBizResult = runBiz(contextOwner, inputBizData);                                                //运行子组件的逻辑，运行体中获得子组件的OutPutDataComponent
 
@@ -101,7 +91,7 @@ public abstract class FunctionComponentBase<I, O> implements SemanticComponent {
         logger.debug(componentConstant.getTraceByContextOwnerIndex(contextOwner.getOwnerIndex()));
 
         if(nextComponent != null)  {
-            if(nextComponent.getType() == 1){
+            if(nextComponent.getType() == Constant.FUNCTION_COMPONENT){
                 nextComponent.functionRun(contextOwner);
             }else{
                 nextComponent.verdictRun(contextOwner, nextComponentId);

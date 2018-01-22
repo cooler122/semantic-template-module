@@ -24,7 +24,7 @@ public class LackResultRetrocessionComponentImpl extends FunctionComponentBase<S
     private RedisService<SVRuleInfo> redisService;
 
     public LackResultRetrocessionComponentImpl() {
-        super("LRRC", "SO-15", "optimalSvRuleInfo", "optimalSvRuleInfo");
+        super("LRRC", "optimalSvRuleInfo", "optimalSvRuleInfo");
     }
 
     @Override

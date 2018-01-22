@@ -22,7 +22,7 @@ public class SemanticParserFacadeImpl implements SemanticParserFacade {
     private static Logger logger = LoggerFactory.getLogger(SemanticParserFacadeImpl.class.getName());
 
     @Autowired
-    @Qualifier("validateConfComponent")
+    @Qualifier("startComponent")
     private SemanticComponent startComponent;                                                                       //1.设定起始点，初始功能组件（直接加载）
 
     @Autowired

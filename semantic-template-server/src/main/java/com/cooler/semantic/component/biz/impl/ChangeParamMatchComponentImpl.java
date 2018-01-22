@@ -1,5 +1,6 @@
 package com.cooler.semantic.component.biz.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.component.data.DataComponentBase;
@@ -21,7 +22,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
     private RedisService<SVRuleInfo> redisService;
 
     public ChangeParamMatchComponentImpl() {
-        super("CPMC", "SO-6 ~ SO-7", "sentenceVectors", "optimalSvRuleInfo");
+        super("CPMC", "sentenceVectors", "optimalSvRuleInfo");
     }
 
     @Override
@@ -61,6 +62,9 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
         }
 
         if(contextId_svRuleInfoMap.size() == 0) return new ComponentBizResult("CPMC_F");                 //如果没有收集到历史规则，就跳出去吧
+        if(currentContextId == 15){
+            System.out.println(JSON.toJSONString(contextId_svRuleInfoMap));
+        }
 
         Map<CoordinateKey, REntityWordInfo> hitCurrentREntityWordInfoMap = new HashMap<>();                             //关联数据Map<{sentenceVectorId, currentEntityType, currentEntityId}, hitCurrentREWI>
         Map<String, Double> svIdcontextId_productValueMap = new HashMap<>();                                            //统计值Map<sentenceVectorId_contextId, 统计数据值>
@@ -98,6 +102,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                             historyWeight = historyWeight != null ? historyWeight : 0d;                                 //排除historyWeight为null的情况
 
                             double productValueIncrement = (1d / currentSVSize * currentWeight) * 3 + (volumeIncrement * historyWeight);//当前句子REWI积值*3 和历史REWI积值 之和
+                            System.out.println(currentContextId + " ---------- " + contextId + "   historyREWI ： " + historyREntityWordInfo.getEntityName() + " ----->  1d / " + currentSVSize + " * " + currentWeight + " * 3" + " + ( " + volumeIncrement + " * " + historyWeight + " )");
                             double currentEntityWeightRateIncrement = 1d / currentSVSize * currentWeight;                               //此处只记录句子向量端的 量比重 * 权重比重
 
                             Double productValue = svIdcontextId_productValueMap.get(sentenceVectorId + "_" + contextId);
@@ -145,7 +150,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
             }
             changeParamOptimalSvRuleInfo.setMatchedREntityWordInfos(matchedREntityWordInfosModified);                   //重新设置修改的REWI集合
 
-            //4.计算相关判断标准：看是否changeParamOptimalSvRuleInfo，作为最终optimalSvRuleInfo，如果确定是，则无需走全参匹配过程，反之则走
+            //4.计算相关判断标准，确定换参结果是否是最终确定性结果：看是否changeParamOptimalSvRuleInfo，作为最终optimalSvRuleInfo，如果确定是，则无需走全参匹配过程，反之则走
             int historyEntitiesCount = 0;                                                                               //历史规则里的实体数量
             int currentEntitiesCount = 0;                                                                               //当前句子向量里的实体数量
             int currentCoreEntitiesCount = 0;                                                                           //当前核心实体数

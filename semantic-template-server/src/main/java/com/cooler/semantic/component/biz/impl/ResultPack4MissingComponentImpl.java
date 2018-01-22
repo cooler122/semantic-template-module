@@ -25,7 +25,7 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
     private AccountConfigurationService accountConfigurationService;
 
     public ResultPack4MissingComponentImpl() {
-        super("RPC4M", "SO-16", "optimalSvRuleInfo", "semanticParserResponse");
+        super("RPC4M", "optimalSvRuleInfo", "semanticParserResponse");
     }
 
     @Override

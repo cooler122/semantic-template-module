@@ -1,19 +1,18 @@
 package com.cooler.semantic.component.biz.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
+import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.component.data.DataComponentBase;
 import com.cooler.semantic.constant.Constant;
-import com.cooler.semantic.entity.AccountConfiguration;
 import com.cooler.semantic.entity.RRuleEntity;
+import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.model.SentenceVector;
 import com.cooler.semantic.service.external.RedisService;
 import com.cooler.semantic.service.external.SimilarityCalculateService;
-import com.cooler.semantic.service.internal.AccountConfigurationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,23 +27,21 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
     private RedisService<SVRuleInfo> redisService;
     @Autowired
     private SimilarityCalculateService similarityCalculateService;
-    @Autowired
-    private AccountConfigurationService accountConfigurationService;
 
     public LackParamMatchComponentImpl() {
-        super("LPMC", "sentenceVectors", "optimalSvRuleInfo");
+        super("LPMC", "sentenceVectors", "optimalSvRuleInfo_LPM");
     }
 
     @Override
     protected ComponentBizResult<Object> runBiz(ContextOwner contextOwner, List<SentenceVector> sentenceVectors) {
-        logger.debug("缺参匹配");
+        logger.trace("LPMC.缺参匹配");
 
         //0.准备好用户配置数据
-        Integer accountId = contextOwner.getAccountId();
-        Integer userId = contextOwner.getUserId();
+        DataComponent<SemanticParserRequest> dataComponent = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
+        SemanticParserRequest request = dataComponent.getData();
+        int algorithmType = request.getAlgorithmType();                                                                 //由用户选择使用哪种算法（当前1~5种， 默认JACCARD_VOLUME_WEIGHT_RATE）
+
         Integer contextId = contextOwner.getContextId();
-        AccountConfiguration accountConfiguration = accountConfigurationService.selectAIdUId(accountId, userId);
-        Integer algorithmType = accountConfiguration.getAlgorithmType();                                                //算法类型
         SVRuleInfo lpm_optimalSvRuleInfo = null;                                                                       //选择的最匹配的历史记录
         Double maxSimilarityDistance = 0d;
 
@@ -183,12 +180,12 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
     }
 
     /**
-     * 根据上下文轮次，获取失忆系数（当前以0.5的指数函数作为失忆函数）
+     * 根据上下文轮次，获取失忆系数（当前以0.6的指数函数作为失忆函数）
      * @param historyRoundCount 上下文轮次，此为负数，代表上几轮
      * @return
      */
     private double getAmnesiacCoefficient(int historyRoundCount){
-        return Math.pow(0.5, -1 * historyRoundCount);
+        return Math.pow(0.6, -1 * historyRoundCount);
     }
 
 }

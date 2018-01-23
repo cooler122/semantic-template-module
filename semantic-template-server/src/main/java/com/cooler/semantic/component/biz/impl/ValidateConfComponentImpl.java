@@ -38,7 +38,7 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
 
     @Override
     protected ComponentBizResult<SemanticParserRequest> runBiz(ContextOwner contextOwner, SemanticParserRequest bizData) {
-        logger.debug("校验和配置");
+        logger.trace("VCC.校验和配置");
 
         ComponentBizResult validateResult = validate(bizData);                       //校验请求体
         if (validateResult != null) return validateResult;
@@ -46,13 +46,12 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
         ComponentBizResult checkInResult = checkIn(bizData);                         //账户权限校验
         if (checkInResult != null) return checkInResult;
 
-        setAccountData(bizData);                                                     //设置用户配置参数
+        setAccountConfigureData(bizData);                                                     //设置用户自定义配置参数
 
         return new ComponentBizResult("VCC_S", Constant.STORE_LOCAL, bizData);
     }
 
     private ComponentBizResult validate(SemanticParserRequest request) {
-        logger.debug("请求体校验...");
         String cmd = request.getCmd();
         List<Integer> accountIds = request.getAccountIds();
         Integer userId = request.getUserId();
@@ -71,7 +70,6 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
 
 
     private ComponentBizResult checkIn(SemanticParserRequest request) {
-        logger.debug("SO-1-2.账户权限校验...");
         Integer accountId = request.getAccountIds().get(0);
         String password = request.getPassword();
 
@@ -104,13 +102,13 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
         return newstr;
     }
 
-    private void setAccountData(SemanticParserRequest request) {
-        logger.debug("SO-1-3.账户自定义参数设置...");
+    private void setAccountConfigureData(SemanticParserRequest request) {
         Integer coreAccountId = request.getAccountIds().get(0);
         Integer userId = request.getUserId();
-
-        AccountConfiguration accountConfiguration = accountConfigurationService.selectAIdUId(coreAccountId, userId);
-
+        AccountConfiguration accountConfiguration = accountConfigurationService.selectAIdUId(coreAccountId, userId);    //先按更细粒度的accountId + userId的设定进行配置参数赋值
+        if(accountConfiguration == null){
+            accountConfiguration = accountConfigurationService.selectAIdUId(coreAccountId, 0);              //如果此用户没有自定义设定，那么就只使用accountId设置的参数值了
+        }
         if(accountConfiguration != null){
             request.setCanBreakContext(accountConfiguration.getCanBreakContext());
             request.setCanBatchQuery(accountConfiguration.getCanBatchQuery());
@@ -118,8 +116,8 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
             request.setEntityMaxQueryCount(accountConfiguration.getEntityMaxQueryCount());
             request.setContextWaitTime(accountConfiguration.getContextWaitTime());
             request.setAccuracyThreshold(accountConfiguration.getAccuracyThreshold());
-            request.setLog_type(accountConfiguration.getLogType());
-            request.setAlgorithm_type(accountConfiguration.getAlgorithmType());
+            request.setLogType(accountConfiguration.getLogType());
+            request.setAlgorithmType(accountConfiguration.getAlgorithmType());
         }
     }
 

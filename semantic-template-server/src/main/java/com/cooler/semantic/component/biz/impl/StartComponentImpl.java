@@ -19,7 +19,7 @@ public class StartComponentImpl extends FunctionComponentBase<Object, Object> {
 
     @Override
     protected ComponentBizResult<Object> runBiz(ContextOwner contextOwner, Object bizData) {
-
+        logger.trace("STARTC.开始...");
         return new ComponentBizResult("START");
     }
 }

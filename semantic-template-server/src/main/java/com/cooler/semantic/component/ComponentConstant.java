@@ -2,6 +2,7 @@ package com.cooler.semantic.component;
 
 import com.cooler.semantic.component.biz.SemanticComponent;
 import com.cooler.semantic.component.data.DataComponent;
+import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.model.ContextOwner;
 
 import java.util.HashMap;
@@ -11,18 +12,19 @@ public class ComponentConstant {
 
     //**************************************************************************************3大核心数据存储容器
     /**
-     * 数据组件Map（每一次上下文都会往里面放入数据，最耗内存，故以后用redis代替）
-     */
-    private Map<String, DataComponent> dataBeanMap = new HashMap<>();
-
-    /**
      * 功能组件Map
      */
     private static Map<String, SemanticComponent> functionComponentMap = new HashMap<>();
+
     /**
      * 流程关系Map
      */
     private static Map<String, String> nextComponentIdMap = new HashMap<>();
+
+    /**
+     * 数据组件Map（每一次上下文都会往里面放入数据，最耗内存，故以后用redis代替）
+     */
+    private Map<String, DataComponent> dataBeanMap = new HashMap<>();
 
     /**
      * 轨迹跟踪字符串Map
@@ -55,6 +57,17 @@ public class ComponentConstant {
      */
     public DataComponent getDataComponent(String dataComponentId, ContextOwner contextOwner){
         return dataBeanMap.get(dataComponentId + "_" + contextOwner.getOwnerIndex());
+    }
+
+    /**
+     * 删除历史数据，为了不让此Map太耗内存
+     * @param contextOwnerCxtIndex
+     */
+    public void clearDataComponentByCxtIndex(String contextOwnerCxtIndex){
+        String[] dataComponentIds = Constant.DATA_COMPONENT_IDs;
+        for (String dataComponentId : dataComponentIds) {
+            dataBeanMap.remove(dataComponentId + "_" + contextOwnerCxtIndex);
+        }
     }
 
     /**
@@ -104,11 +117,8 @@ public class ComponentConstant {
      * 根据上下文，清空轨迹上下文的轨迹标记
      * @param contextOwnerIndex
      */
-    public void clearTraceByContextOwnerIndex(String contextOwnerIndex){
-        StringBuffer stringBuffer = traceSBMap.get(contextOwnerIndex);
-        if(stringBuffer != null){
-            stringBuffer.delete(0, stringBuffer.length());
-        }
+    public void clearTraceByCxtIndex(String contextOwnerIndex){
+        traceSBMap.remove(contextOwnerIndex);
     }
 
     public void setDataBeanMap(Map<String, DataComponent> dataBeanMap) {

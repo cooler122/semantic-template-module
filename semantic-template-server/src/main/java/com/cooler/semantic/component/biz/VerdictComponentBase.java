@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component("verdictComponentBase")
-public class VerdictComponentBase<I, O> implements SemanticComponent{
+public class VerdictComponentBase<I> implements SemanticComponent{
 
     private static Logger logger = LoggerFactory.getLogger(VerdictComponentBase.class);
     /**
@@ -69,24 +69,25 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
      * 此方法为组件的核心调配方法，能够让组件按照设定次序依次进行
      */
     public void verdictRun(ContextOwner contextOwner, String componentId) {
-        ComponentBizResult<O> componentBizResult;
+        ComponentBizResult componentBizResult;
         switch (componentId){
             case "D1" : componentBizResult = d1(contextOwner); break;
             case "D2" : componentBizResult = d2(contextOwner); break;
             case "D3" : componentBizResult = d3(contextOwner); break;
+            case "D4" : componentBizResult = d4(contextOwner); break;
             case "D6" : componentBizResult = d6(contextOwner); break;
             case "D7" : componentBizResult = d7(contextOwner); break;
             case "D8" : componentBizResult = d8(contextOwner); break;
             case "D9" : componentBizResult = d9(contextOwner); break;
             case "D10" : componentBizResult = d10(contextOwner); break;
             case "D11" : componentBizResult = d11(contextOwner); break;
-            default: componentBizResult = new ComponentBizResult<>("D_E");
+            default: componentBizResult = new ComponentBizResult("D_E");
         }
 
         //3.分析结果，保存数据
         String resultCode = componentBizResult.getResultCode();                                                         //返回执行结果码
         int saveCode = componentBizResult.getSaveCode();                                                                //返回输入输出类型
-        O bizData = componentBizResult.getOutputData();                                                                 //返回输出数据体
+        Object bizData = componentBizResult.getOutputData();                                                                 //返回输出数据体
 
         DataComponent outputDataComponent = bizData != null ? new DataComponentBase(outputDataBeanId, contextOwner, bizData.getClass().getSimpleName(), bizData) : new DataComponentBase(this.outputDataBeanId, contextOwner, null, null);
         if(outputDataBeanId != null && outputDataComponent != null){
@@ -99,14 +100,12 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
                 redisService.setCacheObject(contextOwner.getOwnerIndex() + "_" + outputDataBeanId, outputDataComponent);
             }
         }
-
+        componentConstant.setTraceByContextOwnerIndex(contextOwner.getOwnerIndex(), resultCode);
         if(resultCode.equals("END_S"))  return;                                                                      //流程出口（检测状态码，看是否结束）
 
         //4.带动下一个组件再来运行
         String nextComponentId = componentConstant.getFCIDByResultCode(resultCode);
         SemanticComponent nextComponent = componentConstant.getFunctionComponent(nextComponentId);
-        componentConstant.setTraceByContextOwnerIndex(contextOwner.getOwnerIndex(), resultCode);
-        logger.debug(componentConstant.getTraceByContextOwnerIndex(contextOwner.getOwnerIndex()));
 
         if(nextComponent != null)  {
             if(nextComponent.getType() == Constant.FUNCTION_COMPONENT){
@@ -117,101 +116,102 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
         }
     }
 
-    private ComponentBizResult<O> d1(ContextOwner contextOwner) {
+    private ComponentBizResult d1(ContextOwner contextOwner) {
         DataComponent semanticParserRequest = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = (SemanticParserRequest)semanticParserRequest.getData();
         int lastState = request.getLastState();
         if(lastState < 0){
-            return new ComponentBizResult<>("D1_Y");
+            return new ComponentBizResult("D1_Y");
         }else{
-            return new ComponentBizResult<>("D1_N");
-//            return new ComponentBizResult<>("D1_Y");                                                         //TODO：此行是测试代码，为了测试缺参匹配后面要删除此行
+            return new ComponentBizResult("D1_N");
+//            return new ComponentBizResult("D1_Y");                                                         //TODO：此行是测试代码，为了测试缺参匹配后面要删除此行
         }
     }
 
-    private ComponentBizResult<O> d2(ContextOwner contextOwner) {
-        DataComponent<SVRuleInfo> dataComponent = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner);
+    private ComponentBizResult d2(ContextOwner contextOwner) {
+        DataComponent<SVRuleInfo> dataComponent = componentConstant.getDataComponent("optimalSvRuleInfo_LPM", contextOwner);
         if(dataComponent != null && dataComponent.getData() != null){
-            return new ComponentBizResult<>("D2_Y");
+            return new ComponentBizResult("D2_Y");
         }else{
-            return new ComponentBizResult<>("D2_N");
+            return new ComponentBizResult("D2_N");
         }
     }
 
-    private ComponentBizResult<O> d3(ContextOwner contextOwner) {
-        DataComponent<SVRuleInfo> dataComponent = componentConstant.getDataComponent("changeParamOptimalSvRuleInfo", contextOwner);
+    private ComponentBizResult d3(ContextOwner contextOwner) {
+        DataComponent<SVRuleInfo> dataComponent = componentConstant.getDataComponent("optimalSvRuleInfo_CPM", contextOwner);
         if(dataComponent != null && dataComponent.getData() != null){
             SVRuleInfo changeParamOptimalSvRuleInfo = dataComponent.getData();
             if(changeParamOptimalSvRuleInfo.isEnsureFinal()){                                                           //判断换参匹配结果是否确定为最终最优结果
-                return new ComponentBizResult<>("D3_Y");
+                return new ComponentBizResult("D3_Y");
             }else{
-                return new ComponentBizResult<>("D3_N");
+                return new ComponentBizResult("D3_N");
             }
         }
-        return new ComponentBizResult<>("D3_N");
+        return new ComponentBizResult("D3_N");
     }
 
-//    private ComponentBizResult<O> d4() {
-//        if(true){                                                                                                      //TODO：判断换参匹配是否有效，当前测试阶段，让其固定无效，后续补充
-//            return new ComponentBizResult<>("D4_N");
-//        }else{
-//            return new ComponentBizResult<>("D4_Y");
-//        }
-//    }
+    private ComponentBizResult<SVRuleInfo> d4(ContextOwner contextOwner) {
+        DataComponent<SVRuleInfo> dataComponent = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner);
+        if(dataComponent != null && dataComponent.getData() != null){
+            return new ComponentBizResult("D4_Y");
+        }else{
+            return new ComponentBizResult("D4_N");
+        }
+    }
 
-    private ComponentBizResult<O> d6(ContextOwner contextOwner) {
+    private ComponentBizResult d6(ContextOwner contextOwner) {
         DataComponent<SVRuleInfo> optimalSvRuleInfo = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner);
         if(optimalSvRuleInfo != null){
             SVRuleInfo svRuleInfo = optimalSvRuleInfo.getData();
             List<RRuleEntity> lackedRRuleEntities = svRuleInfo.getLackedRRuleEntities();
             if(lackedRRuleEntities != null && lackedRRuleEntities.size() > 0){                                         //lackedRRuleEntities里面的RRE必须都是必须实体
-                return new ComponentBizResult<>("D6_N");
+                return new ComponentBizResult("D6_N");
             }
         }
-        return new ComponentBizResult<>("D6_Y");
+        return new ComponentBizResult("D6_Y");
     }
 
-    private ComponentBizResult<O> d7(ContextOwner contextOwner) {
+    private ComponentBizResult d7(ContextOwner contextOwner) {
         DataComponent<SVRuleInfo> optimalSvRuleInfo = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner); //此时optimalSvRuleInfo一定不为空
         SVRuleInfo svRuleInfo = optimalSvRuleInfo.getData();
         Integer ruleId = svRuleInfo.getRuleId();
         Rule rule = ruleService.selectByPrimaryKey(ruleId);                      //TODO:这一部分还是放到外边的业务组件里面，将rule保存起来，这里就接受一个值即可
         Integer referRuleId = rule.getReferRuleId();
         if(referRuleId.intValue() == 0){
-            return new ComponentBizResult<>("D7_N");
+            return new ComponentBizResult("D7_N");
         }else{
-            return new ComponentBizResult<>("D7_Y");
+            return new ComponentBizResult("D7_Y");
         }
     }
 
-    private ComponentBizResult<O> d8(ContextOwner contextOwner) {
+    private ComponentBizResult d8(ContextOwner contextOwner) {
         if(true){                                                                                                      //TODO;匹配的意图是否是运行中意图
-            return new ComponentBizResult<>("D8_N");
+            return new ComponentBizResult("D8_N");
         }else{
-            return new ComponentBizResult<>("D8_Y");
+            return new ComponentBizResult("D8_Y");
         }
     }
 
-    private ComponentBizResult<O> d9(ContextOwner contextOwner) {
+    private ComponentBizResult d9(ContextOwner contextOwner) {
         DataComponent semanticParserRequest = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = (SemanticParserRequest)semanticParserRequest.getData();
         int lastState = request.getLastState();
         if(lastState < 0){
-            return new ComponentBizResult<>("D9_Y");
+            return new ComponentBizResult("D9_Y");
         }else{
-            return new ComponentBizResult<>("D9_N");
+            return new ComponentBizResult("D9_N");
         }
     }
 
-    private ComponentBizResult<O> d10(ContextOwner contextOwner) {                                                     //TODO:这一个还是要放一些判断逻辑的，但是用不用积累询问次数，现在还不能确定，以后的测试看效果吧
+    private ComponentBizResult d10(ContextOwner contextOwner) {                                                     //TODO:这一个还是要放一些判断逻辑的，但是用不用积累询问次数，现在还不能确定，以后的测试看效果吧
         if(true){
-            return new ComponentBizResult<>("D10_N");
+            return new ComponentBizResult("D10_N");
         }else{
-            return new ComponentBizResult<>("D10_Y");
+            return new ComponentBizResult("D10_Y");
         }
     }
 
-    private ComponentBizResult<O> d11(ContextOwner contextOwner) {
+    private ComponentBizResult d11(ContextOwner contextOwner) {
         DataComponent semanticParserRequest = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = (SemanticParserRequest)semanticParserRequest.getData();
 
@@ -222,9 +222,9 @@ public class VerdictComponentBase<I, O> implements SemanticComponent{
         int contextWaitTime = request.getContextWaitTime();
 
         if(accumulatedQueryCount >= entityMaxQueryCount || now - lastEndTimestamp > contextWaitTime){
-            return new ComponentBizResult<>("D11_Y");
+            return new ComponentBizResult("D11_Y");
         }else{
-            return new ComponentBizResult<>("D11_N");
+            return new ComponentBizResult("D11_N");
         }
     }
 }

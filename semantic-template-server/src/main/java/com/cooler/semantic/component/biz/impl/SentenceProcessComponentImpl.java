@@ -34,7 +34,7 @@ public class SentenceProcessComponentImpl extends FunctionComponentBase<Semantic
 
     @Override
     protected ComponentBizResult<List<SentenceVector>> runBiz(ContextOwner contextOwner, SemanticParserRequest bizData) {
-        logger.debug("SO_2.句子处理");
+        logger.trace("SPC.句子处理");
 
         //SO-2-1.多重分词（包含标词）
         Integer accountId = contextOwner.getAccountId();                                                                //取出第一个accountId，进行分词

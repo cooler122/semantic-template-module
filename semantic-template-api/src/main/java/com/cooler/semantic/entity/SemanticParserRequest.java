@@ -58,12 +58,12 @@ public class SemanticParserRequest implements Serializable {
     /**
      * 日志类型
      */
-    private int log_type = 3;
+    private int logType = 3;
 
     /**
      * 算法类型
      */
-    private int algorithm_type = 1;
+    private int algorithmType = 1;
 
     //--------------------------------------------------------------------3.上下文数据CD，以下是上次匹配产生的上下文参数（如果丢失，则相当于系统“失忆”，此方案是将上下文数据放在服务端的一种实施方案）
     /**
@@ -242,20 +242,20 @@ public class SemanticParserRequest implements Serializable {
         this.accumulatedQueryCount = accumulatedQueryCount;
     }
 
-    public int getLog_type() {
-        return log_type;
+    public int getLogType() {
+        return logType;
     }
 
-    public void setLog_type(int log_type) {
-        this.log_type = log_type;
+    public void setLogType(int logType) {
+        this.logType = logType;
     }
 
-    public int getAlgorithm_type() {
-        return algorithm_type;
+    public int getAlgorithmType() {
+        return algorithmType;
     }
 
-    public void setAlgorithm_type(int algorithm_type) {
-        this.algorithm_type = algorithm_type;
+    public void setAlgorithmType(int algorithmType) {
+        this.algorithmType = algorithmType;
     }
 
     public int getLastState() {
@@ -279,8 +279,8 @@ public class SemanticParserRequest implements Serializable {
                 ", entityMaxQueryCount=" + entityMaxQueryCount +
                 ", contextWaitTime=" + contextWaitTime +
                 ", accuracyThreshold=" + accuracyThreshold +
-                ", log_type=" + log_type +
-                ", algorithm_type=" + algorithm_type +
+                ", logType=" + logType +
+                ", algorithmType=" + algorithmType +
                 ", contextId=" + contextId +
                 ", lastEndTimestamp=" + lastEndTimestamp +
                 ", lastSceneId=" + lastSceneId +

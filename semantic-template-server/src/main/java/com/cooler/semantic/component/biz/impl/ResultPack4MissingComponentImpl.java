@@ -1,16 +1,16 @@
 package com.cooler.semantic.component.biz.impl;
 
 import com.cooler.semantic.component.ComponentBizResult;
-import com.cooler.semantic.component.ComponentConstant;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
+import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.constant.Constant;
-import com.cooler.semantic.entity.AccountConfiguration;
 import com.cooler.semantic.entity.RRuleEntity;
+import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.entity.SemanticParserResponse;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.SVRuleInfo;
-import com.cooler.semantic.service.internal.AccountConfigurationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -20,9 +20,7 @@ import java.util.List;
 
 @Component("resultPack4MissingComponent")
 public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRuleInfo, SemanticParserResponse> {
-
-    @Autowired
-    private AccountConfigurationService accountConfigurationService;
+    private static Logger logger = LoggerFactory.getLogger(ResultPack4MissingComponentImpl.class.getName());
 
     public ResultPack4MissingComponentImpl() {
         super("RPC4M", "optimalSvRuleInfo", "semanticParserResponse");
@@ -30,6 +28,7 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
 
     @Override
     protected ComponentBizResult<SemanticParserResponse> runBiz(ContextOwner contextOwner, SVRuleInfo svRuleInfo) {
+        logger.trace("RPC4M.缺参结果包装");
         String sentence = svRuleInfo.getSentence();
         Double similarity = svRuleInfo.getSimilarity();
         List<RRuleEntity> lackedRRuleEntities = svRuleInfo.getLackedRRuleEntities();
@@ -39,10 +38,9 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
 
         String responseMsg = "您问的是 ";
         if(lackedRRuleEntities != null && lackedSize > 1){                                                             //1.如果缺失实体问题数量 > 1
-            Integer accountId = contextOwner.getAccountId();
-            Integer userId = contextOwner.getUserId();
-            AccountConfiguration accountConfiguration = accountConfigurationService.selectAIdUId(accountId, userId);
-            Boolean canBatchQuery = accountConfiguration.getCanBatchQuery();                                            //查询缺参状态下是否可以批量询问
+            DataComponent<SemanticParserRequest> dataComponent = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
+            SemanticParserRequest request = dataComponent.getData();
+            Boolean canBatchQuery = request.isCanBatchQuery();                                                          //查询缺参状态下是否可以批量询问
             if(canBatchQuery){                                                                                          //如果缺参问题可以批量询问
                 for (RRuleEntity lackedRRuleEntity : lackedRRuleEntities) {
                     responseMsg += lackedRRuleEntity.getNecessaryEntityQuery() + "\t";
@@ -83,7 +81,7 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
         semanticParserResponse.setResponseMsg(responseMsg);
         semanticParserResponse.setSentence(sentence);
         semanticParserResponse.setSentenceModified(sentenceModified);
-        semanticParserResponse.setResponseType(-1 * lackedSize);
+        semanticParserResponse.setResponseType(Constant.MISSING_RESULT);
         semanticParserResponse.setScore(similarity);
         semanticParserResponse.setResponseTimestamp(responseTimestamp);
         semanticParserResponse.setState(-1 * lackedSize);

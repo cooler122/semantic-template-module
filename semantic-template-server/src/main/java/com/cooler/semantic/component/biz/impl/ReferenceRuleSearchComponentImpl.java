@@ -18,7 +18,7 @@ public class ReferenceRuleSearchComponentImpl extends FunctionComponentBase<Obje
 
     @Override
     protected ComponentBizResult<Object> runBiz(ContextOwner contextOwner, Object bizData) {
-
+        logger.trace("RRSC.指代规则检索");
         //TODO:校验和配置逻辑
 
         return new ComponentBizResult("RRSC_S");

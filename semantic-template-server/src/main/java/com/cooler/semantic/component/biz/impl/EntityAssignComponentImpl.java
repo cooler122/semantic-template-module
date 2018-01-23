@@ -36,6 +36,7 @@ public class EntityAssignComponentImpl extends FunctionComponentBase<List<Senten
 
     @Override
     protected ComponentBizResult<List<SentenceVector>> runBiz(ContextOwner contextOwner, List<SentenceVector> sentenceVectors) {
+        logger.trace("EAC.实体归属");
         Integer accountId = contextOwner.getAccountId();
         Integer contextId = contextOwner.getContextId();
         boolean hadAnaphoraResolution = false;

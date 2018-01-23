@@ -19,13 +19,14 @@
     <!-- appender：
         name：相当于一个名称，
         class：确定要加载哪个类
+        thread：线程号
         encoder：一定要加 encoder ，默认配置为PatternLayoutEncoder
         patter：必填
         ConsoleAppender：也明白是什么意思，就是输出在控制台上-->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>
-                %d{yyyy-MM-dd HH:mm:ss} [%thread] [%level] --- %m%n
+                %d{yyyy-MM-dd HH:mm:ss} [%class] [%level] --- %m%n
             </pattern>
         </encoder>
     </appender>
@@ -60,17 +61,23 @@
             additivity：是否要把当前的日志级别，给root根logger
             appender-ref：appender的引用
          -->
-    <!--<logger name="com.xxxx.controller" level="trace" additivity="true">-->
-        <!--<appender-ref ref="STDOUT"/>-->
+    <logger name="com.cooler.semantic" level="debug" additivity="false">
+        <appender-ref ref="STDOUT"/>
         <!--<appender-ref ref="logFile"/>-->
+    </logger>
+
+    <logger name="dao" level="DEBUG"/>
+
+    <!--<logger name="org.apache.ibatis" level="OFF">-->
+        <!--<appender-ref ref="STDOUT"/>-->
     <!--</logger>-->
     <!-- 默认根节点是INFO级别的日志 -->
     <!-- root：logger的根节点，就这一个，默认名称就是root
         level：日志级别
         appender-ref：确定使用哪个appender
          -->
-    <root level="debug">
-        <appender-ref ref="logFile"/>
-        <appender-ref ref="STDOUT"/>
-    </root>
+    <!--<root level="debug">-->
+        <!--&lt;!&ndash;<appender-ref ref="logFile"/>&ndash;&gt;-->
+        <!--<appender-ref ref="STDOUT"/>-->
+    <!--</root>-->
 </configuration>

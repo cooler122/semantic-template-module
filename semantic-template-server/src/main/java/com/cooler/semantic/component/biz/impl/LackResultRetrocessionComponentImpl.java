@@ -10,6 +10,8 @@ import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.external.RedisService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,7 @@ import java.util.Map;
 @Component("lackResultRetrocessionComponent")
 public class LackResultRetrocessionComponentImpl extends FunctionComponentBase<SVRuleInfo, SVRuleInfo> {
 
+    private static Logger logger = LoggerFactory.getLogger(LackResultRetrocessionComponentImpl.class.getName());
     @Autowired
     private RedisService<SVRuleInfo> redisService;
 
@@ -29,6 +32,8 @@ public class LackResultRetrocessionComponentImpl extends FunctionComponentBase<S
 
     @Override
     protected ComponentBizResult<SVRuleInfo> runBiz(ContextOwner contextOwner, SVRuleInfo svRuleInfo) {
+        logger.trace("LRRC.缺参结果回退");
+
         if(svRuleInfo != null){
             return new ComponentBizResult("LRRC_S1");
         }

@@ -1,11 +1,9 @@
 package com.cooler.semantic.component.biz.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.component.data.DataComponentBase;
 import com.cooler.semantic.constant.Constant;
-import com.cooler.semantic.entity.AccountConfiguration;
 import com.cooler.semantic.model.*;
 import com.cooler.semantic.service.external.RedisService;
 import org.slf4j.Logger;
@@ -22,12 +20,12 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
     private RedisService<SVRuleInfo> redisService;
 
     public ChangeParamMatchComponentImpl() {
-        super("CPMC", "sentenceVectors", "optimalSvRuleInfo");
+        super("CPMC", "sentenceVectors", "optimalSvRuleInfo_CPM");
     }
 
     @Override
     protected ComponentBizResult<Object> runBiz(ContextOwner contextOwner, List<SentenceVector> sentenceVectors) {
-        logger.debug("换参匹配");
+        logger.trace("CPMC.换参匹配");
 
         Integer currentContextId = contextOwner.getContextId();
         //1.准备好5轮的历史数据
@@ -62,9 +60,6 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
         }
 
         if(contextId_svRuleInfoMap.size() == 0) return new ComponentBizResult("CPMC_F");                 //如果没有收集到历史规则，就跳出去吧
-        if(currentContextId == 15){
-            System.out.println(JSON.toJSONString(contextId_svRuleInfoMap));
-        }
 
         Map<CoordinateKey, REntityWordInfo> hitCurrentREntityWordInfoMap = new HashMap<>();                             //关联数据Map<{sentenceVectorId, currentEntityType, currentEntityId}, hitCurrentREWI>
         Map<String, Double> svIdcontextId_productValueMap = new HashMap<>();                                            //统计值Map<sentenceVectorId_contextId, 统计数据值>
@@ -87,7 +82,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                     Double currentWeight = currentREntityWordInfo.getWeightMap().get(sentenceVectorId);                 //获取本句子向量的此REWI的权重
 
                     List<REntityWordInfo> historyREntityWordInfos = historyREWIMap.get(currentEntityTypeId);            //历史端：尝试搜索此entityTypeId是否存在于历史匹配的REWI集合里面
-                    if(historyREntityWordInfos != null && historyREntityWordInfos.size() > 0){                          //如果本次entityTypeId的REWI碰上了历史REWI集合
+                    if(historyREntityWordInfos != null && historyREntityWordInfos.size() > 0){                         //如果本次entityTypeId的REWI碰上了历史REWI集合
                         CoordinateKey coordinateKey = new CoordinateKey(sentenceVectorId, currentEntityType, currentEntityId);  //构建此唯一变量组作为key
                         //1.先将获得的能匹配上的 currentREntityWordInfo 对象放到关联Map中
                         hitCurrentREntityWordInfoMap.put(coordinateKey, currentREntityWordInfo);

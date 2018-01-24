@@ -19,11 +19,13 @@ public class AccountConfiguration {
 
     private Double accuracyThreshold;
 
+    private Integer memorizedConversationCount;
+
     private Integer logType;
 
     private Integer algorithmType;
 
-    public AccountConfiguration(Integer id, Integer accountId, Integer userId, Boolean canBreakContext, Boolean canBatchQuery, Integer ruleMaxQueryCount, Integer entityMaxQueryCount, Integer contextWaitTime, Double accuracyThreshold, Integer logType, Integer algorithmType) {
+    public AccountConfiguration(Integer id, Integer accountId, Integer userId, Boolean canBreakContext, Boolean canBatchQuery, Integer ruleMaxQueryCount, Integer entityMaxQueryCount, Integer contextWaitTime, Double accuracyThreshold, Integer memorizedConversationCount, Integer logType, Integer algorithmType) {
         this.id = id;
         this.accountId = accountId;
         this.userId = userId;
@@ -33,6 +35,7 @@ public class AccountConfiguration {
         this.entityMaxQueryCount = entityMaxQueryCount;
         this.contextWaitTime = contextWaitTime;
         this.accuracyThreshold = accuracyThreshold;
+        this.memorizedConversationCount = memorizedConversationCount;
         this.logType = logType;
         this.algorithmType = algorithmType;
     }
@@ -111,6 +114,14 @@ public class AccountConfiguration {
 
     public void setAccuracyThreshold(Double accuracyThreshold) {
         this.accuracyThreshold = accuracyThreshold;
+    }
+
+    public Integer getMemorizedConversationCount() {
+        return memorizedConversationCount;
+    }
+
+    public void setMemorizedConversationCount(Integer memorizedConversationCount) {
+        this.memorizedConversationCount = memorizedConversationCount;
     }
 
     public Integer getLogType() {

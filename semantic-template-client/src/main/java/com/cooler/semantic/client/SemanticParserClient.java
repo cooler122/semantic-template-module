@@ -16,19 +16,19 @@ public class SemanticParserClient {
     private static SemanticParserFacade semanticParserFacade = (SemanticParserFacade)context.getBean("semanticParserFacade", SemanticParserFacade.class);
 
     public static void main(String[] args) throws IOException {
-//        String[] sentences = { "北京今天天气怎么样？" };                                                              //测试全参匹配
+//        String[] sentences = { "今天北京天气怎么样？" };                                                              //测试全参匹配
 
 //        String[] sentences = { "天气怎么样？", "今天", "北京" };                                                      //测试缺参匹配
 
 //        String[] sentences = { "天气怎么样？", "今天", "北京", "天气怎么样？", "今天北京" };                          //测试缺参匹配（批量询问，需要设置can_batch_query = 1）
 
-//        String[] sentences = { "北京今天天气怎么样？", "上海呢？", "天津呢？" };                                      //测试全参情况下的换参匹配
+//        String[] sentences = { "北京今天天气怎么样？", "上海呢？", "天津呢？" , "明天呢？", "广州天气呢？", "广州今天的", "我还想知道北京的"};     //测试全参情况下的换参匹配
 
 //        String[] sentences = { "北京天气怎么样？", "上海呢？", "天津呢？", "今天"};                                        //测试缺参情况下的换参匹配
 
 //        String[] sentences = { "天气怎么样？", "哈哈", "哈哈", "哈哈", "今天", "北京" };                                   //测试打断上下文的缺参匹配1
 
-        String[] sentences = { "天气怎么样？", "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京", "哈哈"};                       //测试打断上下文的缺参匹配2
+//        String[] sentences = { "天气怎么样？", "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京", "哈哈"};                       //测试打断上下文的缺参匹配2
 
 //        String[] sentences = {  "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京" };                                       //测试匹配失败
 
@@ -40,12 +40,12 @@ public class SemanticParserClient {
 
 //        String[] sentences = {  "唱林俊杰的歌", "美人鱼", "江南"};                                                       //另一场景，测试换参匹配（连续指代消解 + 换参匹配）
 
-//        String[] sentences = {  "唱周杰伦的歌" , "唱他的双节棍", "播放他的听妈妈的话", "唱林俊杰的歌", "美人鱼", "江南"};        //另一场景，测试缺参匹配（自定义分词 + 连续指代消解 + 换参匹配）
+        String[] sentences = {  "唱周杰伦的歌" , "唱他的双节棍", "播放他的听妈妈的话", "唱林俊杰的歌", "美人鱼", "江南"};        //另一场景，测试缺参匹配（自定义分词 + 连续指代消解 + 换参匹配）
 
-//        String[] sentences = {  "唱周杰伦的歌" , "唱他的双节棍", "播放他的听妈妈的话", "唱林俊杰的美人鱼", "江南"};        //另一场景，测试缺参匹配（自定义分词 + 连续指代消解 + 换参匹配）
+//        String[] sentences = {  "唱王菲的歌" , "唱他的双节棍", "播放他的听妈妈的话", "唱林俊杰的美人鱼", "江南"};        //另一场景，测试缺参匹配（自定义分词 + 连续指代消解 + 换参匹配）
 
-//        Integer contextId = (int)(Math.random() * 10000000 + 1);
-        Integer contextId = 21;
+        Integer contextId = (int)(Math.random() * 10000000 + 1);
+//        Integer contextId = 21;
         System.out.println("对话编号：" + contextId);
 
         Integer state = 0;

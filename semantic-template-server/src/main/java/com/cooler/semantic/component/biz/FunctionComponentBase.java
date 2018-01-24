@@ -1,12 +1,10 @@
 package com.cooler.semantic.component.biz;
 
-import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentConstant;
 import com.cooler.semantic.component.data.*;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.model.ContextOwner;
-import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.external.RedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +60,6 @@ public abstract class FunctionComponentBase<I, O> implements SemanticComponent {
         }
 
         //2.运行业务
-//        System.out.println("\n组件ID：" + this.id + "，流程编号：" + "，入参：" + JSON.toJSONString(inputDataComponent) + "，开始运行...");
         I inputBizData = inputDataComponent != null ? inputDataComponent.getData() : null;
         ComponentBizResult<O> componentBizResult = runBiz(contextOwner, inputBizData);                                                //运行子组件的逻辑，运行体中获得子组件的OutPutDataComponent
 

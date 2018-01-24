@@ -9,9 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by jiang on 2017/4/11.
- */
 public interface RedisService<T> {
     <T> ValueOperations<String, T> setCacheObject(String key, T value);
     /**
@@ -20,6 +17,13 @@ public interface RedisService<T> {
      * @return 缓存键值对应的数据
      */
     <T> T getCacheObject(String key/*,ValueOperations<String,T> operation*/);
+
+    /**
+     * 根据key集合，一次获取多个结果
+     * @param keys  key集合
+     * @return  多个结果
+     */
+    List<T> getCacheObjects(List<String> keys);
 
     /**
      * 缓存List数据

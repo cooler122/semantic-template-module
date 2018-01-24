@@ -97,15 +97,18 @@ public class ContextOwner implements Serializable{
         return accountId + "_" + userId + "_" + (contextId - n);
     }
 
+    public String getLastNData(int n, String dataName){
+        if(n > 5) n = 5;
+        return accountId + "_" + userId + "_" + (contextId - n) + "_" + dataName;
+    }
+
     /**
      * 获取上n轮对话的contextId
      * @param n
      * @return
      */
     public Integer getLastNContextId(int n){
-        if(n > 5){                                                                                                      //规定最多不能回溯到前面5轮对话
-            n = 5;
-        }
+        if(n > 5) n = 5;
         return contextId - n;
     }
 }

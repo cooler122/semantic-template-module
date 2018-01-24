@@ -11,7 +11,6 @@ import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.external.RedisService;
-import com.cooler.semantic.service.internal.AccountConfigurationService;
 import com.cooler.semantic.service.internal.RuleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +31,6 @@ public class VerdictComponentBase<I> implements SemanticComponent{
      * 组件类型（1功能组件、2判断组件）
      */
     protected int type = Constant.VERDICT_COMPONENT;
-//    /**
-//     * 可变输入输出参数类型映射表
-//     */
-//    protected Map<String, String[]> inOutDataComponentIdMap = new HashMap<>();
-//    /**
-//     * 输入数据组件
-//     */
-//    protected String inputDataBeanId;
     /**
      * 输出数据组件
      */
@@ -124,7 +115,6 @@ public class VerdictComponentBase<I> implements SemanticComponent{
             return new ComponentBizResult("D1_Y");
         }else{
             return new ComponentBizResult("D1_N");
-//            return new ComponentBizResult("D1_Y");                                                         //TODO：此行是测试代码，为了测试缺参匹配后面要删除此行
         }
     }
 

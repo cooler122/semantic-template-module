@@ -38,6 +38,15 @@ public class RedisServiceImpl<T> implements RedisService<T> {
     }
 
     /**
+     * 根据key集合，一次获取多个结果
+     * @param keys  key集合
+     * @return  多个结果
+     */
+    public List<T> getCacheObjects(List<String> keys) {
+        ValueOperations<String, T> operation = redisTemplate.opsForValue();
+        return operation.multiGet(keys);
+    }
+    /**
      * 缓存List数据
      * @param key      缓存的键值
      * @param dataList 待缓存的List数据

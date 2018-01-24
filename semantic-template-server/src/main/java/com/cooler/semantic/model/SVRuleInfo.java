@@ -114,6 +114,11 @@ public class SVRuleInfo implements Serializable{
      */
     private List<RRuleEntity> lackedRRuleEntities;
 
+    /**
+     * 此数据体的匹配类型（在过程中赋值）（3类匹配类型：LPM、CPM、FPM）
+     */
+    private Integer matchType;
+
     public Integer getSentenceVectorId() {
         return sentenceVectorId;
     }
@@ -250,7 +255,15 @@ public class SVRuleInfo implements Serializable{
         this.ensureFinal = ensureFinal;
     }
 
-    //    public Integer getContextId() {
+    public Integer getMatchType() {
+        return matchType;
+    }
+
+    public void setMatchType(Integer matchType) {
+        this.matchType = matchType;
+    }
+
+//    public Integer getContextId() {
 //        return contextId;
 //    }
 //

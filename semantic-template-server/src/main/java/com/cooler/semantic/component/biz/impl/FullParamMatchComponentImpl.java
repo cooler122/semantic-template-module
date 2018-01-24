@@ -75,6 +75,7 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                 }
             });
             SVRuleInfo optimalSvRuleInfo_FPM = svRuleInfosResult.get(0);                                                        //获取相似度值最大的那一个（最优结果）
+            optimalSvRuleInfo_FPM.setMatchType(Constant.FPM);                                                                   //设置匹配类型
             optimalSvRuleInfo_FPM.setrEntityWordInfosList(null);                                                                //最优规则找到后，需要保存（本地、远程），此过程数据太大而且后续没有更多作用，故此处设置为null
             Double fullParamSimilarity = optimalSvRuleInfo_FPM.getSimilarity();
 

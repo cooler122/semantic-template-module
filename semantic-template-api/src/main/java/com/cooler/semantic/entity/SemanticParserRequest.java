@@ -25,6 +25,11 @@ public class SemanticParserRequest implements Serializable {
     private Integer userId;
 
     //--------------------------------------------------------------------2.配置参数CP
+
+    /**
+     * 能记住的会话的数量
+     */
+    private int memorizedConversationCount = 5;
     /**
      * 是否能跳出上下文
      */
@@ -242,6 +247,14 @@ public class SemanticParserRequest implements Serializable {
         this.accumulatedQueryCount = accumulatedQueryCount;
     }
 
+    public int getMemorizedConversationCount() {
+        return memorizedConversationCount;
+    }
+
+    public void setMemorizedConversationCount(int memorizedConversationCount) {
+        this.memorizedConversationCount = memorizedConversationCount;
+    }
+
     public int getLogType() {
         return logType;
     }
@@ -273,6 +286,7 @@ public class SemanticParserRequest implements Serializable {
                 ", accountIds=" + accountIds +
                 ", password='" + password + '\'' +
                 ", userId=" + userId +
+                ", memorizedConversationCount=" + memorizedConversationCount +
                 ", canBreakContext=" + canBreakContext +
                 ", canBatchQuery=" + canBatchQuery +
                 ", ruleMaxQueryCount=" + ruleMaxQueryCount +

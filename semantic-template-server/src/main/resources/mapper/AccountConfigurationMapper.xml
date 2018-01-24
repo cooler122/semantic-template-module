@@ -12,13 +12,15 @@
       <arg column="entity_max_query_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="context_wait_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="accuracy_threshold" jdbcType="DOUBLE" javaType="java.lang.Double" />
+      <arg column="memorized_conversation_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="log_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="algorithm_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List" >
     id, account_id, user_id, can_break_context, can_batch_query, rule_max_query_count, 
-    entity_max_query_count, context_wait_time, accuracy_threshold, log_type, algorithm_type
+    entity_max_query_count, context_wait_time, accuracy_threshold, memorized_conversation_count, 
+    log_type, algorithm_type
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -34,11 +36,13 @@
     insert into account_configuration (id, account_id, user_id, 
       can_break_context, can_batch_query, rule_max_query_count, 
       entity_max_query_count, context_wait_time, accuracy_threshold, 
-      log_type, algorithm_type)
+      memorized_conversation_count, log_type, algorithm_type
+      )
     values (#{id,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
       #{canBreakContext,jdbcType=BIT}, #{canBatchQuery,jdbcType=BIT}, #{ruleMaxQueryCount,jdbcType=INTEGER}, 
       #{entityMaxQueryCount,jdbcType=INTEGER}, #{contextWaitTime,jdbcType=INTEGER}, #{accuracyThreshold,jdbcType=DOUBLE}, 
-      #{logType,jdbcType=INTEGER}, #{algorithmType,jdbcType=INTEGER})
+      #{memorizedConversationCount,jdbcType=INTEGER}, #{logType,jdbcType=INTEGER}, #{algorithmType,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.cooler.semantic.entity.AccountConfiguration" >
     insert into account_configuration
@@ -69,6 +73,9 @@
       </if>
       <if test="accuracyThreshold != null" >
         accuracy_threshold,
+      </if>
+      <if test="memorizedConversationCount != null" >
+        memorized_conversation_count,
       </if>
       <if test="logType != null" >
         log_type,
@@ -105,6 +112,9 @@
       <if test="accuracyThreshold != null" >
         #{accuracyThreshold,jdbcType=DOUBLE},
       </if>
+      <if test="memorizedConversationCount != null" >
+        #{memorizedConversationCount,jdbcType=INTEGER},
+      </if>
       <if test="logType != null" >
         #{logType,jdbcType=INTEGER},
       </if>
@@ -140,6 +150,9 @@
       <if test="accuracyThreshold != null" >
         accuracy_threshold = #{accuracyThreshold,jdbcType=DOUBLE},
       </if>
+      <if test="memorizedConversationCount != null" >
+        memorized_conversation_count = #{memorizedConversationCount,jdbcType=INTEGER},
+      </if>
       <if test="logType != null" >
         log_type = #{logType,jdbcType=INTEGER},
       </if>
@@ -159,6 +172,7 @@
       entity_max_query_count = #{entityMaxQueryCount,jdbcType=INTEGER},
       context_wait_time = #{contextWaitTime,jdbcType=INTEGER},
       accuracy_threshold = #{accuracyThreshold,jdbcType=DOUBLE},
+      memorized_conversation_count = #{memorizedConversationCount,jdbcType=INTEGER},
       log_type = #{logType,jdbcType=INTEGER},
       algorithm_type = #{algorithmType,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}

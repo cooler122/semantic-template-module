@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
+
 @Component("resultPack4RunningComponent")
 public class ResultPack4RunningComponentImpl extends FunctionComponentBase<SVRuleInfo, SemanticParserResponse> {
     private static Logger logger = LoggerFactory.getLogger(ResultPack4RunningComponentImpl.class.getName());
@@ -23,6 +25,7 @@ public class ResultPack4RunningComponentImpl extends FunctionComponentBase<SVRul
         logger.trace("RPC4R.运行中意图结果包装");
         String sentence = svRuleInfo.getSentence();
         Double similarity = svRuleInfo.getSimilarity();
+        similarity = new BigDecimal(similarity).setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
         long responseTimestamp = System.currentTimeMillis();
         String sentenceModified = StringUtils.collectionToDelimitedString(svRuleInfo.getWords(), "");
         svRuleInfo.setSentenceModified(sentenceModified);

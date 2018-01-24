@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -31,6 +32,7 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
         logger.trace("RPC4M.缺参结果包装");
         String sentence = svRuleInfo.getSentence();
         Double similarity = svRuleInfo.getSimilarity();
+        similarity = new BigDecimal(similarity).setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
         List<RRuleEntity> lackedRRuleEntities = svRuleInfo.getLackedRRuleEntities();
         int lackedSize = lackedRRuleEntities.size();
         String sentenceModified = StringUtils.collectionToDelimitedString(svRuleInfo.getWords(), "");

@@ -7,6 +7,7 @@ import com.cooler.semantic.model.ContextOwner;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ComponentConstant {
 
@@ -24,7 +25,8 @@ public class ComponentConstant {
     /**
      * 数据组件Map（每一次上下文都会往里面放入数据，最耗内存，故以后用redis代替）
      */
-    private Map<String, DataComponent> dataBeanMap = new HashMap<>();
+    //TODO：此代表了本地内存，为了保证速度，已经对其做了优化，保证其内部数据不会无限增加，但其读取频繁，看后续效果，如果效果不好，则使用redis完全代替之
+    private Map<String, DataComponent> dataBeanMap = new ConcurrentHashMap<>();
 
     /**
      * 轨迹跟踪字符串Map

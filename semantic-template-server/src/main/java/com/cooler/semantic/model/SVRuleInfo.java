@@ -1,5 +1,6 @@
 package com.cooler.semantic.model;
 
+import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.RRuleEntity;
 
 import java.io.Serializable;
@@ -34,6 +35,11 @@ public class SVRuleInfo implements Serializable{
      * 句子向量和规则的交集 有效实体数量 实际占有率
      */
     private Double similarity = 0d;
+
+    /**
+     * 运行过程中获取的阈值（可能是用户设置的全局阈值，也可能是用户设置的规则性局部阈值），总之similarity > runningAccuracyThreshold，才能算匹配上
+     */
+    private Double runningAccuracyThreshold = 0d;
 
     /**
      * 此值的含义：确定它是最优结果值吗？
@@ -117,7 +123,12 @@ public class SVRuleInfo implements Serializable{
     /**
      * 此数据体的匹配类型（在过程中赋值）（3类匹配类型：LPM、CPM、FPM）
      */
-    private Integer matchType;
+    private Integer matchType = Constant.NO_MATCH;
+
+    /**
+     * 采用了的算法类型（默认贾卡德第三类算法）
+     */
+    private Integer algorithmType = Constant.JACCARD_VOLUME_WEIGHT_RATE;
 
     public Integer getSentenceVectorId() {
         return sentenceVectorId;
@@ -239,6 +250,14 @@ public class SVRuleInfo implements Serializable{
         this.matchedRRuleEntities = matchedRRuleEntities;
     }
 
+    public Double getRunningAccuracyThreshold() {
+        return runningAccuracyThreshold;
+    }
+
+    public void setRunningAccuracyThreshold(Double runningAccuracyThreshold) {
+        this.runningAccuracyThreshold = runningAccuracyThreshold;
+    }
+
     public String getSentenceModified() {
         return sentenceModified;
     }
@@ -263,7 +282,15 @@ public class SVRuleInfo implements Serializable{
         this.matchType = matchType;
     }
 
-//    public Integer getContextId() {
+    public Integer getAlgorithmType() {
+        return algorithmType;
+    }
+
+    public void setAlgorithmType(Integer algorithmType) {
+        this.algorithmType = algorithmType;
+    }
+
+    //    public Integer getContextId() {
 //        return contextId;
 //    }
 //

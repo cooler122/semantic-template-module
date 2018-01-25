@@ -143,7 +143,14 @@ public class VerdictComponentBase<I> implements SemanticComponent{
     private ComponentBizResult<SVRuleInfo> d4(ContextOwner contextOwner) {
         DataComponent<SVRuleInfo> dataComponent = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner);
         if(dataComponent != null && dataComponent.getData() != null){
-            return new ComponentBizResult("D4_Y");
+            SVRuleInfo svRuleInfo = dataComponent.getData();
+            Double similarity = svRuleInfo.getSimilarity();                                                             //相似度值
+            Double runningAccuracyThreshold = svRuleInfo.getRunningAccuracyThreshold();                                 //运行中阈值
+            if(similarity > runningAccuracyThreshold){
+                return new ComponentBizResult("D4_Y");
+            }else{
+                return new ComponentBizResult("D4_N");
+            }
         }else{
             return new ComponentBizResult("D4_N");
         }

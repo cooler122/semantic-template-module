@@ -17,6 +17,8 @@ public class Rule {
 
     private String ruleTemplate;
 
+    private Double accuracyThreshold;
+
     private String ruleMsg;
 
     private Integer referRuleId;
@@ -27,7 +29,7 @@ public class Rule {
 
     private Date updateTime;
 
-    public Rule(Integer id, String ruleName, Integer intentId, Integer senceId, Integer accountId, String originalSentence, String ruleTemplate, String ruleMsg, Integer referRuleId, Integer state, Date createTime, Date updateTime) {
+    public Rule(Integer id, String ruleName, Integer intentId, Integer senceId, Integer accountId, String originalSentence, String ruleTemplate, Double accuracyThreshold, String ruleMsg, Integer referRuleId, Integer state, Date createTime, Date updateTime) {
         this.id = id;
         this.ruleName = ruleName;
         this.intentId = intentId;
@@ -35,6 +37,7 @@ public class Rule {
         this.accountId = accountId;
         this.originalSentence = originalSentence;
         this.ruleTemplate = ruleTemplate;
+        this.accuracyThreshold = accuracyThreshold;
         this.ruleMsg = ruleMsg;
         this.referRuleId = referRuleId;
         this.state = state;
@@ -100,6 +103,14 @@ public class Rule {
 
     public void setRuleTemplate(String ruleTemplate) {
         this.ruleTemplate = ruleTemplate == null ? null : ruleTemplate.trim();
+    }
+
+    public Double getAccuracyThreshold() {
+        return accuracyThreshold;
+    }
+
+    public void setAccuracyThreshold(Double accuracyThreshold) {
+        this.accuracyThreshold = accuracyThreshold;
     }
 
     public String getRuleMsg() {

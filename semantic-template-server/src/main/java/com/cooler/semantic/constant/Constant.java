@@ -4,10 +4,12 @@ package com.cooler.semantic.constant;
 public class Constant{
 
     //------------------------------------------------------------------------------匹配类型
+    public static final int NO_MATCH = 0;                                               //没匹配
     public static final int LPM = 1;                                                    //缺参匹配
     public static final int CPM = 2;                                                    //换参匹配
     public static final int FPM = 3;                                                    //全参匹配
-    public static final int OPTIMAL = 4;                                                //最佳结果
+    public static final int OPTIMAL = 4;                                               //最终选择的匹配
+
 
     //------------------------------------------------------------------------------组件类型
     public static final int FUNCTION_COMPONENT = 1;                                   //功能组件
@@ -54,6 +56,8 @@ public class Constant{
     public static final int TEXT_LOG = 1;                                           //文本日志数据
     public static final int HTML_LOG = 2;                                           //静态HTML日志数据
     public static final int DATA_BASE_LOG = 3;                                      //数据库日志数据
+
+    public static final double RULE_DEFAULT_PARAM = -1;                           //规定规则自定义阈值如果没有设置，其值为-1
 
 
 

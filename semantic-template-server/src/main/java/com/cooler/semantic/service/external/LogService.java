@@ -1,6 +1,8 @@
 package com.cooler.semantic.service.external;
 
 import com.cooler.semantic.component.data.DataComponent;
+import com.cooler.semantic.model.ContextOwner;
+
 import java.util.List;
 
 public interface LogService {

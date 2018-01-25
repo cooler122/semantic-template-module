@@ -6,6 +6,10 @@ import com.cooler.semantic.service.internal.RuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service("ruleService")
 public class RuleServiceImpl implements RuleService {
     @Autowired
@@ -39,5 +43,11 @@ public class RuleServiceImpl implements RuleService {
     @Override
     public int updateByPrimaryKey(Rule record) {
         return ruleMapper.updateByPrimaryKey(record);
+    }
+
+    @Override
+    public Double selectAccuracyThresholdByIdAccountId(Integer accountId, Integer ruleId) {
+        Double ruleAccuracyThreshold = ruleMapper.selectAccuracyThresholdByIdAccountId(accountId, ruleId);                        //最多取出两个记录
+        return ruleAccuracyThreshold;
     }
 }

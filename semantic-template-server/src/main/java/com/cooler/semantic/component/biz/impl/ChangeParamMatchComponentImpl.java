@@ -4,6 +4,7 @@ import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.constant.Constant;
+import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,7 +94,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                             historyWeight = historyWeight != null ? historyWeight : 0d;                                 //排除historyWeight为null的情况
 
                             double productValueIncrement = (1d / currentSVSize * currentWeight) * 3 + (volumeIncrement * historyWeight);//当前句子REWI积值*3 和历史REWI积值 之和
-                            System.out.println(currentContextId + " ---------- " + contextId + "   historyREWI ： " + historyREntityWordInfo.getEntityName() + " ----->  1d / " + currentSVSize + " * " + currentWeight + " * 3" + " + ( " + volumeIncrement + " * " + historyWeight + " )");
+//此处很关键                            System.out.println(currentContextId + " ---------- " + contextId + "   historyREWI ： " + historyREntityWordInfo.getEntityName() + " ----->  (1d / " + currentSVSize + " * " + currentWeight + ") * 3" + " + ( " + volumeIncrement + " * " + historyWeight + " )");
                             double currentEntityWeightRateIncrement = 1d / currentSVSize * currentWeight;                               //此处只记录句子向量端的 量比重 * 权重比重
 
                             Double productValue = svIdcontextId_productValueMap.get(sentenceVectorId + "_" + contextId);
@@ -120,6 +121,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
             //3.换参，设置历史规则为当前匹配规则：设置changeParamOptimalSvRuleInfo，并修改里面替换的参数，包括words和matchedREntityWordInfos
             SVRuleInfo changeParamOptimalSvRuleInfo = contextId_svRuleInfoMap.get(maxValueContextId);                   //这里通过maxValueContextId获取的SVRuleInfo对象作为换参匹配返回的changeParamOptimalSvRuleInfo，有待后面对比全参匹配进行选择
             changeParamOptimalSvRuleInfo.setMatchType(Constant.CPM);                                                   //设置匹配类型
+//            changeParamOptimalSvRuleInfo.setAlgorithmType(?);        //这个只从历史记录里面取的，以前是什么，现在还是什么，无需设置。
             List<String> words = changeParamOptimalSvRuleInfo.getWords();
             List<REntityWordInfo> matchedREntityWordInfosModified = new ArrayList<>();                                  //准备一个新的REWI集合，作为换参SVRuleInfo的匹配REWI集合
             List<REntityWordInfo> matchedREntityWordInfos = changeParamOptimalSvRuleInfo.getMatchedREntityWordInfos();             //获取旧的REWI集合

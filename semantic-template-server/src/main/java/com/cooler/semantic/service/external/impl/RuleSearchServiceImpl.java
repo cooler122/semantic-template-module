@@ -51,22 +51,21 @@ public class RuleSearchServiceImpl implements RuleSearchService {
                 if(svRuleInfo.getPreRuleVolumeRateOccupancy() >= 0.2 || svRuleInfo.getPreRuleWeightOccupancy() >= 0.34){        //规则端阈值，只有超过这两个阈值之一，才有资格建立成一个完整的RuleInfo对象，参与相似度计算，不然计算没意义//TODO:可以在用户配置建立新参数字段（是或是并，也可调节）
                     svRuleInfo.setRuleId(ruleId);                                                                       //自身数据：ruleId、ruleName、accountId、
                     svRuleInfo.setRuleName(rRuleEntity.getRuleName());
-                    svRuleInfo.setAccountId(rRuleEntity.getAccountId());
+                }
+                ruleInfoMap.put(ruleId, svRuleInfo);
+            }
+            Collection<SVRuleInfo> svRuleInfos = ruleInfoMap.values();
 
+            for (SVRuleInfo svRuleInfo : svRuleInfos) {
+                if(svRuleInfo.getRuleId() != null){                                                                    //筛掉没有超过规则端阈值的ruleInfo，也就是没有赋予ruleId的ruleInfo对象
+                    svRuleInfo.setAccountId(accountId);
                     svRuleInfo.setSentenceVectorId(sentenceVectorId);
                     svRuleInfo.setSentence(sentence);                                                                   //装载sentenceVector数据：sentence、words、natures、weights、rEntityWordInfosList，作为计算相似度的句子向量端数值
                     svRuleInfo.setWords(words);
                     svRuleInfo.setNatures(natures);
                     svRuleInfo.setWeights(weights);
                     svRuleInfo.setrEntityWordInfosList(rEntityWordInfosList);
-                }
-                ruleInfoMap.put(ruleId, svRuleInfo);
-            }
-            Collection<SVRuleInfo> SVRuleInfos = ruleInfoMap.values();
-
-            for (SVRuleInfo SVRuleInfo : SVRuleInfos) {
-                if(SVRuleInfo.getRuleId() != null){                                                                    //筛掉没有超过规则端阈值的ruleInfo，也就是没有赋予ruleId的ruleInfo对象
-                    svRuleInfosBeyondFirstThreshold.add(SVRuleInfo);
+                    svRuleInfosBeyondFirstThreshold.add(svRuleInfo);
                 }
             }
         }

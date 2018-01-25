@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component("resultPack4FailComponent")
 public class ResultPack4FailComponentImpl extends FunctionComponentBase<SVRuleInfo, SemanticParserResponse> {
 
@@ -24,13 +26,17 @@ public class ResultPack4FailComponentImpl extends FunctionComponentBase<SVRuleIn
     @Override
     protected ComponentBizResult<SemanticParserResponse> runBiz(ContextOwner contextOwner, SVRuleInfo svRuleInfo) {
         logger.trace("RPC4F.失败结果包装");
+
         DataComponent<SemanticParserRequest> dataComponent = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = dataComponent.getData();
-
         String sentence = request.getCmd();
         Double similarity = 0d;
+        if(svRuleInfo != null){
+            sentence = svRuleInfo.getSentence();
+            similarity = svRuleInfo.getSimilarity();
+            similarity = new BigDecimal(similarity).setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
+        }
         long responseTimestamp = System.currentTimeMillis();
-
         SemanticParserResponse semanticParserResponse = new SemanticParserResponse();
         semanticParserResponse.setSentence(sentence);
         semanticParserResponse.setResponseType(Constant.FAIL_RESULT);

@@ -42,7 +42,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
         Double maxSimilarityDistance = 0d;
         Integer bestContextId = null;
 
-        //1.准备好5轮的历史数据
+        //1.准备好历史数据
         DataComponent<List<DataComponent<SVRuleInfo>>> historyBigDataComponent = componentConstant.getDataComponent("historyDataComponents", contextOwner);
         List<DataComponent<SVRuleInfo>> historyDataComponents = historyBigDataComponent.getData();
         Map<Integer, DataComponent<SVRuleInfo>> historyDataComponentMap = new HashMap<>();
@@ -137,7 +137,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                                 Double rewWeight = weightMap.get(sentenceVectorId);                                     //找出针对当前句子向量的此REW的权重
 
                                 historyMatchedREntityWeightMap.put(sentenceVectorId, rewWeight * (1 - (amnesiacCoefficient * totalUsedHistoryRuleWeights)) / totalUsedCurrSVInfoWeights);   //从新为此REW设置针对当前句子向量的权重值（此有公式）
-                                logger.debug("contextId: " + currentContextId + "  " + historyMatchedREntityWordInfo.getEntityName() + " : " + rewWeight + "*" + "(1 - (" + amnesiacCoefficient + " * " + totalUsedHistoryRuleWeights + " )) / " +  totalUsedCurrSVInfoWeights);
+                                System.out.println("contextId: " + rewContextId + "(current)  " + historyMatchedREntityWordInfo.getEntityName() + " : " + rewWeight + " * " + "(1 - (" + amnesiacCoefficient + " * " + totalUsedHistoryRuleWeights + " )) / " +  totalUsedCurrSVInfoWeights);
                             }
                             //2.2.6.3.如果这个REW是历史对话中存储的REW
                             else{                                                                                      //如果此REW版本不等于本轮对话版本号，那么它就是历史对话产生的REW（它来源于历史对话的半匹配规则rule）
@@ -145,7 +145,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                                 Double historyMatchedRRuleEntityWeight = historyMatchedRRuleEntity.getWeight();         //获取其权重
 
                                 historyMatchedREntityWeightMap.put(sentenceVectorId, historyMatchedRRuleEntityWeight * amnesiacCoefficient);        //从新为此REW设置针对当前句子向量的权重值（此有公式）
-                                logger.debug("contextId: " + currentContextId + "  " + historyMatchedREntityWordInfo.getEntityName() + " : " + historyMatchedRRuleEntityWeight + " * " + amnesiacCoefficient);
+                                System.out.println("contextId: " + rewContextId + "(history)  " + historyMatchedREntityWordInfo.getEntityName() + " : " + historyMatchedRRuleEntityWeight + " * " + amnesiacCoefficient);
                             }
                         }
 
@@ -168,6 +168,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
         //3.此处缺参匹配已经匹配成功，既然已经选定了一个SVRuleInfo对象作为lpm_optimalSvRuleInfo，那么要完善此处的lpm_optimalSvRuleInfo内部结构体
         if(lpm_optimalSvRuleInfo != null){
             lpm_optimalSvRuleInfo.setMatchType(Constant.LPM);                                                           //设置匹配类型
+            lpm_optimalSvRuleInfo.setAlgorithmType(algorithmType);                                                      //设置算法类型
             List<REntityWordInfo> matchedREntityWordInfos = lpm_optimalSvRuleInfo.getMatchedREntityWordInfos();
             List<String> wordsModified = new ArrayList<>();
             for (REntityWordInfo matchedREntityWordInfo : matchedREntityWordInfos) {

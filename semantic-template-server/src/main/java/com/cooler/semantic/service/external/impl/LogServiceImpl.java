@@ -3,11 +3,8 @@ package com.cooler.semantic.service.external.impl;
 import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.constant.Constant;
-import com.cooler.semantic.dao.ProcessLogDataMapper;
-import com.cooler.semantic.entity.ProcessLogData;
-import com.cooler.semantic.entity.SemanticParserRequest;
-import com.cooler.semantic.entity.SemanticParserResponse;
-import com.cooler.semantic.model.ContextOwner;
+import com.cooler.semantic.dao.LogDataProcess2Mapper;
+import com.cooler.semantic.entity.*;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.model.SentenceVector;
@@ -18,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Service("logService")
@@ -25,7 +23,7 @@ public class LogServiceImpl implements LogService {
 
     private static Logger logger = LoggerFactory.getLogger(LogServiceImpl.class.getName());
     @Autowired
-    private ProcessLogDataMapper processLogDataMapper;
+    private LogDataProcess2Mapper logDataProcess2Mapper;
 
     @Override
     public void writeLog(int logType, List<DataComponent> dataComponents, String processTrace) {
@@ -49,14 +47,12 @@ public class LogServiceImpl implements LogService {
     }
 
     private void writeDataBaseLog(List<DataComponent> dataComponents, String processTrace) {
-        ProcessLogData processLogData = new ProcessLogData();
-        processLogData.setProcessTrace(processTrace);
+        LogDataProcess2 logDataProcess = new LogDataProcess2();
+        logDataProcess.setDateTime(new Date());
+        logDataProcess.setProcessTrace(processTrace);
+
         for (DataComponent dataComponent : dataComponents) {
             String dataComponentId = dataComponent.getId();
-            ContextOwner contextOwner = dataComponent.getContextOwner();
-            String ownerIndex = contextOwner.getOwnerIndex();
-            processLogData.setOwnerIndex(ownerIndex);
-
             Object data = dataComponent.getData();
             switch (dataComponentId){
                 case "historyDataComponents" : {
@@ -70,10 +66,29 @@ public class LogServiceImpl implements LogService {
                     Integer userId = semanticParserRequest.getUserId();
                     int contextId = semanticParserRequest.getContextId();
                     String cmd = semanticParserRequest.getCmd();
+                    logDataProcess.setAccountId(accountIds.get(0));
+                    logDataProcess.setUserId(userId);
+                    logDataProcess.setContextId(contextId);
+                    logDataProcess.setDetailContextOwner(Arrays.toString(accountIds.toArray()) + "_" + userId + "_" + contextId );
+                    logDataProcess.setSentence(cmd);
+                    logDataProcess.setConfigureParams(JSON.toJSONString(semanticParserRequest));
+                    break;
+                }
+                case "semanticParserResponse" : {
+                    SemanticParserResponse semanticParserResponse = (SemanticParserResponse) data;
+                    String sentenceModified = semanticParserResponse.getSentenceModified();
+                    String responseMsg = semanticParserResponse.getResponseMsg();
+                    int state = semanticParserResponse.getState();
+                    double score = semanticParserResponse.getScore();
+                    int responseType = semanticParserResponse.getResponseType();
+                    long responseTimestamp = semanticParserResponse.getResponseTimestamp();
 
-                    processLogData.setDetailContextOwner(Arrays.toString(accountIds.toArray()) + "_" + userId + "_" + contextId );
-                    processLogData.setSentence(cmd);
-                    processLogData.setConfigureParams(JSON.toJSONString(semanticParserRequest));
+                    logDataProcess.setSentenceModified(sentenceModified);
+                    logDataProcess.setResponseMsg(responseMsg);
+                    logDataProcess.setState(state);
+                    logDataProcess.setScore(score);
+                    logDataProcess.setResponseType(responseType);
+                    logDataProcess.setResponseTimestamp(responseTimestamp + "");
                     break;
                 }
                 case "sentenceVectors" : {
@@ -89,51 +104,35 @@ public class LogServiceImpl implements LogService {
                         sv_words_sb.append(Arrays.toString(words.toArray())).append(", ");
                         sv_weights_sb.append(Arrays.toString(weights.toArray())).append(", ");
                     }
-                    processLogData.setSvIds(sv_ids_sb.toString());
-                    processLogData.setSvWords(sv_words_sb.toString());
-                    processLogData.setSvWeights(sv_weights_sb.toString());
+                    logDataProcess.setSvIds(sv_ids_sb.toString());
+                    logDataProcess.setSvWords(sv_words_sb.toString());
+                    logDataProcess.setSvWeights(sv_weights_sb.toString());
                     break;
                 }
                 case "optimalSvRuleInfo_LPM" : {
                     SVRuleInfo optimalSvRuleInfo_LPM = (SVRuleInfo) data;
-                    putSVRuleInfoParams(optimalSvRuleInfo_LPM, processLogData, Constant.LPM);
+                    putSVRuleInfoParams(optimalSvRuleInfo_LPM, logDataProcess, Constant.LPM);
                     break;
                 }
                 case "optimalSvRuleInfo_CPM" : {
                     SVRuleInfo optimalSvRuleInfo_CPM = (SVRuleInfo) data;
-                    putSVRuleInfoParams(optimalSvRuleInfo_CPM, processLogData, Constant.CPM);
+                    putSVRuleInfoParams(optimalSvRuleInfo_CPM, logDataProcess, Constant.CPM);
                     break;
                 }
                 case "optimalSvRuleInfo_FPM" : {
                     SVRuleInfo optimalSvRuleInfo_FPM = (SVRuleInfo) data;
-                    putSVRuleInfoParams(optimalSvRuleInfo_FPM, processLogData, Constant.FPM);
+                    putSVRuleInfoParams(optimalSvRuleInfo_FPM, logDataProcess, Constant.FPM);
                     break;
                 }
                 case "optimalSvRuleInfo" : {
                     SVRuleInfo optimalSvRuleInfo = (SVRuleInfo) data;
-                    putSVRuleInfoParams(optimalSvRuleInfo, processLogData, Constant.OPTIMAL);
+                    putSVRuleInfoParams(optimalSvRuleInfo, logDataProcess, Constant.OPTIMAL);
                     break;
                 }
-                case "semanticParserResponse" : {
-                    SemanticParserResponse semanticParserResponse = (SemanticParserResponse) data;
-                    String sentenceModified = semanticParserResponse.getSentenceModified();
-                    String responseMsg = semanticParserResponse.getResponseMsg();
-                    int state = semanticParserResponse.getState();
-                    double score = semanticParserResponse.getScore();
-                    int responseType = semanticParserResponse.getResponseType();
-                    long responseTimestamp = semanticParserResponse.getResponseTimestamp();
 
-                    processLogData.setSentenceModified(sentenceModified);
-                    processLogData.setResponseMsg(responseMsg);
-                    processLogData.setState(state);
-                    processLogData.setScore(score);
-                    processLogData.setResponseType(responseType);
-                    processLogData.setResponseTimestamp(responseTimestamp + "");
-                    break;
-                }
             }
         }
-        processLogDataMapper.insert(processLogData);
+        logDataProcess2Mapper.insert(logDataProcess);
     }
 
     private void writeHtmlLog(List<DataComponent> dataComponents, String processTrace) {
@@ -142,12 +141,32 @@ public class LogServiceImpl implements LogService {
     private void writeTextLog(List<DataComponent> dataComponents, String processTrace) {
     }
 
-    private void putSVRuleInfoParams(SVRuleInfo svRuleInfo, ProcessLogData processLogData, int resultType){
+    /**
+     * 收集SVRuleInfo里面的值
+     * @param svRuleInfo
+     * @param logDataProcess
+     * @param resultType
+     */
+    private void putSVRuleInfoParams(SVRuleInfo svRuleInfo, LogDataProcess2 logDataProcess, int resultType){
+        if(svRuleInfo == null) return;         //这种情况有可能发生，当没有匹配到任何规则的时候，svRuleInfo将为空，有时候lastState<0时，下一轮对话尝试缺参匹配，下一轮如果跳到另一个场景了，那么缺参匹配就会产生空svRuleInfo
         Integer sentenceVectorId = svRuleInfo.getSentenceVectorId();
-        StringBuffer rew_entitys_sb = new StringBuffer();                                                               //包含entityType_entityId_entityName
-        StringBuffer rew_words_sb = new StringBuffer();                                                                 //包含wordId_word_normalWord
-        StringBuffer rew_weights_sb = new StringBuffer();
+
+        StringBuffer rule_score_sb = new StringBuffer();
+        StringBuffer matched_rew_sb = new StringBuffer();
+        StringBuffer matched_rre_sb = new StringBuffer();                                                    //包含wordId_word_normalWord
+        StringBuffer lacked_rre_sb = new StringBuffer();
         List<REntityWordInfo> matchedREntityWordInfos = svRuleInfo.getMatchedREntityWordInfos();
+        List<RRuleEntity> matchedRRuleEntities = svRuleInfo.getMatchedRRuleEntities();
+        List<RRuleEntity> lackedRRuleEntities = svRuleInfo.getLackedRRuleEntities();
+
+        Integer ruleId = svRuleInfo.getRuleId();
+        String ruleName = svRuleInfo.getRuleName();
+        Integer algorithmType = svRuleInfo.getAlgorithmType();
+        Double similarity = svRuleInfo.getSimilarity();
+        Double runningAccuracyThreshold = svRuleInfo.getRunningAccuracyThreshold();
+        rule_score_sb.append(ruleId).append("| ").append(ruleName).append("| ").append(algorithmType).append("| ").append(String.format("%.3f",similarity)).append("| ").append(String.format("%.3f",runningAccuracyThreshold));
+
+
         for (REntityWordInfo matchedREntityWordInfo : matchedREntityWordInfos) {
             String entityTypeId = matchedREntityWordInfo.getEntityTypeId();
             String entityName = matchedREntityWordInfo.getEntityName();
@@ -156,34 +175,55 @@ public class LogServiceImpl implements LogService {
 //            String normalWord = matchedREntityWordInfo.getNormalWord();
             Double weight = matchedREntityWordInfo.getWeightMap().get(sentenceVectorId);
             weight = (weight == null ? 0d : weight);
-
-            rew_entitys_sb.append(entityTypeId).append("_").append(entityName).append("| ");
-            rew_words_sb.append(wordId).append("_").append(word).append("| ");
-            rew_weights_sb.append(String.format("%.3f", weight)).append("| ");
+            matched_rew_sb.append("(").append(entityTypeId).append("_").append(entityName).append(")(").append(String.format("%.3f", weight)).append(")(").append(wordId).append("_").append(word).append(")| ");
         }
+        for (RRuleEntity matchedRRuleEntity : matchedRRuleEntities) {
+            String entityTypeId = matchedRRuleEntity.getEntityTypeId();
+            String entityName = matchedRRuleEntity.getEntityName();
+            Double weight = matchedRRuleEntity.getWeight();
+            weight = (weight == null ? 0d : weight);
+            matched_rre_sb.append("(").append(entityTypeId).append("_").append(entityName).append(")(").append(String.format("%.3f", weight)).append(")| ");
+        }
+        for (RRuleEntity lackedRRuleEntity : lackedRRuleEntities) {
+            String entityTypeId = lackedRRuleEntity.getEntityTypeId();
+            String entityName = lackedRRuleEntity.getEntityName();
+            Double weight = lackedRRuleEntity.getWeight();
+            weight = (weight == null ? 0d : weight);
+            lacked_rre_sb.append("(").append(entityTypeId).append("_").append(entityName).append(")(").append(String.format("%.3f", weight)).append(")| ");
+        }
+
         switch (resultType){
             case  Constant.LPM : {
-                processLogData.setLpmRewEntitys(rew_entitys_sb.toString());
-                processLogData.setLpmRewWords(rew_words_sb.toString());
-                processLogData.setLpmRewWeights(rew_weights_sb.toString());
+                logDataProcess.setLpmRuleScore(rule_score_sb.toString());
+                logDataProcess.setLpmMatchedRew(matched_rew_sb.toString());
+                logDataProcess.setLpmMatchedRre(matched_rre_sb.toString());
+                logDataProcess.setLpmLackedRre(lacked_rre_sb.toString());
                 break;
             }
             case  Constant.CPM : {
-                processLogData.setCpmRewEntitys(rew_entitys_sb.toString());
-                processLogData.setCpmRewWords(rew_words_sb.toString());
-                processLogData.setCpmRewWeights(rew_weights_sb.toString());
+                logDataProcess.setCpmRuleScore(rule_score_sb.toString());
+                logDataProcess.setCpmMatchedRew(matched_rew_sb.toString());
+                logDataProcess.setCpmMatchedRre(matched_rre_sb.toString());
+                logDataProcess.setCpmLackedRre(lacked_rre_sb.toString());
                 break;
             }
             case  Constant.FPM : {
-                processLogData.setFpmRewEntitys(rew_entitys_sb.toString());
-                processLogData.setFpmRewWords(rew_words_sb.toString());
-                processLogData.setFpmRewWeights(rew_weights_sb.toString());
+                logDataProcess.setFpmRuleScore(rule_score_sb.toString());
+                logDataProcess.setFpmMatchedRew(matched_rew_sb.toString());
+                logDataProcess.setFpmMatchedRre(matched_rre_sb.toString());
+                logDataProcess.setFpmLackedRre(lacked_rre_sb.toString());
                 break;
             }
             case  Constant.OPTIMAL : {
-                processLogData.setOptimalRewEntitys(rew_entitys_sb.toString());
-                processLogData.setOptimalRewWords(rew_words_sb.toString());
-                processLogData.setOptimalRewWeights(rew_weights_sb.toString());
+                StringBuffer selectResultSB = new StringBuffer();
+                Integer matchType = svRuleInfo.getMatchType();
+                selectResultSB.append(matchType).append("| ")
+                        .append(ruleId).append("| ")
+                        .append(ruleName).append("| ")
+                        .append(algorithmType).append("| ")
+                        .append(String.format("%.3f",similarity)).append("| ")
+                        .append(runningAccuracyThreshold);
+                logDataProcess.setSelectResult(selectResultSB.toString());
                 break;
             }
         }

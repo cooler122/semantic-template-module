@@ -3,7 +3,7 @@ package com.cooler.semantic.service.external.impl;
 import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.constant.Constant;
-import com.cooler.semantic.dao.LogDataProcess2Mapper;
+import com.cooler.semantic.dao.LogDataProcessMapper;
 import com.cooler.semantic.entity.*;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
@@ -23,7 +23,7 @@ public class LogServiceImpl implements LogService {
 
     private static Logger logger = LoggerFactory.getLogger(LogServiceImpl.class.getName());
     @Autowired
-    private LogDataProcess2Mapper logDataProcess2Mapper;
+    private LogDataProcessMapper logDataProcessMapper;
 
     @Override
     public void writeLog(int logType, List<DataComponent> dataComponents, String processTrace) {
@@ -46,8 +46,13 @@ public class LogServiceImpl implements LogService {
         }
     }
 
+    /**
+     * 存储日志到数据库中
+     * @param dataComponents
+     * @param processTrace
+     */
     private void writeDataBaseLog(List<DataComponent> dataComponents, String processTrace) {
-        LogDataProcess2 logDataProcess = new LogDataProcess2();
+        LogDataProcess logDataProcess = new LogDataProcess();
         logDataProcess.setDateTime(new Date());
         logDataProcess.setProcessTrace(processTrace);
 
@@ -132,7 +137,7 @@ public class LogServiceImpl implements LogService {
 
             }
         }
-        logDataProcess2Mapper.insert(logDataProcess);
+        logDataProcessMapper.insert(logDataProcess);
     }
 
     private void writeHtmlLog(List<DataComponent> dataComponents, String processTrace) {
@@ -147,7 +152,7 @@ public class LogServiceImpl implements LogService {
      * @param logDataProcess
      * @param resultType
      */
-    private void putSVRuleInfoParams(SVRuleInfo svRuleInfo, LogDataProcess2 logDataProcess, int resultType){
+    private void putSVRuleInfoParams(SVRuleInfo svRuleInfo, LogDataProcess logDataProcess, int resultType){
         if(svRuleInfo == null) return;         //这种情况有可能发生，当没有匹配到任何规则的时候，svRuleInfo将为空，有时候lastState<0时，下一轮对话尝试缺参匹配，下一轮如果跳到另一个场景了，那么缺参匹配就会产生空svRuleInfo
         Integer sentenceVectorId = svRuleInfo.getSentenceVectorId();
 

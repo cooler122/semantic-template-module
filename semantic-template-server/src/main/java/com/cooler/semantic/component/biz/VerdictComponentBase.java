@@ -146,7 +146,7 @@ public class VerdictComponentBase<I> implements SemanticComponent{
             SVRuleInfo svRuleInfo = dataComponent.getData();
             Double similarity = svRuleInfo.getSimilarity();                                                             //相似度值
             Double runningAccuracyThreshold = svRuleInfo.getRunningAccuracyThreshold();                                 //运行中阈值
-            if(similarity > runningAccuracyThreshold){
+            if(similarity >= runningAccuracyThreshold){
                 return new ComponentBizResult("D4_Y");
             }else{
                 return new ComponentBizResult("D4_N");
@@ -193,10 +193,24 @@ public class VerdictComponentBase<I> implements SemanticComponent{
         DataComponent semanticParserRequest = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = (SemanticParserRequest)semanticParserRequest.getData();
         int lastState = request.getLastState();
-        if(lastState < 0){
-            return new ComponentBizResult("D9_Y");
-        }else{
-            return new ComponentBizResult("D9_N");
+        DataComponent<SVRuleInfo> optimalSvRuleInfo_DataComponent = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner);
+
+        if(optimalSvRuleInfo_DataComponent != null && optimalSvRuleInfo_DataComponent.getData() != null) {       //（有提示词本）轮还是有结果的，但结果全部小于阈值，因为当前D4->D9，如果结果大于阈值的就会从D4->D6了
+            if(lastState < 0){
+                //去LRRC，再做最后一搏，但将规则问出来 ---> 回应“不知道您上句话什么意思，如果你是问${ruleName}，那么您可以这样问${ruleTemplate}，您前面问的是...呢？（保存缺参上下文）
+                return new ComponentBizResult("D9_Y_Y");
+            }else{
+                //去失败结果体，但将规则问出来 ---> 回应“不知道您上句话什么意思，如果你是问${ruleName}，那么您可以这样问${ruleTemplate}（保存当前上下文，虽然失败结果）
+                return new ComponentBizResult("D9_Y_N");
+            }
+        }else{                                                                                                     //（无提示词）本轮结果彻底没解析出来，为空，不用谈阈值了
+            if(lastState < 0){
+                //去LRRC了，再做最后一搏，看看能否上轮缺参问题回退一步 ---> 回应“不知道您上句话的意思，您前面问的是...呢？”（保存回退的缺参上下文）
+                return new ComponentBizResult("D9_N_Y");
+            }else{
+                //完全要去失败结果体了--->回应完全不知道您说什么（保存当前的空上下文）
+                return new ComponentBizResult("D9_N_N");
+            }
         }
     }
 

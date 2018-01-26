@@ -46,7 +46,7 @@
                 <entry key="D1" value-ref="verdictComponentBase"/>                                              <!-- D1:    CS.S < 0 ? -->
                 <entry key="D2" value-ref="verdictComponentBase"/>                                              <!-- D2:    判断：缺参匹配无效 ? -->
                 <entry key="D3" value-ref="verdictComponentBase"/>                                              <!-- D3:    可换参实体数 > 0 ? -->
-                <!--<entry key="D4" value-ref="verdictComponentBase"/>                                              &lt;!&ndash; D4:    换参匹配无效 ？ &ndash;&gt;-->
+                <entry key="D4" value-ref="verdictComponentBase"/>                                              <!-- D4:    换参匹配无效 ？ -->
                 <entry key="D6" value-ref="verdictComponentBase"/>                                              <!-- D6:    必须参数是否完全匹配 ? -->
                 <entry key="D7" value-ref="verdictComponentBase"/>                                              <!-- D7:    匹配规则是引导性规则 ? -->
                 <entry key="D8" value-ref="verdictComponentBase"/>                                              <!-- D8:    规则的意图是运行中意图 ? -->
@@ -85,13 +85,13 @@
                 <entry key="FPMC_S" value="ORSC"/>
                 <entry key="FPMC_F" value="ORSC"/>
 
-                <entry key="ORSC_S_L" value="D6"/>
-                <entry key="ORSC_S_C1" value="D6"/>
-                <entry key="ORSC_S_F1" value="D6"/>
+                <entry key="ORSC_S_L" value="D4"/>
+                <entry key="ORSC_S_C1" value="D4"/>
+                <entry key="ORSC_S_F1" value="D4"/>
 
-                <entry key="ORSC_S_C2" value="D9"/>
-                <entry key="ORSC_S_F2" value="D9"/>
-                <entry key="ORSC_S" value="D9"/>
+                <entry key="ORSC_S_C2" value="D4"/>
+                <entry key="ORSC_S_F2" value="D4"/>
+                <entry key="ORSC_S" value="D4"/>
 
                 <entry key="D4_Y" value="D6"/>
                 <entry key="D4_N" value="D9"/>
@@ -107,8 +107,10 @@
                 <entry key="D8_N" value="RPC4NR"/>
                 <entry key="D8_Y" value="RPC4R"/>
 
-                <entry key="D9_Y" value="D10"/>
-                <entry key="D9_N" value="RPC4F"/>
+                <entry key="D9_Y_Y" value="D10"/>
+                <entry key="D9_N_Y" value="D10"/>
+                <entry key="D9_Y_N" value="RPC4F"/>
+                <entry key="D9_N_N" value="RPC4F"/>
 
                 <entry key="D10_Y" value="RPC4F"/>
                 <entry key="D10_N" value="LRRC"/>

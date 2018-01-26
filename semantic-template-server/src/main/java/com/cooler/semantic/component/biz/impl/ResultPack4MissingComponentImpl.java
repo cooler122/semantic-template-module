@@ -37,8 +37,13 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
         int lackedSize = lackedRRuleEntities.size();
         String sentenceModified = StringUtils.collectionToDelimitedString(svRuleInfo.getWords(), "");
         svRuleInfo.setSentenceModified(sentenceModified);
+        String responseMsg = "";
 
-        String responseMsg = "您问的是 ";
+        DataComponent sugguestDataDataComponent = componentConstant.getDataComponent("sugguestData", contextOwner);         //看看前面是否获取了建议语句
+        if(sugguestDataDataComponent != null && sugguestDataDataComponent.getData() != null){
+            responseMsg = sugguestDataDataComponent.getData() + "，前面您问的是：";
+        }
+
         if(lackedRRuleEntities != null && lackedSize > 1){                                                             //1.如果缺失实体问题数量 > 1
             DataComponent<SemanticParserRequest> dataComponent = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
             SemanticParserRequest request = dataComponent.getData();
@@ -69,11 +74,11 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
                     }
                 });
                 RRuleEntity rRuleEntity = lackedRRuleEntities.get(0);
-                responseMsg = rRuleEntity.getNecessaryEntityQuery();
+                responseMsg += rRuleEntity.getNecessaryEntityQuery();
             }
         }else{                                                                                                         //2.如果缺失实体问题数量 = 1
             RRuleEntity rRuleEntity = lackedRRuleEntities.get(0);
-            responseMsg = rRuleEntity.getNecessaryEntityQuery();
+            responseMsg += rRuleEntity.getNecessaryEntityQuery();
         }
 
 

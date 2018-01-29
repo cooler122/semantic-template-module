@@ -4,7 +4,6 @@ import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.constant.Constant;
-import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -174,6 +173,5 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
         }else{
             return new ComponentBizResult("CPMC_F");
         }
-
     }
 }

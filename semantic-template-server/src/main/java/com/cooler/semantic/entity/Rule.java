@@ -21,7 +21,7 @@ public class Rule {
 
     private String ruleMsg;
 
-    private Integer referRuleId;
+    private String baseMatchSentence;
 
     private Integer state;
 
@@ -29,7 +29,7 @@ public class Rule {
 
     private Date updateTime;
 
-    public Rule(Integer id, String ruleName, Integer intentId, Integer senceId, Integer accountId, String originalSentence, String ruleTemplate, Double accuracyThreshold, String ruleMsg, Integer referRuleId, Integer state, Date createTime, Date updateTime) {
+    public Rule(Integer id, String ruleName, Integer intentId, Integer senceId, Integer accountId, String originalSentence, String ruleTemplate, Double accuracyThreshold, String ruleMsg, String baseMatchSentence, Integer state, Date createTime, Date updateTime) {
         this.id = id;
         this.ruleName = ruleName;
         this.intentId = intentId;
@@ -39,7 +39,7 @@ public class Rule {
         this.ruleTemplate = ruleTemplate;
         this.accuracyThreshold = accuracyThreshold;
         this.ruleMsg = ruleMsg;
-        this.referRuleId = referRuleId;
+        this.baseMatchSentence = baseMatchSentence;
         this.state = state;
         this.createTime = createTime;
         this.updateTime = updateTime;
@@ -121,12 +121,12 @@ public class Rule {
         this.ruleMsg = ruleMsg == null ? null : ruleMsg.trim();
     }
 
-    public Integer getReferRuleId() {
-        return referRuleId;
+    public String getBaseMatchSentence() {
+        return baseMatchSentence;
     }
 
-    public void setReferRuleId(Integer referRuleId) {
-        this.referRuleId = referRuleId;
+    public void setBaseMatchSentence(String baseMatchSentence) {
+        this.baseMatchSentence = baseMatchSentence == null ? null : baseMatchSentence.trim();
     }
 
     public Integer getState() {

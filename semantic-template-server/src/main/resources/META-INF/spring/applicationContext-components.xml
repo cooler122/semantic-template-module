@@ -29,7 +29,7 @@
             <map>
                 <entry key="STARTC" value-ref="startComponent"/>                                                 <!-- 开始节点 -->
                 <entry key="VCC" value-ref="validateConfComponent"/>                                            <!-- 校验和配置 -->
-                <entry key="SPC" value-ref="sentenceProcessComponent"/>                                         <!-- 句子处理 -->
+                <entry key="SPC" value-ref="sentenceProcessComponent"/>                                        <!-- 句子处理 -->
                 <entry key="EAC" value-ref="entityAssignComponent"/>                                            <!-- 实体归属 -->
                 <entry key="LPMC" value-ref="lackParamMatchComponent"/>                                        <!-- 缺参匹配 -->
                 <entry key="CPMC" value-ref="changeParamMatchComponent"/>                                      <!-- 换参匹配 -->

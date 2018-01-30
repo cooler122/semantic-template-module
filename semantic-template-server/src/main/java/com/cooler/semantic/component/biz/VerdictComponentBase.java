@@ -6,11 +6,13 @@ import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.component.data.DataComponentBase;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.RRuleEntity;
+import com.cooler.semantic.entity.ReferRuleRelation;
 import com.cooler.semantic.entity.Rule;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.external.RedisService;
+import com.cooler.semantic.service.external.ReferRuleRelationService;
 import com.cooler.semantic.service.internal.RuleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +48,7 @@ public class VerdictComponentBase<I> implements SemanticComponent{
     private RedisService<DataComponent> redisService;
 
     @Autowired
-    private RuleService ruleService;
+    private ReferRuleRelationService referRuleRelationService;
 
     @Override
     public int getType() {
@@ -172,9 +174,8 @@ public class VerdictComponentBase<I> implements SemanticComponent{
         DataComponent<SVRuleInfo> optimalSvRuleInfo = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner); //此时optimalSvRuleInfo一定不为空
         SVRuleInfo svRuleInfo = optimalSvRuleInfo.getData();
         Integer ruleId = svRuleInfo.getRuleId();
-        Rule rule = ruleService.selectByPrimaryKey(ruleId);                      //TODO:这一部分还是放到外边的业务组件里面，将rule保存起来，这里就接受一个值即可
-        Integer referRuleId = rule.getReferRuleId();
-        if(referRuleId.intValue() == 0){
+        List<ReferRuleRelation> referRuleRelations = referRuleRelationService.selectByRuleId(ruleId);
+        if(referRuleRelations.size() == 0){
             return new ComponentBizResult("D7_N");
         }else{
             return new ComponentBizResult("D7_Y");

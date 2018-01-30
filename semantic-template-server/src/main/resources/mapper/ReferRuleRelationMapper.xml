@@ -125,4 +125,12 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+  <!-- 业务相关 -->
+  <select id="selectByRuleId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from refer_rule_relation
+    where rule_id = #{ruleId,jdbcType=INTEGER} and state = 1
+  </select>
+
 </mapper>

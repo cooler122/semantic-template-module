@@ -5,6 +5,8 @@ public class ReferRuleCondition {
 
     private Integer referRuleRelationId;
 
+    private Integer entityType;
+
     private Integer entityId;
 
     private Integer logicExpression;
@@ -13,9 +15,10 @@ public class ReferRuleCondition {
 
     private Integer state;
 
-    public ReferRuleCondition(Integer id, Integer referRuleRelationId, Integer entityId, Integer logicExpression, String entityParam, Integer state) {
+    public ReferRuleCondition(Integer id, Integer referRuleRelationId, Integer entityType, Integer entityId, Integer logicExpression, String entityParam, Integer state) {
         this.id = id;
         this.referRuleRelationId = referRuleRelationId;
+        this.entityType = entityType;
         this.entityId = entityId;
         this.logicExpression = logicExpression;
         this.entityParam = entityParam;
@@ -40,6 +43,14 @@ public class ReferRuleCondition {
 
     public void setReferRuleRelationId(Integer referRuleRelationId) {
         this.referRuleRelationId = referRuleRelationId;
+    }
+
+    public Integer getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(Integer entityType) {
+        this.entityType = entityType;
     }
 
     public Integer getEntityId() {

@@ -6,6 +6,7 @@
     <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="refer_rule_relation_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="entity_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="entity_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="logic_expression" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="entity_param" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -14,7 +15,8 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, refer_rule_relation_id, entity_id, logic_expression, entity_param, state
+    id, refer_rule_relation_id, entity_type, entity_id, logic_expression, entity_param, 
+    state
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -30,12 +32,12 @@
   </delete>
 
   <insert id="insert" parameterType="com.cooler.semantic.entity.ReferRuleCondition" >
-    insert into refer_rule_condition (id, refer_rule_relation_id, entity_id, 
-      logic_expression, entity_param, state
-      )
-    values (#{id,jdbcType=INTEGER}, #{referRuleRelationId,jdbcType=INTEGER}, #{entityId,jdbcType=INTEGER}, 
-      #{logicExpression,jdbcType=INTEGER}, #{entityParam,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}
-      )
+    insert into refer_rule_condition (id, refer_rule_relation_id, entity_type, 
+      entity_id, logic_expression, entity_param, 
+      state)
+    values (#{id,jdbcType=INTEGER}, #{referRuleRelationId,jdbcType=INTEGER}, #{entityType,jdbcType=INTEGER}, 
+      #{entityId,jdbcType=INTEGER}, #{logicExpression,jdbcType=INTEGER}, #{entityParam,jdbcType=VARCHAR}, 
+      #{state,jdbcType=INTEGER})
   </insert>
 
   <insert id="insertSelective" parameterType="com.cooler.semantic.entity.ReferRuleCondition" >
@@ -46,6 +48,9 @@
       </if>
       <if test="referRuleRelationId != null" >
         refer_rule_relation_id,
+      </if>
+      <if test="entityType != null" >
+        entity_type,
       </if>
       <if test="entityId != null" >
         entity_id,
@@ -66,6 +71,9 @@
       </if>
       <if test="referRuleRelationId != null" >
         #{referRuleRelationId,jdbcType=INTEGER},
+      </if>
+      <if test="entityType != null" >
+        #{entityType,jdbcType=INTEGER},
       </if>
       <if test="entityId != null" >
         #{entityId,jdbcType=INTEGER},
@@ -88,6 +96,9 @@
       <if test="referRuleRelationId != null" >
         refer_rule_relation_id = #{referRuleRelationId,jdbcType=INTEGER},
       </if>
+      <if test="entityType != null" >
+        entity_type = #{entityType,jdbcType=INTEGER},
+      </if>
       <if test="entityId != null" >
         entity_id = #{entityId,jdbcType=INTEGER},
       </if>
@@ -107,11 +118,20 @@
   <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.ReferRuleCondition" >
     update refer_rule_condition
     set refer_rule_relation_id = #{referRuleRelationId,jdbcType=INTEGER},
+      entity_type = #{entityType,jdbcType=INTEGER},
       entity_id = #{entityId,jdbcType=INTEGER},
       logic_expression = #{logicExpression,jdbcType=INTEGER},
       entity_param = #{entityParam,jdbcType=VARCHAR},
       state = #{state,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 业务相关 -->
+  <select id="selectByRRRelationId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from refer_rule_condition
+    where refer_rule_relation_id = #{referRuleRelationId,jdbcType=INTEGER}
+  </select>
 
 </mapper>

@@ -20,6 +20,11 @@ public class RRuleEntityServiceImpl implements RRuleEntityService {
     }
 
     @Override
+    public List<RRuleEntity> selectNecessaryByAIdRId(Integer accountId, Integer enableReferRuleId) {
+        return rRuleEntityMapper.selectNecessaryByAIdRId(accountId, enableReferRuleId);
+    }
+
+    @Override
     public int deleteByPrimaryKey(Integer id) {
         return rRuleEntityMapper.deleteByPrimaryKey(id);
     }
@@ -48,4 +53,5 @@ public class RRuleEntityServiceImpl implements RRuleEntityService {
     public int updateByPrimaryKey(RRuleEntity record) {
         return rRuleEntityMapper.updateByPrimaryKey(record);
     }
+
 }

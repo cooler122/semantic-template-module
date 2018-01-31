@@ -64,6 +64,7 @@ public class StartComponentImpl extends FunctionComponentBase<Object, Object> {
                 }
             });
         }
+
         return new ComponentBizResult("START", Constant.STORE_LOCAL_REMOTE, historyDataComponents);
     }
 }

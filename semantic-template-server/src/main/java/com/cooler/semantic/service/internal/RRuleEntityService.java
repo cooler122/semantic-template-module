@@ -13,4 +13,12 @@ public interface RRuleEntityService extends BaseService<RRuleEntity> {
      * @return
      */
     List<RRuleEntity> selectBySVRuleInfos(Integer accountId, List<SVRuleInfo> svRuleInfos);
+
+    /**
+     * 根据账号和ruleId来查询RRE集合
+     * @param accountId
+     * @param enableReferRuleId
+     * @return
+     */
+    List<RRuleEntity> selectNecessaryByAIdRId(Integer accountId, Integer enableReferRuleId);
 }

@@ -47,6 +47,7 @@ public class Constant{
             "optimalSvRuleInfo_LPM",
             "optimalSvRuleInfo_CPM",
             "optimalSvRuleInfo_FPM",
+            "createdReferSvRuleInfo",
             "sugguestData",
             "optimalSvRuleInfo",
             "semanticParserResponse"

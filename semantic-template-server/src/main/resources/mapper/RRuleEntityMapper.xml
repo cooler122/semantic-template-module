@@ -254,4 +254,15 @@
     </foreach>
   </select>
 
+  <select id="selectByAIdRId" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from r_rule_entity
+    where
+    state = 1 and
+    account_id = #{accountId,jdbcType=INTEGER} and
+    rule_id = #{ruleId,jdbcType=INTEGER} and
+    is_necessary = 1
+  </select>
+
 </mapper>

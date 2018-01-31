@@ -103,6 +103,7 @@
                 <entry key="D7_Y" value="RRSC"/>        <!-- SO-12可以在RPC4M里面做，SO-15，可以在BaseComponent里面定义存储，故直接指向到RPC4M -->
 
                 <entry key="RRSC_S" value="RPC4M"/>
+                <entry key="RRSC_F" value="RPC4F"/>
 
                 <entry key="D8_N" value="RPC4NR"/>
                 <entry key="D8_Y" value="RPC4R"/>

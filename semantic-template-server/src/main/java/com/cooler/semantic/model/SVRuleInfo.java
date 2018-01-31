@@ -4,7 +4,9 @@ import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.RRuleEntity;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SVRuleInfo implements Serializable{
 
@@ -75,6 +77,11 @@ public class SVRuleInfo implements Serializable{
     private String sentenceModified;
 
     /**
+     * 指向性规则的初始句子
+     */
+    private String referRuleInitSentence;
+
+    /**
      * 分好词的字符串数组
      */
     private List<String> words;
@@ -119,6 +126,11 @@ public class SVRuleInfo implements Serializable{
      * 这个规则在匹配后，缺失的必须参数
      */
     private List<RRuleEntity> lackedRRuleEntities;
+
+    /**
+     * 获得的有用值积累，在解析过程中获取
+     */
+    private Map<String, String> businessNecessaryParamMap = new HashMap<>();
 
     /**
      * 此数据体的匹配类型（在过程中赋值）（3类匹配类型：LPM、CPM、FPM）
@@ -290,7 +302,22 @@ public class SVRuleInfo implements Serializable{
         this.algorithmType = algorithmType;
     }
 
-    //    public Integer getContextId() {
+    public String getReferRuleInitSentence() {
+        return referRuleInitSentence;
+    }
+
+    public void setReferRuleInitSentence(String referRuleInitSentence) {
+        this.referRuleInitSentence = referRuleInitSentence;
+    }
+
+    public Map<String, String> getBusinessNecessaryParamMap() {
+        return businessNecessaryParamMap;
+    }
+
+    public void setBusinessNecessaryParamMap(Map<String, String> businessNecessaryParamMap) {
+        this.businessNecessaryParamMap = businessNecessaryParamMap;
+    }
+//    public Integer getContextId() {
 //        return contextId;
 //    }
 //

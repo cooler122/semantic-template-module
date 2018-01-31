@@ -4,15 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.component.data.DataComponent;
-import com.cooler.semantic.entity.ReferRuleCondition;
-import com.cooler.semantic.entity.ReferRuleRelation;
-import com.cooler.semantic.entity.Rule;
-import com.cooler.semantic.entity.SemanticParserRequest;
+import com.cooler.semantic.constant.Constant;
+import com.cooler.semantic.entity.*;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.external.ReferRuleConditionService;
 import com.cooler.semantic.service.external.ReferRuleRelationService;
+import com.cooler.semantic.service.internal.RRuleEntityService;
 import com.cooler.semantic.service.internal.RuleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +28,14 @@ public class ReferenceRuleSearchComponentImpl extends FunctionComponentBase<SVRu
     @Autowired
     private RuleService ruleService;
     @Autowired
+    private RRuleEntityService rRuleEntityService;
+    @Autowired
     private ReferRuleRelationService referRuleRelationService;
     @Autowired
     private ReferRuleConditionService referRuleConditionService;
 
     public ReferenceRuleSearchComponentImpl() {
-        super("RRSC", "optimalSvRuleInfo", null);
+        super("RRSC", "optimalSvRuleInfo", "createdReferSvRuleInfo");
     }
 
     @Override
@@ -43,6 +44,8 @@ public class ReferenceRuleSearchComponentImpl extends FunctionComponentBase<SVRu
 
         DataComponent<SemanticParserRequest> dataComponent = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = dataComponent.getData();
+        String sentence = request.getCmd();
+        int algorithmType = request.getAlgorithmType();
 
         Integer ruleId = svRuleInfo.getRuleId();
         Map<Integer, String> matchedREWIMap = new HashMap<>();
@@ -85,32 +88,39 @@ public class ReferenceRuleSearchComponentImpl extends FunctionComponentBase<SVRu
         if(enableReferRuleIds != null && enableReferRuleIds.size() > 0){
             if(enableReferRuleIds.size() > 1){
                 String ruleName = svRuleInfo.getRuleName();
-                logger.warn("规则id为： " + ruleId + " （" + ruleName + ")的规则，REWI为" + JSON.toJSONString(matchedREntityWordInfos) + ", 获得的指向规则数量大于1，指向规则ID集为：" + Arrays.toString(enableReferRuleIds.toArray()));
+                logger.warn("规则id为： " + ruleId + " (" + ruleName + ")的规则，REWI为" + JSON.toJSONString(matchedREntityWordInfos) + ", 获得的指向规则数量大于1，指向规则ID集为：" + Arrays.toString(enableReferRuleIds.toArray()));
             }
             Integer enableReferRuleId = enableReferRuleIds.get(0);                                                      //需要指向的rule的ID编号
             Rule rule = ruleService.selectByPrimaryKey(enableReferRuleId);
+            List<RRuleEntity> lackRRuleEntities = rRuleEntityService.selectNecessaryByAIdRId(contextOwner.getAccountId(), enableReferRuleId);
 
+            String ruleName = rule.getRuleName();
             String baseMatchSentence = rule.getBaseMatchSentence();
             Integer accountId = rule.getAccountId();
             Double accuracyThreshold = rule.getAccuracyThreshold();
             accuracyThreshold = accuracyThreshold != -1d ? accuracyThreshold : request.getAccuracyThreshold();
             String[] baseMatchWords = baseMatchSentence.split(",");
 
-            SVRuleInfo referOptimalSvRuleInfo = new SVRuleInfo();
-            referOptimalSvRuleInfo.setAccountId(accountId);
-            referOptimalSvRuleInfo.setSimilarity(accuracyThreshold + 0.01d);
-            referOptimalSvRuleInfo.setRunningAccuracyThreshold(accuracyThreshold);
-            referOptimalSvRuleInfo.setSentence(baseMatchSentence);
-            referOptimalSvRuleInfo.setWords(Arrays.asList(baseMatchWords));
-            //TODO:可能rule要分成简单rule和指代性rule了，重新设置一个字段来区分这两类：简单rule是直接产生回应的rule，指代性rule是指向另一个rule的rule，指代性rule要有预置语句，让其期初匹配超过阈值
-            //TODO:可能要规划一条线，专门走指代rule，即碰到指代规则进行了句子实体归属后就不进入3类匹配流程了，而专门设置一条匹配路线，直接计算指代规则和新的SV的权重，然后到ORSC模块，还要设计一个对话管理模块，专门来管理多条线路的对话。
+            SVRuleInfo createdReferSvRuleInfo = new SVRuleInfo();
+            createdReferSvRuleInfo.setAccountId(accountId);
+            createdReferSvRuleInfo.setSentenceVectorId(0);
+            createdReferSvRuleInfo.setSentence(sentence);
+            createdReferSvRuleInfo.setSentenceModified(sentence);
+            createdReferSvRuleInfo.setReferRuleInitSentence(baseMatchSentence);
+            createdReferSvRuleInfo.setWords(Arrays.asList(baseMatchWords));
 
+            createdReferSvRuleInfo.setRuleId(enableReferRuleId);
+            createdReferSvRuleInfo.setRuleName(ruleName);
+            createdReferSvRuleInfo.setAlgorithmType(algorithmType);
+            createdReferSvRuleInfo.setSimilarity(accuracyThreshold + 0.01d);
+            createdReferSvRuleInfo.setRunningAccuracyThreshold(accuracyThreshold);
+            createdReferSvRuleInfo.setLackedRRuleEntities(lackRRuleEntities);
 
+            return new ComponentBizResult("RRSC_S", Constant.STORE_LOCAL_REMOTE, createdReferSvRuleInfo);
         }else{
 
+            return new ComponentBizResult("RRSC_F");                                                     //如果前面进入这个分支，表示有指向性规则，但各个条件的限制导致没有合适的的指向性规则，那么要返回匹配失败结果体了。
         }
-
-        return new ComponentBizResult("RRSC_S");
     }
 
     private boolean compareReferenceEntityParam(Integer requiredEntityType, Integer requiredEntityId, String matchedEntityParam, Integer logicExpression, String referenceEntityParam) {

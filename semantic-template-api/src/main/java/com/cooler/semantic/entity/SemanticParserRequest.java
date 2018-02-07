@@ -25,11 +25,16 @@ public class SemanticParserRequest implements Serializable {
     private Integer userId;
 
     //--------------------------------------------------------------------2.配置参数CP
+    /**
+     * 段对话能被记忆的轮数
+     */
+    private int shortConversationMemorizedCount = 5;
 
     /**
-     * 能记住的会话的数量
+     * 长对话能被记忆的轮数
      */
-    private int memorizedConversationCount = 5;
+    private int longConversationMemorizedCount = 5;
+
     /**
      * 是否能跳出上下文
      */
@@ -247,12 +252,20 @@ public class SemanticParserRequest implements Serializable {
         this.accumulatedQueryCount = accumulatedQueryCount;
     }
 
-    public int getMemorizedConversationCount() {
-        return memorizedConversationCount;
+    public int getShortConversationMemorizedCount() {
+        return shortConversationMemorizedCount;
     }
 
-    public void setMemorizedConversationCount(int memorizedConversationCount) {
-        this.memorizedConversationCount = memorizedConversationCount;
+    public void setShortConversationMemorizedCount(int shortConversationMemorizedCount) {
+        this.shortConversationMemorizedCount = shortConversationMemorizedCount;
+    }
+
+    public int getLongConversationMemorizedCount() {
+        return longConversationMemorizedCount;
+    }
+
+    public void setLongConversationMemorizedCount(int longConversationMemorizedCount) {
+        this.longConversationMemorizedCount = longConversationMemorizedCount;
     }
 
     public int getLogType() {
@@ -286,7 +299,8 @@ public class SemanticParserRequest implements Serializable {
                 ", accountIds=" + accountIds +
                 ", password='" + password + '\'' +
                 ", userId=" + userId +
-                ", memorizedConversationCount=" + memorizedConversationCount +
+                ", shortConversationMemorizedCount=" + shortConversationMemorizedCount +
+                ", longConversationMemorizedCount=" + longConversationMemorizedCount +
                 ", canBreakContext=" + canBreakContext +
                 ", canBatchQuery=" + canBatchQuery +
                 ", ruleMaxQueryCount=" + ruleMaxQueryCount +

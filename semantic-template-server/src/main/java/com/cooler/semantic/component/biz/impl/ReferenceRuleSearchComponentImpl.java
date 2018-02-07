@@ -7,6 +7,7 @@ import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.*;
 import com.cooler.semantic.model.ContextOwner;
+import com.cooler.semantic.model.MatchedEntityParam;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.external.ReferRuleConditionService;
@@ -35,7 +36,7 @@ public class ReferenceRuleSearchComponentImpl extends FunctionComponentBase<SVRu
     private ReferRuleConditionService referRuleConditionService;
 
     public ReferenceRuleSearchComponentImpl() {
-        super("RRSC", "optimalSvRuleInfo", "createdReferSvRuleInfo");
+        super("RRSC", "optimalSvRuleInfo", "optimalSvRuleInfo");
     }
 
     @Override
@@ -48,6 +49,7 @@ public class ReferenceRuleSearchComponentImpl extends FunctionComponentBase<SVRu
         int algorithmType = request.getAlgorithmType();
 
         Integer ruleId = svRuleInfo.getRuleId();
+        List<RRuleEntity> matchedRRuleEntities = svRuleInfo.getMatchedRRuleEntities();
         Map<Integer, String> matchedREWIMap = new HashMap<>();
         List<REntityWordInfo> matchedREntityWordInfos = svRuleInfo.getMatchedREntityWordInfos();
         for (REntityWordInfo matchedREntityWordInfo : matchedREntityWordInfos) {
@@ -102,6 +104,7 @@ public class ReferenceRuleSearchComponentImpl extends FunctionComponentBase<SVRu
             String[] baseMatchWords = baseMatchSentence.split(",");
 
             SVRuleInfo createdReferSvRuleInfo = new SVRuleInfo();
+            createdReferSvRuleInfo.setLongConversationRule(true);
             createdReferSvRuleInfo.setAccountId(accountId);
             createdReferSvRuleInfo.setSentenceVectorId(0);
             createdReferSvRuleInfo.setSentence(sentence);
@@ -114,7 +117,23 @@ public class ReferenceRuleSearchComponentImpl extends FunctionComponentBase<SVRu
             createdReferSvRuleInfo.setAlgorithmType(algorithmType);
             createdReferSvRuleInfo.setSimilarity(accuracyThreshold + 0.01d);
             createdReferSvRuleInfo.setRunningAccuracyThreshold(accuracyThreshold);
-            createdReferSvRuleInfo.setLackedRRuleEntities(lackRRuleEntities);
+            createdReferSvRuleInfo.setMatchedREntityWordInfos(matchedREntityWordInfos);                                 //注意这是直接rule匹配下的REWI集合
+            createdReferSvRuleInfo.setMatchedRRuleEntities(matchedRRuleEntities);
+            createdReferSvRuleInfo.setLackedRRuleEntities(lackRRuleEntities);                                           //注意这是指代rule匹配下的RRE集合
+
+            if(matchedRRuleEntities != null && matchedRRuleEntities.size() > 0){
+                List<MatchedEntityParam> matchedEntityParams = new ArrayList<>();
+                for (RRuleEntity matchedRRuleEntity : matchedRRuleEntities) {
+                    Integer entityType = matchedRRuleEntity.getEntityType();
+                    Integer entityId = matchedRRuleEntity.getEntityId();
+                    String entityName = matchedRRuleEntity.getEntityName();
+                    String entityAppName = matchedRRuleEntity.getEntityAppName();
+                    String value = matchedREWIMap.get(entityId);                                                        //获取这个匹配上的值
+                    MatchedEntityParam matchedEntityParam = new MatchedEntityParam(ruleId, entityType, entityId, entityName, entityAppName, value);
+                    matchedEntityParams.add(matchedEntityParam);
+                }
+                createdReferSvRuleInfo.setAccumulatedMatchedEntityParams(matchedEntityParams);                          //设置各个指向性规则积累的值
+            }
 
             return new ComponentBizResult("RRSC_S", Constant.STORE_LOCAL_REMOTE, createdReferSvRuleInfo);
         }else{

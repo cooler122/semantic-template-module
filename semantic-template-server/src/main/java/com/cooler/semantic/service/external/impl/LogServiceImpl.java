@@ -171,30 +171,36 @@ public class LogServiceImpl implements LogService {
         Double runningAccuracyThreshold = svRuleInfo.getRunningAccuracyThreshold();
         rule_score_sb.append(ruleId).append("| ").append(ruleName).append("| ").append(algorithmType).append("| ").append(String.format("%.3f",similarity)).append("| ").append(String.format("%.3f",runningAccuracyThreshold));
 
-
-        for (REntityWordInfo matchedREntityWordInfo : matchedREntityWordInfos) {
-            String entityTypeId = matchedREntityWordInfo.getEntityTypeId();
-            String entityName = matchedREntityWordInfo.getEntityName();
-            Integer wordId = matchedREntityWordInfo.getWordId();
-            String word = matchedREntityWordInfo.getWord();
+        if(matchedREntityWordInfos != null && matchedREntityWordInfos.size() > 0){
+            for (REntityWordInfo matchedREntityWordInfo : matchedREntityWordInfos) {
+                String entityTypeId = matchedREntityWordInfo.getEntityTypeId();
+                String entityName = matchedREntityWordInfo.getEntityName();
+                Integer wordId = matchedREntityWordInfo.getWordId();
+                String word = matchedREntityWordInfo.getWord();
 //            String normalWord = matchedREntityWordInfo.getNormalWord();
-            Double weight = matchedREntityWordInfo.getWeightMap().get(sentenceVectorId);
-            weight = (weight == null ? 0d : weight);
-            matched_rew_sb.append("(").append(entityTypeId).append("_").append(entityName).append(")(").append(String.format("%.3f", weight)).append(")(").append(wordId).append("_").append(word).append(")| ");
+                Double weight = matchedREntityWordInfo.getWeightMap().get(sentenceVectorId);
+                weight = (weight == null ? 0d : weight);
+                matched_rew_sb.append("(").append(entityTypeId).append("_").append(entityName).append(")(").append(String.format("%.3f", weight)).append(")(").append(wordId).append("_").append(word).append(")| ");
+            }
         }
-        for (RRuleEntity matchedRRuleEntity : matchedRRuleEntities) {
-            String entityTypeId = matchedRRuleEntity.getEntityTypeId();
-            String entityName = matchedRRuleEntity.getEntityName();
-            Double weight = matchedRRuleEntity.getWeight();
-            weight = (weight == null ? 0d : weight);
-            matched_rre_sb.append("(").append(entityTypeId).append("_").append(entityName).append(")(").append(String.format("%.3f", weight)).append(")| ");
+
+        if(matchedRRuleEntities != null && matchedRRuleEntities.size() > 0){
+            for (RRuleEntity matchedRRuleEntity : matchedRRuleEntities) {
+                String entityTypeId = matchedRRuleEntity.getEntityTypeId();
+                String entityName = matchedRRuleEntity.getEntityName();
+                Double weight = matchedRRuleEntity.getWeight();
+                weight = (weight == null ? 0d : weight);
+                matched_rre_sb.append("(").append(entityTypeId).append("_").append(entityName).append(")(").append(String.format("%.3f", weight)).append(")| ");
+            }
         }
-        for (RRuleEntity lackedRRuleEntity : lackedRRuleEntities) {
-            String entityTypeId = lackedRRuleEntity.getEntityTypeId();
-            String entityName = lackedRRuleEntity.getEntityName();
-            Double weight = lackedRRuleEntity.getWeight();
-            weight = (weight == null ? 0d : weight);
-            lacked_rre_sb.append("(").append(entityTypeId).append("_").append(entityName).append(")(").append(String.format("%.3f", weight)).append(")| ");
+        if(lackedRRuleEntities != null && lackedRRuleEntities.size() > 0){
+            for (RRuleEntity lackedRRuleEntity : lackedRRuleEntities) {
+                String entityTypeId = lackedRRuleEntity.getEntityTypeId();
+                String entityName = lackedRRuleEntity.getEntityName();
+                Double weight = lackedRRuleEntity.getWeight();
+                weight = (weight == null ? 0d : weight);
+                lacked_rre_sb.append("(").append(entityTypeId).append("_").append(entityName).append(")(").append(String.format("%.3f", weight)).append(")| ");
+            }
         }
 
         switch (resultType){

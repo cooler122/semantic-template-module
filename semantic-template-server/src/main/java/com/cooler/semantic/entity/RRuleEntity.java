@@ -16,11 +16,13 @@ public class RRuleEntity implements Serializable{
 
     private Integer entityId;
 
-    private String entityName;
-
     private String entityTypeId;
 
-    private Byte isNecessary;
+    private String entityName;
+
+    private String entityAppName;
+
+    private Integer queryType;
 
     private String necessaryEntityQuery;
 
@@ -36,16 +38,17 @@ public class RRuleEntity implements Serializable{
 
     private Date createTime;
 
-    public RRuleEntity(Integer id, Integer ruleId, String ruleName, Integer serialNumber, Integer entityType, Integer entityId, String entityName, String entityTypeId, Byte isNecessary, String necessaryEntityQuery, String natrue, Double volumeRate, Double weight, Integer state, Integer accountId, Date createTime) {
+    public RRuleEntity(Integer id, Integer ruleId, String ruleName, Integer serialNumber, Integer entityType, Integer entityId, String entityTypeId, String entityName, String entityAppName, Integer queryType, String necessaryEntityQuery, String natrue, Double volumeRate, Double weight, Integer state, Integer accountId, Date createTime) {
         this.id = id;
         this.ruleId = ruleId;
         this.ruleName = ruleName;
         this.serialNumber = serialNumber;
         this.entityType = entityType;
         this.entityId = entityId;
-        this.entityName = entityName;
         this.entityTypeId = entityTypeId;
-        this.isNecessary = isNecessary;
+        this.entityName = entityName;
+        this.entityAppName = entityAppName;
+        this.queryType = queryType;
         this.necessaryEntityQuery = necessaryEntityQuery;
         this.natrue = natrue;
         this.volumeRate = volumeRate;
@@ -107,14 +110,6 @@ public class RRuleEntity implements Serializable{
         this.entityId = entityId;
     }
 
-    public String getEntityName() {
-        return entityName;
-    }
-
-    public void setEntityName(String entityName) {
-        this.entityName = entityName == null ? null : entityName.trim();
-    }
-
     public String getEntityTypeId() {
         return entityTypeId;
     }
@@ -123,12 +118,28 @@ public class RRuleEntity implements Serializable{
         this.entityTypeId = entityTypeId == null ? null : entityTypeId.trim();
     }
 
-    public Byte getIsNecessary() {
-        return isNecessary;
+    public String getEntityName() {
+        return entityName;
     }
 
-    public void setIsNecessary(Byte isNecessary) {
-        this.isNecessary = isNecessary;
+    public void setEntityName(String entityName) {
+        this.entityName = entityName == null ? null : entityName.trim();
+    }
+
+    public String getEntityAppName() {
+        return entityAppName;
+    }
+
+    public void setEntityAppName(String entityAppName) {
+        this.entityAppName = entityAppName == null ? null : entityAppName.trim();
+    }
+
+    public Integer getQueryType() {
+        return queryType;
+    }
+
+    public void setQueryType(Integer queryType) {
+        this.queryType = queryType;
     }
 
     public String getNecessaryEntityQuery() {

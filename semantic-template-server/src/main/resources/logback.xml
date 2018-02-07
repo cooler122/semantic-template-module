@@ -61,7 +61,7 @@
             additivity：是否要把当前的日志级别，给root根logger
             appender-ref：appender的引用
          -->
-    <logger name="com.cooler.semantic" level="debug" additivity="false">
+    <logger name="com.cooler.semantic" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
         <!--<appender-ref ref="logFile"/>-->
     </logger>

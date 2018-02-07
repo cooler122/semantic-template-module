@@ -61,6 +61,12 @@ public class Constant{
 
     public static final double RULE_DEFAULT_PARAM = -1;                           //规定规则自定义阈值如果没有设置，其值为-1
 
+    //------------------------------------------------------------------------------机器反问(Ask Back)模式类型
+    public static final int AB_NO_QUERY_MODE = 0;                                      //不问模式
+    public static final int AB_QUESTION_RESPONSE_MODE = 1;                            //问答题模式
+    public static final int AB_CHOICE_QUESTION_MODE = 2;                               //选择题模式
+    public static final int AB_INTERFACE_QUESTION_RESPONSE_MODE = 3;                 //先问接口，若失败则问答题模式
+    public static final int AB_INTERFACE_CHOICE_QUESTION_MODE = 4;                   //先问接口，若失败则选择题模式
 
 
 }

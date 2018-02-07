@@ -10,9 +10,10 @@
       <arg column="serial_number" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="entity_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="entity_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="entity_name" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="entity_type_id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="is_necessary" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="entity_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="entity_app_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="query_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="necessary_entity_query" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="natrue" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="volume_rate" jdbcType="DOUBLE" javaType="java.lang.Double" />
@@ -24,9 +25,9 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, rule_id, rule_name, serial_number, entity_type, entity_id, entity_name, entity_type_id, 
-    is_necessary, necessary_entity_query, natrue, volume_rate, weight, state, account_id, 
-    create_time
+    id, rule_id, rule_name, serial_number, entity_type, entity_id, entity_type_id, entity_name, 
+    entity_app_name, query_type, necessary_entity_query, natrue, volume_rate, weight, 
+    state, account_id, create_time
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -44,16 +45,16 @@
   <insert id="insert" parameterType="com.cooler.semantic.entity.RRuleEntity" >
     insert into r_rule_entity (id, rule_id, rule_name, 
       serial_number, entity_type, entity_id, 
-      entity_name, entity_type_id, is_necessary, 
-      necessary_entity_query, natrue, volume_rate, 
-      weight, state, account_id, 
-      create_time)
+      entity_type_id, entity_name, entity_app_name, 
+      query_type, necessary_entity_query, natrue, 
+      volume_rate, weight, state, 
+      account_id, create_time)
     values (#{id,jdbcType=INTEGER}, #{ruleId,jdbcType=INTEGER}, #{ruleName,jdbcType=VARCHAR}, 
       #{serialNumber,jdbcType=INTEGER}, #{entityType,jdbcType=INTEGER}, #{entityId,jdbcType=INTEGER}, 
-      #{entityName,jdbcType=VARCHAR}, #{entityTypeId,jdbcType=VARCHAR}, #{isNecessary,jdbcType=TINYINT}, 
-      #{necessaryEntityQuery,jdbcType=VARCHAR}, #{natrue,jdbcType=VARCHAR}, #{volumeRate,jdbcType=DOUBLE}, 
-      #{weight,jdbcType=DOUBLE}, #{state,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP})
+      #{entityTypeId,jdbcType=VARCHAR}, #{entityName,jdbcType=VARCHAR}, #{entityAppName,jdbcType=VARCHAR}, 
+      #{queryType,jdbcType=INTEGER}, #{necessaryEntityQuery,jdbcType=VARCHAR}, #{natrue,jdbcType=VARCHAR}, 
+      #{volumeRate,jdbcType=DOUBLE}, #{weight,jdbcType=DOUBLE}, #{state,jdbcType=INTEGER}, 
+      #{accountId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
 
   <insert id="insertSelective" parameterType="com.cooler.semantic.entity.RRuleEntity" >
@@ -77,14 +78,17 @@
       <if test="entityId != null" >
         entity_id,
       </if>
-      <if test="entityName != null" >
-        entity_name,
-      </if>
       <if test="entityTypeId != null" >
         entity_type_id,
       </if>
-      <if test="isNecessary != null" >
-        is_necessary,
+      <if test="entityName != null" >
+        entity_name,
+      </if>
+      <if test="entityAppName != null" >
+        entity_app_name,
+      </if>
+      <if test="queryType != null" >
+        query_type,
       </if>
       <if test="necessaryEntityQuery != null" >
         necessary_entity_query,
@@ -127,14 +131,17 @@
       <if test="entityId != null" >
         #{entityId,jdbcType=INTEGER},
       </if>
-      <if test="entityName != null" >
-        #{entityName,jdbcType=VARCHAR},
-      </if>
       <if test="entityTypeId != null" >
         #{entityTypeId,jdbcType=VARCHAR},
       </if>
-      <if test="isNecessary != null" >
-        #{isNecessary,jdbcType=TINYINT},
+      <if test="entityName != null" >
+        #{entityName,jdbcType=VARCHAR},
+      </if>
+      <if test="entityAppName != null" >
+        #{entityAppName,jdbcType=VARCHAR},
+      </if>
+      <if test="queryType != null" >
+        #{queryType,jdbcType=INTEGER},
       </if>
       <if test="necessaryEntityQuery != null" >
         #{necessaryEntityQuery,jdbcType=VARCHAR},
@@ -178,14 +185,17 @@
       <if test="entityId != null" >
         entity_id = #{entityId,jdbcType=INTEGER},
       </if>
-      <if test="entityName != null" >
-        entity_name = #{entityName,jdbcType=VARCHAR},
-      </if>
       <if test="entityTypeId != null" >
         entity_type_id = #{entityTypeId,jdbcType=VARCHAR},
       </if>
-      <if test="isNecessary != null" >
-        is_necessary = #{isNecessary,jdbcType=TINYINT},
+      <if test="entityName != null" >
+        entity_name = #{entityName,jdbcType=VARCHAR},
+      </if>
+      <if test="entityAppName != null" >
+        entity_app_name = #{entityAppName,jdbcType=VARCHAR},
+      </if>
+      <if test="queryType != null" >
+        query_type = #{queryType,jdbcType=INTEGER},
       </if>
       <if test="necessaryEntityQuery != null" >
         necessary_entity_query = #{necessaryEntityQuery,jdbcType=VARCHAR},
@@ -219,9 +229,10 @@
       serial_number = #{serialNumber,jdbcType=INTEGER},
       entity_type = #{entityType,jdbcType=INTEGER},
       entity_id = #{entityId,jdbcType=INTEGER},
-      entity_name = #{entityName,jdbcType=VARCHAR},
       entity_type_id = #{entityTypeId,jdbcType=VARCHAR},
-      is_necessary = #{isNecessary,jdbcType=TINYINT},
+      entity_name = #{entityName,jdbcType=VARCHAR},
+      entity_app_name = #{entityAppName,jdbcType=VARCHAR},
+      query_type = #{queryType,jdbcType=INTEGER},
       necessary_entity_query = #{necessaryEntityQuery,jdbcType=VARCHAR},
       natrue = #{natrue,jdbcType=VARCHAR},
       volume_rate = #{volumeRate,jdbcType=DOUBLE},
@@ -233,7 +244,6 @@
   </update>
 
   <!-- 业务相关 -->
-
   <select id="selectByREntityWordInfos" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
@@ -254,7 +264,7 @@
     </foreach>
   </select>
 
-  <select id="selectByAIdRId" resultMap="BaseResultMap" >
+  <select id="selectNecessaryByAIdRId" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
     from r_rule_entity
@@ -262,7 +272,7 @@
     state = 1 and
     account_id = #{accountId,jdbcType=INTEGER} and
     rule_id = #{ruleId,jdbcType=INTEGER} and
-    is_necessary = 1
+    query_type > 0
   </select>
 
 </mapper>

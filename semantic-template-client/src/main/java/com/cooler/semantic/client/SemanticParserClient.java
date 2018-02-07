@@ -46,7 +46,7 @@ public class SemanticParserClient {
 
 //        String[] sentences = { "天气怎么样？", "今天", "唱周杰伦的歌" , "唱周杰伦的双节棍", "播放他的听妈妈的话" };        //测试多场景
 
-        String[] sentences = { "我要取款" };        //测试多场景
+        String[] sentences = { "我要取款", "八八八", "六六六六六六", "三千", "确认" , "要"};        //测试多场景
 
         Integer contextId = (int)(Math.random() * 10000000 + 1);
 //        Integer contextId = 21;

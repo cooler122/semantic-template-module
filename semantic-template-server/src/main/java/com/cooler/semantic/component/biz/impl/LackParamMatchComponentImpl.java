@@ -88,6 +88,8 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                             for (RRuleEntity historyMatchedRRuleEntity : historyMatchedRRuleEntities) {
                                 totalUsedHistoryRuleWeights += historyMatchedRRuleEntity.getWeight();                   //第i轮对话，规则端已经匹配上的实体权重累积起来，先算 totalUsedHistoryRuleWeights
                             }
+                        }else{
+                            historyMatchedRRuleEntities = new ArrayList<>();                                            //下面还需要用到这个，但这个可能为null，所以还是要新设置对象
                         }
                         //2.2.3.（缺参合并）遍历历史缺失参数集，来收集本次能合并到历史缺参规则中的分词REW，并记录权重累积值，历史数据集合修改，以及记录匹配数量
                         for(RRuleEntity historyLackedRRuleEntity : historyLackedRRuleEntities){                         //遍历缺失实体集合

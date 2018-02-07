@@ -113,6 +113,11 @@ public class SVRuleInfo implements Serializable{
     private String ruleName;
 
     /**
+     * 是否是长对话（事务型对话）下的规则（此对话只有在D7的时候进行设置，只要首要规则被使用，无论完全匹配与否，都会走D7）
+     */
+    private boolean isLongConversationRule = false;
+
+    /**
      * 此分词模式，选择并，匹配上的REW集合
      */
     private List<REntityWordInfo> matchedREntityWordInfos;
@@ -126,6 +131,11 @@ public class SVRuleInfo implements Serializable{
      * 这个规则在匹配后，缺失的必须参数
      */
     private List<RRuleEntity> lackedRRuleEntities;
+
+    /**
+     * 在长对话中，积累的匹配上的RRE集合
+     */
+    private List<MatchedEntityParam> accumulatedMatchedEntityParams;
 
     /**
      * 获得的有用值积累，在解析过程中获取
@@ -317,6 +327,23 @@ public class SVRuleInfo implements Serializable{
     public void setBusinessNecessaryParamMap(Map<String, String> businessNecessaryParamMap) {
         this.businessNecessaryParamMap = businessNecessaryParamMap;
     }
+
+    public boolean isLongConversationRule() {
+        return isLongConversationRule;
+    }
+
+    public void setLongConversationRule(boolean longConversationRule) {
+        isLongConversationRule = longConversationRule;
+    }
+
+    public List<MatchedEntityParam> getAccumulatedMatchedEntityParams() {
+        return accumulatedMatchedEntityParams;
+    }
+
+    public void setAccumulatedMatchedEntityParams(List<MatchedEntityParam> accumulatedMatchedEntityParams) {
+        this.accumulatedMatchedEntityParams = accumulatedMatchedEntityParams;
+    }
+
 //    public Integer getContextId() {
 //        return contextId;
 //    }

@@ -19,13 +19,15 @@ public class AccountConfiguration {
 
     private Double accuracyThreshold;
 
-    private Integer memorizedConversationCount;
+    private Integer shortConversationMemorizedCount;
+
+    private Integer longConversationMemorizedCount;
 
     private Integer logType;
 
     private Integer algorithmType;
 
-    public AccountConfiguration(Integer id, Integer accountId, Integer userId, Boolean canBreakContext, Boolean canBatchQuery, Integer ruleMaxQueryCount, Integer entityMaxQueryCount, Integer contextWaitTime, Double accuracyThreshold, Integer memorizedConversationCount, Integer logType, Integer algorithmType) {
+    public AccountConfiguration(Integer id, Integer accountId, Integer userId, Boolean canBreakContext, Boolean canBatchQuery, Integer ruleMaxQueryCount, Integer entityMaxQueryCount, Integer contextWaitTime, Double accuracyThreshold, Integer shortConversationMemorizedCount, Integer longConversationMemorizedCount, Integer logType, Integer algorithmType) {
         this.id = id;
         this.accountId = accountId;
         this.userId = userId;
@@ -35,7 +37,8 @@ public class AccountConfiguration {
         this.entityMaxQueryCount = entityMaxQueryCount;
         this.contextWaitTime = contextWaitTime;
         this.accuracyThreshold = accuracyThreshold;
-        this.memorizedConversationCount = memorizedConversationCount;
+        this.shortConversationMemorizedCount = shortConversationMemorizedCount;
+        this.longConversationMemorizedCount = longConversationMemorizedCount;
         this.logType = logType;
         this.algorithmType = algorithmType;
     }
@@ -116,12 +119,20 @@ public class AccountConfiguration {
         this.accuracyThreshold = accuracyThreshold;
     }
 
-    public Integer getMemorizedConversationCount() {
-        return memorizedConversationCount;
+    public Integer getShortConversationMemorizedCount() {
+        return shortConversationMemorizedCount;
     }
 
-    public void setMemorizedConversationCount(Integer memorizedConversationCount) {
-        this.memorizedConversationCount = memorizedConversationCount;
+    public void setShortConversationMemorizedCount(Integer shortConversationMemorizedCount) {
+        this.shortConversationMemorizedCount = shortConversationMemorizedCount;
+    }
+
+    public Integer getLongConversationMemorizedCount() {
+        return longConversationMemorizedCount;
+    }
+
+    public void setLongConversationMemorizedCount(Integer longConversationMemorizedCount) {
+        this.longConversationMemorizedCount = longConversationMemorizedCount;
     }
 
     public Integer getLogType() {

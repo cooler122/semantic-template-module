@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cooler.semantic.dao.AccountConfigurationMapper" >
+
   <resultMap id="BaseResultMap" type="com.cooler.semantic.entity.AccountConfiguration" >
     <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
@@ -12,38 +13,44 @@
       <arg column="entity_max_query_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="context_wait_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="accuracy_threshold" jdbcType="DOUBLE" javaType="java.lang.Double" />
-      <arg column="memorized_conversation_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="short_conversation_memorized_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="long_conversation_memorized_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="log_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="algorithm_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
     </constructor>
   </resultMap>
+
   <sql id="Base_Column_List" >
     id, account_id, user_id, can_break_context, can_batch_query, rule_max_query_count, 
-    entity_max_query_count, context_wait_time, accuracy_threshold, memorized_conversation_count, 
-    log_type, algorithm_type
+    entity_max_query_count, context_wait_time, accuracy_threshold, short_conversation_memorized_count, 
+    long_conversation_memorized_count, log_type, algorithm_type
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from account_configuration
     where id = #{id,jdbcType=INTEGER}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from account_configuration
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <insert id="insert" parameterType="com.cooler.semantic.entity.AccountConfiguration" >
     insert into account_configuration (id, account_id, user_id, 
       can_break_context, can_batch_query, rule_max_query_count, 
       entity_max_query_count, context_wait_time, accuracy_threshold, 
-      memorized_conversation_count, log_type, algorithm_type
-      )
+      short_conversation_memorized_count, long_conversation_memorized_count, 
+      log_type, algorithm_type)
     values (#{id,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
       #{canBreakContext,jdbcType=BIT}, #{canBatchQuery,jdbcType=BIT}, #{ruleMaxQueryCount,jdbcType=INTEGER}, 
       #{entityMaxQueryCount,jdbcType=INTEGER}, #{contextWaitTime,jdbcType=INTEGER}, #{accuracyThreshold,jdbcType=DOUBLE}, 
-      #{memorizedConversationCount,jdbcType=INTEGER}, #{logType,jdbcType=INTEGER}, #{algorithmType,jdbcType=INTEGER}
-      )
+      #{shortConversationMemorizedCount,jdbcType=INTEGER}, #{longConversationMemorizedCount,jdbcType=INTEGER}, 
+      #{logType,jdbcType=INTEGER}, #{algorithmType,jdbcType=INTEGER})
   </insert>
+
   <insert id="insertSelective" parameterType="com.cooler.semantic.entity.AccountConfiguration" >
     insert into account_configuration
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -74,8 +81,11 @@
       <if test="accuracyThreshold != null" >
         accuracy_threshold,
       </if>
-      <if test="memorizedConversationCount != null" >
-        memorized_conversation_count,
+      <if test="shortConversationMemorizedCount != null" >
+        short_conversation_memorized_count,
+      </if>
+      <if test="longConversationMemorizedCount != null" >
+        long_conversation_memorized_count,
       </if>
       <if test="logType != null" >
         log_type,
@@ -112,8 +122,11 @@
       <if test="accuracyThreshold != null" >
         #{accuracyThreshold,jdbcType=DOUBLE},
       </if>
-      <if test="memorizedConversationCount != null" >
-        #{memorizedConversationCount,jdbcType=INTEGER},
+      <if test="shortConversationMemorizedCount != null" >
+        #{shortConversationMemorizedCount,jdbcType=INTEGER},
+      </if>
+      <if test="longConversationMemorizedCount != null" >
+        #{longConversationMemorizedCount,jdbcType=INTEGER},
       </if>
       <if test="logType != null" >
         #{logType,jdbcType=INTEGER},
@@ -123,6 +136,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.AccountConfiguration" >
     update account_configuration
     <set >
@@ -150,8 +164,11 @@
       <if test="accuracyThreshold != null" >
         accuracy_threshold = #{accuracyThreshold,jdbcType=DOUBLE},
       </if>
-      <if test="memorizedConversationCount != null" >
-        memorized_conversation_count = #{memorizedConversationCount,jdbcType=INTEGER},
+      <if test="shortConversationMemorizedCount != null" >
+        short_conversation_memorized_count = #{shortConversationMemorizedCount,jdbcType=INTEGER},
+      </if>
+      <if test="longConversationMemorizedCount != null" >
+        long_conversation_memorized_count = #{longConversationMemorizedCount,jdbcType=INTEGER},
       </if>
       <if test="logType != null" >
         log_type = #{logType,jdbcType=INTEGER},
@@ -162,6 +179,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.AccountConfiguration" >
     update account_configuration
     set account_id = #{accountId,jdbcType=INTEGER},
@@ -172,12 +190,12 @@
       entity_max_query_count = #{entityMaxQueryCount,jdbcType=INTEGER},
       context_wait_time = #{contextWaitTime,jdbcType=INTEGER},
       accuracy_threshold = #{accuracyThreshold,jdbcType=DOUBLE},
-      memorized_conversation_count = #{memorizedConversationCount,jdbcType=INTEGER},
+      short_conversation_memorized_count = #{shortConversationMemorizedCount,jdbcType=INTEGER},
+      long_conversation_memorized_count = #{longConversationMemorizedCount,jdbcType=INTEGER},
       log_type = #{logType,jdbcType=INTEGER},
       algorithm_type = #{algorithmType,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
 
   <!-- 自定义业务 -->
   <select id="selectAIdUId"  resultMap="BaseResultMap" >

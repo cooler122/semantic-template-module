@@ -87,7 +87,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             List<RRuleEntity> lackedRRuleEntities = new ArrayList<>();                                                  //没匹配上的RRE关系集合
 
             for (RRuleEntity rRuleEntity : rRuleEntityMap.values()) {
-                if(rRuleEntity.getIsNecessary() == (byte)1)
+                if(rRuleEntity.getQueryType() != Constant.AB_NO_QUERY_MODE)                                          //如果询问模式不是“不必询问”，则表示是必须参数
                     lackedRRuleEntities.add(rRuleEntity);                                                               //先将此rule下面的所有必须参数都装进去，后面一个个去除
             }
 
@@ -173,7 +173,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             List<RRuleEntity> lackedRRuleEntities = new ArrayList<>();                                                  //没匹配上的RRE关系集合
 
             for (RRuleEntity rRuleEntity : rRuleEntityMap.values()) {
-                if(rRuleEntity.getIsNecessary() == (byte)1)
+                if(rRuleEntity.getQueryType() != Constant.AB_NO_QUERY_MODE)                                          //如果询问模式不是“不必询问”，则表示是必须参数
                     lackedRRuleEntities.add(rRuleEntity);                                                               //先将此rule下面的所有必须参数都装进去，后面一个个去除
             }
 
@@ -253,7 +253,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             List<RRuleEntity> lackedRRuleEntities = new ArrayList<>();                                                  //没匹配上的RRE关系集合
 
             for (RRuleEntity rRuleEntity : rRuleEntityMap.values()) {
-                if(rRuleEntity.getIsNecessary() == (byte)1)
+                if(rRuleEntity.getQueryType() != Constant.AB_NO_QUERY_MODE)                                          //如果询问模式不是“不必询问”，则表示是必须参数
                     lackedRRuleEntities.add(rRuleEntity);                                                               //先将此rule下面的所有必须参数都装进去，后面一个个去除
             }
 

@@ -117,7 +117,7 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
             String indirectQuestion = entityQueryParam.getIndirectQuestion();
             Map<String, String> indirectQueryParamMap = entityQueryParam.getIndirectQueryParamMap();
             Set<String> choiceSet = indirectQueryParamMap.keySet();
-            responseMsg += indirectQuestion + StringUtils.collectionToDelimitedString(choiceSet, " ? ") + " ? \t";
+            responseMsg += indirectQuestion + StringUtils.collectionToDelimitedString(choiceSet, " ? ") + " ?";
         }else{
             //TODO:还有两个类型
             System.out.println("其它的后续处理");

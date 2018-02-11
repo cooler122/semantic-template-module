@@ -15,15 +15,16 @@
       <arg column="accuracy_threshold" jdbcType="DOUBLE" javaType="java.lang.Double" />
       <arg column="short_conversation_memorized_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="long_conversation_memorized_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="log_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="algorithm_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="process_log_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="calculation_log_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
     </constructor>
   </resultMap>
 
   <sql id="Base_Column_List" >
     id, account_id, user_id, can_break_context, can_batch_query, rule_max_query_count, 
     entity_max_query_count, context_wait_time, accuracy_threshold, short_conversation_memorized_count, 
-    long_conversation_memorized_count, log_type, algorithm_type
+    long_conversation_memorized_count, algorithm_type, process_log_type, calculation_log_type
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -43,12 +44,14 @@
       can_break_context, can_batch_query, rule_max_query_count, 
       entity_max_query_count, context_wait_time, accuracy_threshold, 
       short_conversation_memorized_count, long_conversation_memorized_count, 
-      log_type, algorithm_type)
+      algorithm_type, process_log_type, calculation_log_type
+      )
     values (#{id,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
       #{canBreakContext,jdbcType=BIT}, #{canBatchQuery,jdbcType=BIT}, #{ruleMaxQueryCount,jdbcType=INTEGER}, 
       #{entityMaxQueryCount,jdbcType=INTEGER}, #{contextWaitTime,jdbcType=INTEGER}, #{accuracyThreshold,jdbcType=DOUBLE}, 
       #{shortConversationMemorizedCount,jdbcType=INTEGER}, #{longConversationMemorizedCount,jdbcType=INTEGER}, 
-      #{logType,jdbcType=INTEGER}, #{algorithmType,jdbcType=INTEGER})
+      #{algorithmType,jdbcType=INTEGER}, #{processLogType,jdbcType=INTEGER}, #{calculationLogType,jdbcType=INTEGER}
+      )
   </insert>
 
   <insert id="insertSelective" parameterType="com.cooler.semantic.entity.AccountConfiguration" >
@@ -87,11 +90,14 @@
       <if test="longConversationMemorizedCount != null" >
         long_conversation_memorized_count,
       </if>
-      <if test="logType != null" >
-        log_type,
-      </if>
       <if test="algorithmType != null" >
         algorithm_type,
+      </if>
+      <if test="processLogType != null" >
+        process_log_type,
+      </if>
+      <if test="calculationLogType != null" >
+        calculation_log_type,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -128,11 +134,14 @@
       <if test="longConversationMemorizedCount != null" >
         #{longConversationMemorizedCount,jdbcType=INTEGER},
       </if>
-      <if test="logType != null" >
-        #{logType,jdbcType=INTEGER},
-      </if>
       <if test="algorithmType != null" >
         #{algorithmType,jdbcType=INTEGER},
+      </if>
+      <if test="processLogType != null" >
+        #{processLogType,jdbcType=INTEGER},
+      </if>
+      <if test="calculationLogType != null" >
+        #{calculationLogType,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -170,11 +179,14 @@
       <if test="longConversationMemorizedCount != null" >
         long_conversation_memorized_count = #{longConversationMemorizedCount,jdbcType=INTEGER},
       </if>
-      <if test="logType != null" >
-        log_type = #{logType,jdbcType=INTEGER},
-      </if>
       <if test="algorithmType != null" >
         algorithm_type = #{algorithmType,jdbcType=INTEGER},
+      </if>
+      <if test="processLogType != null" >
+        process_log_type = #{processLogType,jdbcType=INTEGER},
+      </if>
+      <if test="calculationLogType != null" >
+        calculation_log_type = #{calculationLogType,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -192,8 +204,9 @@
       accuracy_threshold = #{accuracyThreshold,jdbcType=DOUBLE},
       short_conversation_memorized_count = #{shortConversationMemorizedCount,jdbcType=INTEGER},
       long_conversation_memorized_count = #{longConversationMemorizedCount,jdbcType=INTEGER},
-      log_type = #{logType,jdbcType=INTEGER},
-      algorithm_type = #{algorithmType,jdbcType=INTEGER}
+      algorithm_type = #{algorithmType,jdbcType=INTEGER},
+      process_log_type = #{processLogType,jdbcType=INTEGER},
+      calculation_log_type = #{calculationLogType,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
@@ -204,5 +217,4 @@
     from account_configuration
     where account_id = #{accountId,jdbcType=INTEGER} and user_id = #{userId,jdbcType=INTEGER}
   </select>
-
 </mapper>

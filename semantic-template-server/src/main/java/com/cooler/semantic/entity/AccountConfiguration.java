@@ -23,11 +23,13 @@ public class AccountConfiguration {
 
     private Integer longConversationMemorizedCount;
 
-    private Integer logType;
-
     private Integer algorithmType;
 
-    public AccountConfiguration(Integer id, Integer accountId, Integer userId, Boolean canBreakContext, Boolean canBatchQuery, Integer ruleMaxQueryCount, Integer entityMaxQueryCount, Integer contextWaitTime, Double accuracyThreshold, Integer shortConversationMemorizedCount, Integer longConversationMemorizedCount, Integer logType, Integer algorithmType) {
+    private Integer processLogType;
+
+    private Integer calculationLogType;
+
+    public AccountConfiguration(Integer id, Integer accountId, Integer userId, Boolean canBreakContext, Boolean canBatchQuery, Integer ruleMaxQueryCount, Integer entityMaxQueryCount, Integer contextWaitTime, Double accuracyThreshold, Integer shortConversationMemorizedCount, Integer longConversationMemorizedCount, Integer algorithmType, Integer processLogType, Integer calculationLogType) {
         this.id = id;
         this.accountId = accountId;
         this.userId = userId;
@@ -39,8 +41,9 @@ public class AccountConfiguration {
         this.accuracyThreshold = accuracyThreshold;
         this.shortConversationMemorizedCount = shortConversationMemorizedCount;
         this.longConversationMemorizedCount = longConversationMemorizedCount;
-        this.logType = logType;
         this.algorithmType = algorithmType;
+        this.processLogType = processLogType;
+        this.calculationLogType = calculationLogType;
     }
 
     public AccountConfiguration() {
@@ -135,19 +138,27 @@ public class AccountConfiguration {
         this.longConversationMemorizedCount = longConversationMemorizedCount;
     }
 
-    public Integer getLogType() {
-        return logType;
-    }
-
-    public void setLogType(Integer logType) {
-        this.logType = logType;
-    }
-
     public Integer getAlgorithmType() {
         return algorithmType;
     }
 
     public void setAlgorithmType(Integer algorithmType) {
         this.algorithmType = algorithmType;
+    }
+
+    public Integer getProcessLogType() {
+        return processLogType;
+    }
+
+    public void setProcessLogType(Integer processLogType) {
+        this.processLogType = processLogType;
+    }
+
+    public Integer getCalculationLogType() {
+        return calculationLogType;
+    }
+
+    public void setCalculationLogType(Integer calculationLogType) {
+        this.calculationLogType = calculationLogType;
     }
 }

@@ -8,7 +8,7 @@ import com.cooler.semantic.entity.*;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.model.SentenceVector;
-import com.cooler.semantic.service.external.LogService;
+import com.cooler.semantic.service.external.ProcessLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +18,25 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-@Service("logService")
-public class LogServiceImpl implements LogService {
+@Service("processLogService")
+public class ProcessLogServiceImpl implements ProcessLogService {
 
-    private static Logger logger = LoggerFactory.getLogger(LogServiceImpl.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(ProcessLogServiceImpl.class.getName());
     @Autowired
     private LogDataProcessMapper logDataProcessMapper;
 
     @Override
     public void writeLog(int logType, List<DataComponent> dataComponents, String processTrace) {
         switch (logType){
-            case Constant.TEXT_LOG : {
+            case Constant.PROCESS_LOG_TEXT : {
                 writeTextLog(dataComponents, processTrace);
                 break;
             }
-            case Constant.HTML_LOG : {
+            case Constant.PROCESS_LOG_HTML : {
                 writeHtmlLog(dataComponents, processTrace);
                 break;
             }
-            case Constant.DATA_BASE_LOG : {
+            case Constant.PROCESS_LOG_DATA_BASE : {
                 writeDataBaseLog(dataComponents, processTrace);
                 break;
             }

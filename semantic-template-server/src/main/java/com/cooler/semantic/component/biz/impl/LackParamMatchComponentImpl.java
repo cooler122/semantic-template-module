@@ -1,18 +1,17 @@
 package com.cooler.semantic.component.biz.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.RRuleEntity;
 import com.cooler.semantic.entity.SemanticParserRequest;
-import com.cooler.semantic.model.ContextOwner;
-import com.cooler.semantic.model.REntityWordInfo;
-import com.cooler.semantic.model.SVRuleInfo;
-import com.cooler.semantic.model.SentenceVector;
+import com.cooler.semantic.model.*;
 import com.cooler.semantic.service.external.SimilarityCalculateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.*;
@@ -23,6 +22,8 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
     private static Logger logger = LoggerFactory.getLogger(LackParamMatchComponentImpl.class.getName());
     @Autowired
     private SimilarityCalculateService similarityCalculateService;
+
+    private enum LogDataType { sentenceVectors, dataComponentMap , coupleDatas , amnesiacDatas , similarityCalculationDatas , lpmSVRuleInfo };
 
     public LackParamMatchComponentImpl() {
         super("LPMC", "sentenceVectors", "optimalSvRuleInfo_LPM");
@@ -36,6 +37,10 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
         DataComponent<SemanticParserRequest> dataComponent = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = dataComponent.getData();
         int algorithmType = request.getAlgorithmType();                                                                 //由用户选择使用哪种算法（当前1~5种， 默认JACCARD_VOLUME_WEIGHT_RATE）
+
+        int calculationLogType = request.getCalculationLogType();                                                       //由用户选择是否打印计算日志
+        LPMCalculationLogParam lpmCalculationLogParam = null;
+        this.saveCalculationLog(calculationLogType, LogDataType.sentenceVectors , lpmCalculationLogParam, sentenceVectors);
 
         Integer currentContextId = contextOwner.getContextId();
         SVRuleInfo lpm_optimalSvRuleInfo = null;                                                                       //选择的最匹配的历史记录
@@ -52,10 +57,11 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                 historyDataComponentMap.put(historyContextId, historyDataComponent);
             }
         }
+        this.saveCalculationLog(calculationLogType, LogDataType.dataComponentMap , lpmCalculationLogParam, historyDataComponentMap);
 
-        //2.遍历每个句子向量
+        //2.遍历本轮参数的每个句子向量
         for (SentenceVector sentenceVector : sentenceVectors) {
-            //2.1.准备好句子端的REW数据，将其放到一个Map中，以备后面查询
+            //2.1.准备好句子端的REWIs数据，将其放到一个Map中，以备后面查询
             Integer sentenceVectorId = sentenceVector.getId();                                                          //分词模式编号
             Map<String, REntityWordInfo> rEntityWordInfoMap = new HashMap<>();                                          //此分词模式下所得到的所有REW，放到一个Map中
             List<List<REntityWordInfo>> rEntityWordInfosList = sentenceVector.getrEntityWordInfosList();                //句子向量中分词段归属的实体集群
@@ -116,10 +122,12 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                         if(combineLackEntityCount == 0 || (totalUsedCurrSVInfoWeights < 0.2d && totalUsedCurrentRuleWeights < 0.1d)) continue;
 
                         //2.2.4.将变化后的历史RRE集合放到一个Map中，以备后续查找和传递
-                        Map<String, RRuleEntity> historyMatchedRRuleEntityMap = new HashMap<>();                        //构建一个Map，将所有历史版本的缺参RRE放到这个Map，以便后面查找
+                        Map<String, RRuleEntity> historyMatchedRRuleEntityMap = new HashMap<>();                        //构建一个Map，将所有历史版本的缺参RRE放到这个Map，以便后面查找，这就代表了Rule端的RRE集合了，会传入相似度算法进行计算了
                         for (RRuleEntity historyMatchedRRuleEntity : historyMatchedRRuleEntities) {
                             String entityTypeId = historyMatchedRRuleEntity.getEntityTypeId();
-                            historyMatchedRRuleEntityMap.put(entityTypeId, historyMatchedRRuleEntity);
+                            RRuleEntity rRuleEntity = new RRuleEntity();
+                            BeanUtils.copyProperties(historyMatchedRRuleEntity, rRuleEntity);                           //这里需要深克隆，留下原来的值，因为后面这个historyMatchedRRuleEntity会被重新设置权重
+                            historyMatchedRRuleEntityMap.put(entityTypeId, rRuleEntity);
                         }
 
                         //2.2.5.计算历史上下文的失忆系数
@@ -132,7 +140,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                             String entityTypeId = historyMatchedREntityWordInfo.getEntityTypeId();                      //REW的唯一标识entityTypeId
                             Map<Integer, Double> historyMatchedREntityWeightMap = historyMatchedREntityWordInfo.getWeightMap();     //REW的权重Map<sentenceVectorId, weight>
 
-                            //2.2.6.2.如果这个REW是当前对话的句子向量中产生的REW
+                            //2.2.6.2.如果这个REW是当前对话的句子向量中产生的REW，按公式设置相关实体的权重
                             if(rewContextId == currentContextId){                                                              //如果此REW版本等于当前对话版本，那么它就是本轮句子产生的REW（它应该来源于本轮对话的句子向量sv）
                                 REntityWordInfo currREntityWordInfo = historyMatchedREntityWordInfo;                    //此REW是本轮对话产生的REW，故而赋值给currREntityWordInfo，虽然是句废代码，但标识此含义。
                                 Map<Integer, Double> weightMap = currREntityWordInfo.getWeightMap();                    //取出其权重Map
@@ -141,7 +149,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                                 historyMatchedREntityWeightMap.put(sentenceVectorId, rewWeight * (1 - (amnesiacCoefficient * totalUsedHistoryRuleWeights)) / totalUsedCurrSVInfoWeights);   //从新为此REW设置针对当前句子向量的权重值（此有公式）
                                 System.out.println("contextId: " + rewContextId + "(current)  " + historyMatchedREntityWordInfo.getEntityName() + " : " + rewWeight + " * " + "(1 - (" + amnesiacCoefficient + " * " + totalUsedHistoryRuleWeights + " )) / " +  totalUsedCurrSVInfoWeights);
                             }
-                            //2.2.6.3.如果这个REW是历史对话中存储的REW
+                            //2.2.6.3.如果这个REW是历史对话中存储的REW，按公式设置它权重
                             else{                                                                                      //如果此REW版本不等于本轮对话版本号，那么它就是历史对话产生的REW（它来源于历史对话的半匹配规则rule）
                                 RRuleEntity historyMatchedRRuleEntity = historyMatchedRRuleEntityMap.get(entityTypeId); //取出上面准备好的历史RRE隐射的RRE
                                 Double historyMatchedRRuleEntityWeight = historyMatchedRRuleEntity.getWeight();         //获取其权重
@@ -152,14 +160,15 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                         }
 
                         //2.2.7.计算缺参相似度
-                        SVRuleInfo historySVRuleInfo = similarityCalculateService.similarityCalculate_LPM(algorithmType, historySvRuleInfo, historyMatchedRRuleEntityMap);      //计算相似度，此输出参数只有一个结果
-                        Double currentSimilarity = historySVRuleInfo.getSimilarity();
+                        SVRuleInfo resultSvRuleInfo = similarityCalculateService.similarityCalculate_LPM(algorithmType, historySvRuleInfo, historyMatchedRRuleEntityMap);      //计算相似度，historySvRuleInfo -> historyMatchedREntityWordInfos -> 相关的historyMatchedREntityWeightMap中的权重已经改变
+                        System.out.println(algorithmType + "\n" + JSON.toJSONString(historySvRuleInfo) + "\n" + JSON.toJSONString(historyMatchedRRuleEntityMap) + "\n --- > \n" + JSON.toJSONString(resultSvRuleInfo));
+                        Double currentSimilarity = resultSvRuleInfo.getSimilarity();
 
                         //2.2.8.计算相似度提升值，进而选择最佳缺参匹配SVRuleInfo结果
                         double similarityDistance = currentSimilarity - historySimilarity;
                         if(similarityDistance > maxSimilarityDistance || (similarityDistance == maxSimilarityDistance && bestContextId < historyContextId)){
                             maxSimilarityDistance = similarityDistance;
-                            lpm_optimalSvRuleInfo = historySVRuleInfo;
+                            lpm_optimalSvRuleInfo = resultSvRuleInfo;
                             bestContextId = historyContextId;
                         }
                     }
@@ -183,12 +192,27 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
     }
 
     /**
-     * 根据上下文轮次，获取失忆系数（当前以0.6的指数函数作为失忆函数）
+     * 根据上下文轮次，获取失忆系数（当前以0.6的指数函数作为失忆函数，0.6算是失忆倍数）
      * @param historyRoundDistance 上下文轮次，距离当前上下文编号的距离
      * @return
      */
     private double getAmnesiacCoefficient(int historyRoundDistance){
         return Math.pow(0.6, -1 * historyRoundDistance);
+    }
+
+    /**
+     * 保存计算日志的数据
+     * @param calculationLogType
+     * @param dataType
+     * @param lpmCalculationLogParam
+     * @param data
+     */
+    private void saveCalculationLog(int calculationLogType, LogDataType dataType, LPMCalculationLogParam lpmCalculationLogParam, Object data){
+        if(calculationLogType != Constant.NO_CALCULATION_LOG && data != null){
+            if(lpmCalculationLogParam == null){
+                lpmCalculationLogParam = new LPMCalculationLogParam();
+            }
+        }
     }
 
 }

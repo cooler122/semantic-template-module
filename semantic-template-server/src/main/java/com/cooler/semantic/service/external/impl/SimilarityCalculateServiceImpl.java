@@ -350,7 +350,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                 intersectionWeightOccupancy = intersectionWeightOccupancy + sv_weight + rule_weight;                    //积累权重比重
             }
         }
-        intersectionVolumeRateOccupancy /= 2;
+        intersectionVolumeRateOccupancy /= 2;                                                                           //只求交集，无论数量还是权重，全集肯定是2
         intersectionWeightOccupancy /= 2;
 
         switch (typeId){

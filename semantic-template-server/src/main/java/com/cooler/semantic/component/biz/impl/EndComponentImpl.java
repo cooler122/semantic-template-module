@@ -1,13 +1,13 @@
 package com.cooler.semantic.component.biz.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.ContextOwner;
-import com.cooler.semantic.service.external.LogService;
+import com.cooler.semantic.service.external.CalculationLogService;
+import com.cooler.semantic.service.external.ProcessLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,9 @@ public class EndComponentImpl extends FunctionComponentBase<Object, Object> {
 
     private static Logger logger = LoggerFactory.getLogger(EndComponentImpl.class.getName());
     @Autowired
-    private LogService logService;
+    private ProcessLogService processLogService;
+    @Autowired
+    private CalculationLogService calculationLogService;
 
     public EndComponentImpl() {
         super("ENDC", null, null);
@@ -38,10 +40,11 @@ public class EndComponentImpl extends FunctionComponentBase<Object, Object> {
                 DataComponent<SemanticParserRequest> requestDataComponent = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
                 SemanticParserRequest request = requestDataComponent.getData();
                 String processTrace = componentConstant.getTraceByContextOwnerIndex(contextOwner.getOwnerIndex());
-                int logType = request.getLogType();
-                if(logType == Constant.NO_LOG) {                                                                       //如果用户设置了日志类型，则需要打印日志，这个日志类型还需要设定，靠下面的logger的格式设置
-                    return;
-                }else{
+                int processLogType = request.getProcessLogType();
+                int calculationLogType = request.getCalculationLogType();
+
+                //2.打印流程日志
+                if(processLogType != Constant.NO_PROCESS_LOG){
                     String[] dataComponentIds = Constant.DATA_COMPONENT_IDs;
                     List<DataComponent> dataComponents = new ArrayList<>();
                     for (String dataComponentId : dataComponentIds) {
@@ -51,8 +54,13 @@ public class EndComponentImpl extends FunctionComponentBase<Object, Object> {
                         }
                     }
                     if(dataComponents.size() > 0){
-                        logService.writeLog(logType, dataComponents, processTrace);
+                        processLogService.writeLog(processLogType, dataComponents, processTrace);
                     }
+                }
+
+                //3.打印计算日志
+                if(calculationLogType != Constant.NO_CALCULATION_LOG){
+                    calculationLogService.writeLog(calculationLogType, null, null);
                 }
             }
         };

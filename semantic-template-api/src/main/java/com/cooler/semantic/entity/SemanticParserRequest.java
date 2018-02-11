@@ -66,9 +66,14 @@ public class SemanticParserRequest implements Serializable {
     private double accuracyThreshold  = 0.7;
 
     /**
-     * 日志类型
+     * 过程日志类型
      */
-    private int logType = 3;
+    private int processLogType = 0;
+
+    /**
+     * 计算日志类型
+     */
+    private int calculationLogType = 0;
 
     /**
      * 算法类型
@@ -268,12 +273,20 @@ public class SemanticParserRequest implements Serializable {
         this.longConversationMemorizedCount = longConversationMemorizedCount;
     }
 
-    public int getLogType() {
-        return logType;
+    public int getProcessLogType() {
+        return processLogType;
     }
 
-    public void setLogType(int logType) {
-        this.logType = logType;
+    public void setProcessLogType(int processLogType) {
+        this.processLogType = processLogType;
+    }
+
+    public int getCalculationLogType() {
+        return calculationLogType;
+    }
+
+    public void setCalculationLogType(int calculationLogType) {
+        this.calculationLogType = calculationLogType;
     }
 
     public int getAlgorithmType() {
@@ -307,7 +320,8 @@ public class SemanticParserRequest implements Serializable {
                 ", entityMaxQueryCount=" + entityMaxQueryCount +
                 ", contextWaitTime=" + contextWaitTime +
                 ", accuracyThreshold=" + accuracyThreshold +
-                ", logType=" + logType +
+                ", processLogType=" + processLogType +
+                ", calculationLogType=" + calculationLogType +
                 ", algorithmType=" + algorithmType +
                 ", contextId=" + contextId +
                 ", lastEndTimestamp=" + lastEndTimestamp +

@@ -1,6 +1,5 @@
 package com.cooler.semantic.component.biz.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
@@ -12,7 +11,6 @@ import com.cooler.semantic.entity.SemanticParserResponse;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.EntityQueryParam;
 import com.cooler.semantic.model.SVRuleInfo;
-import org.jboss.netty.util.internal.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -112,7 +110,7 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
             logger.warn("注意设置错误！此处必须参数的query_type必须设置为非0");
         }else if(queryType == Constant.AB_QUESTION_RESPONSE_MODE){
             String directQuestion = entityQueryParam.getDirectQuestion();
-            responseMsg += directQuestion + "\t";
+            responseMsg += directQuestion;
         }else if(queryType == Constant.AB_CHOICE_QUESTION_MODE){
             String indirectQuestion = entityQueryParam.getIndirectQuestion();
             Map<String, String> indirectQueryParamMap = entityQueryParam.getIndirectQueryParamMap();

@@ -53,11 +53,17 @@ public class Constant{
             "semanticParserResponse"
     };
 
-    //------------------------------------------------------------------------------日志类型
-    public static final int NO_LOG = 0;                                              //无日志
-    public static final int TEXT_LOG = 1;                                           //文本日志数据
-    public static final int HTML_LOG = 2;                                           //静态HTML日志数据
-    public static final int DATA_BASE_LOG = 3;                                      //数据库日志数据
+    //------------------------------------------------------------------------------过程日志类型
+    public static final int NO_PROCESS_LOG = 0;                                              //无日志
+    public static final int PROCESS_LOG_TEXT = 1;                                           //文本日志数据
+    public static final int PROCESS_LOG_HTML = 2;                                           //静态HTML日志数据
+    public static final int PROCESS_LOG_DATA_BASE = 3;                                      //数据库日志数据
+
+    //------------------------------------------------------------------------------计算日志类型（3类匹配计算类型）
+    public static final int NO_CALCULATION_LOG = 0;                                              //无日志
+    public static final int CALCULATION_LOG_TEXT = 1;                                           //文本日志数据
+    public static final int CALCULATION_LOG_HTML = 2;                                           //静态HTML日志数据
+    public static final int CALCULATION_LOG_DATA_BASE = 3;                                      //数据库日志数据
 
     public static final double RULE_DEFAULT_PARAM = -1;                           //规定规则自定义阈值如果没有设置，其值为-1
 

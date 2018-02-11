@@ -1,11 +1,10 @@
 package com.cooler.semantic.service.external;
 
 import com.cooler.semantic.component.data.DataComponent;
-import com.cooler.semantic.model.ContextOwner;
 
 import java.util.List;
 
-public interface LogService {
+public interface CalculationLogService {
     /**
      * 根据日志类型，来写日志
      * @param logType   日志类型

@@ -23,7 +23,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
     @Autowired
     private SimilarityCalculateService similarityCalculateService;
 
-    private enum LogDataType { sentenceVectors, dataComponentMap , coupleDatas , amnesiacDatas , similarityCalculationDatas , lpmSVRuleInfo };
+    private enum CalculationLogDataType { sentenceVectors, dataComponentMap , coupleDatas , amnesiacDatas , similarityCalculationDatas , lpmSVRuleInfo };
 
     public LackParamMatchComponentImpl() {
         super("LPMC", "sentenceVectors", "optimalSvRuleInfo_LPM");
@@ -40,7 +40,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
 
         int calculationLogType = request.getCalculationLogType();                                                       //由用户选择是否打印计算日志
         LPMCalculationLogParam lpmCalculationLogParam = null;
-        this.saveCalculationLog(calculationLogType, LogDataType.sentenceVectors , lpmCalculationLogParam, sentenceVectors);
+        this.saveCalculationLog(calculationLogType, CalculationLogDataType.sentenceVectors , lpmCalculationLogParam, sentenceVectors);
 
         Integer currentContextId = contextOwner.getContextId();
         SVRuleInfo lpm_optimalSvRuleInfo = null;                                                                       //选择的最匹配的历史记录
@@ -57,7 +57,9 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                 historyDataComponentMap.put(historyContextId, historyDataComponent);
             }
         }
-        this.saveCalculationLog(calculationLogType, LogDataType.dataComponentMap , lpmCalculationLogParam, historyDataComponentMap);
+        this.saveCalculationLog(calculationLogType, CalculationLogDataType.dataComponentMap , lpmCalculationLogParam, historyDataComponentMap);
+
+        //TODO:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!注意缺参匹配的计算日志还没有写完，上面直接放入historyDataComponentMap貌似非常吃内存，历史数据太吃内存了，看看能否修改LPMCalculationLogParam类，这个类理应只记录字符串
 
         //2.遍历本轮参数的每个句子向量
         for (SentenceVector sentenceVector : sentenceVectors) {
@@ -173,6 +175,9 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                         }
                     }
                 }
+
+                CoupleAlterationRateData coupleAlterationRateData = new CoupleAlterationRateData();
+
             }
         }
 
@@ -203,11 +208,11 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
     /**
      * 保存计算日志的数据
      * @param calculationLogType
-     * @param dataType
+     * @param calculationLogDataType
      * @param lpmCalculationLogParam
      * @param data
      */
-    private void saveCalculationLog(int calculationLogType, LogDataType dataType, LPMCalculationLogParam lpmCalculationLogParam, Object data){
+    private void saveCalculationLog(int calculationLogType, CalculationLogDataType calculationLogDataType, LPMCalculationLogParam lpmCalculationLogParam, Object data){
         if(calculationLogType != Constant.NO_CALCULATION_LOG && data != null){
             if(lpmCalculationLogParam == null){
                 lpmCalculationLogParam = new LPMCalculationLogParam();

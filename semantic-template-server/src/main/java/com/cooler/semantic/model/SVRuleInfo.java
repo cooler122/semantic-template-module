@@ -138,7 +138,7 @@ public class SVRuleInfo implements Serializable{
     private List<MatchedEntityParam> accumulatedMatchedEntityParams;
 
     /**
-     * 获得的有用值积累，在解析过程中获取
+     * 获得的有用值积累，在解析过程中获取（用到应用中的值）
      */
     private Map<String, String> businessNecessaryParamMap = new HashMap<>();
 

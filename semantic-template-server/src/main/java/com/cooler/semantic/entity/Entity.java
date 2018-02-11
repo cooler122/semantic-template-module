@@ -1,5 +1,7 @@
 package com.cooler.semantic.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 
 public class Entity {
@@ -11,12 +13,16 @@ public class Entity {
 
     private Integer accountId;
 
+    @JSONField(serialize=false)
     private Integer state;
 
+    @JSONField(serialize=false)
     private String entityMsg;
 
+    @JSONField(serialize=false)
     private Date createTime;
 
+    @JSONField(serialize=false)
     private Date updateTime;
 
     public Entity(Integer id, String entityName, Integer entityType, Integer accountId, Integer state, String entityMsg, Date createTime, Date updateTime) {

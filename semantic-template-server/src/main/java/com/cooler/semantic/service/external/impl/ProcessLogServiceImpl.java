@@ -62,7 +62,7 @@ public class ProcessLogServiceImpl implements ProcessLogService {
             switch (dataComponentId){
                 case "historyDataComponents" : {
                     List<DataComponent<SVRuleInfo>> historyDataComponents = (List<DataComponent<SVRuleInfo>>)data;
-                    System.out.println(JSON.toJSONString(historyDataComponents));
+//                    System.out.println(JSON.toJSONString(historyDataComponents));
                     break;
                 }
                 case "semanticParserRequest" : {

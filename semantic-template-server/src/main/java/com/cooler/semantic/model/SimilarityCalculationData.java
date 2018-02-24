@@ -5,49 +5,85 @@ import com.cooler.semantic.entity.Entity;
 import java.util.List;
 
 public class SimilarityCalculationData{
+
         /**
-         * 句子向量实体
+         * 1.句子向量ID
          */
-        private List<Entity> svInputEntityParams;
+        private Integer sentenceVectorId;
+
         /**
-         * 规则向量实体
+         * 2.上下文ID
          */
-        private List<Entity> ruleInputEntityParams;
+        private Integer contextId;
+
         /**
-         * 算法类型
+         * 3.句子向量实体
+         */
+        private List<List<REntityWordInfo>> svInputREWIs;
+
+        /**
+         * 4.规则向量实体
+         */
+        private List<REntityWordInfo> ruleInputREWIs;
+
+        /**
+         * 5.算法类型
          */
         private Integer algorithmType;
+
         /**
-         * 算法公式
+         * 6.算法公式
          */
         private String algorithmFormula;
-        /**
-         * 交集实体的数量占比和数量占比（此量根据算法而不同，这是贾卡德算法产生的值，这里放两个值，用字符串合起来，形式如：( entityId - entityName ) : svVolumnRate - ruleVolumnRate）
-         */
-        private List<String> svIntersectionEntityVolumnRate;
-        /**
-         * 交集实体的数量占比和权重占比（此量根据算法而不同，这是贾卡德算法产生的值，这里放两个值，用字符串合起来，形式如：( entityId - entityName ) : svWeightRate - ruleWeightRate）
-         */
-        private List<String> ruleIntersectionEntityWeightRate;
-        /**
-         * 相似度分值以及其细节值(形如：similarityValue -> intersectionVolumeRateOccupancy * intersectionWeightOccupancy
-         */
-        private String aboutSimilarityValue;
 
-        public List<Entity> getSvInputEntityParams() {
-            return svInputEntityParams;
+        /**
+         * 7.交集实体的句子向量端数量占比和规则端数量占比（此量根据算法而不同，这是贾卡德算法产生的值，这里放两个值，用字符串合起来，形式如：( entityId - entityName ) : svVolumnRate - ruleVolumnRate）
+         */
+        private List<String> intersectionEntityVolumnRates;
+
+        /**
+         * 8.规则端，交集实体的数量占比和权重占比（此量根据算法而不同，这是贾卡德算法产生的值，这里放两个值，用字符串合起来，形式如：( entityId - entityName ) : svWeightRate - ruleWeightRate）
+         */
+        private List<String> intersectionEntityWeightRates;
+
+        /**
+         * 9.相似度分值以及其细节值(形如：similarityValue -> intersectionVolumeRateOccupancy * intersectionWeightOccupancy
+         */
+        private String similarityValue;
+
+        //--------------------------------------------------------------------------------------------------------------gets、sets
+
+
+        public Integer getSentenceVectorId() {
+            return sentenceVectorId;
         }
 
-        public void setSvInputEntityParams(List<Entity> svInputEntityParams) {
-            this.svInputEntityParams = svInputEntityParams;
+        public void setSentenceVectorId(Integer sentenceVectorId) {
+            this.sentenceVectorId = sentenceVectorId;
         }
 
-        public List<Entity> getRuleInputEntityParams() {
-            return ruleInputEntityParams;
+        public Integer getContextId() {
+            return contextId;
         }
 
-        public void setRuleInputEntityParams(List<Entity> ruleInputEntityParams) {
-            this.ruleInputEntityParams = ruleInputEntityParams;
+        public void setContextId(Integer contextId) {
+            this.contextId = contextId;
+        }
+
+        public List<List<REntityWordInfo>> getSvInputREWIs() {
+            return svInputREWIs;
+        }
+
+        public void setSvInputREWIs(List<List<REntityWordInfo>> svInputREWIs) {
+            this.svInputREWIs = svInputREWIs;
+        }
+
+        public List<REntityWordInfo> getRuleInputREWIs() {
+            return ruleInputREWIs;
+        }
+
+        public void setRuleInputREWIs(List<REntityWordInfo> ruleInputREWIs) {
+            this.ruleInputREWIs = ruleInputREWIs;
         }
 
         public Integer getAlgorithmType() {
@@ -66,27 +102,27 @@ public class SimilarityCalculationData{
             this.algorithmFormula = algorithmFormula;
         }
 
-        public List<String> getSvIntersectionEntityVolumnRate() {
-            return svIntersectionEntityVolumnRate;
+        public List<String> getIntersectionEntityVolumnRates() {
+            return intersectionEntityVolumnRates;
         }
 
-        public void setSvIntersectionEntityVolumnRate(List<String> svIntersectionEntityVolumnRate) {
-            this.svIntersectionEntityVolumnRate = svIntersectionEntityVolumnRate;
+        public void setIntersectionEntityVolumnRates(List<String> intersectionEntityVolumnRates) {
+            this.intersectionEntityVolumnRates = intersectionEntityVolumnRates;
         }
 
-        public List<String> getRuleIntersectionEntityWeightRate() {
-            return ruleIntersectionEntityWeightRate;
+        public List<String> getIntersectionEntityWeightRates() {
+            return intersectionEntityWeightRates;
         }
 
-        public void setRuleIntersectionEntityWeightRate(List<String> ruleIntersectionEntityWeightRate) {
-            this.ruleIntersectionEntityWeightRate = ruleIntersectionEntityWeightRate;
+        public void setIntersectionEntityWeightRates(List<String> intersectionEntityWeightRates) {
+            this.intersectionEntityWeightRates = intersectionEntityWeightRates;
         }
 
-        public String getAboutSimilarityValue() {
-            return aboutSimilarityValue;
-        }
+        public String getSimilarityValue() {
+                return similarityValue;
+            }
 
-        public void setAboutSimilarityValue(String aboutSimilarityValue) {
-            this.aboutSimilarityValue = aboutSimilarityValue;
+        public void setSimilarityValue(String similarityValue) {
+            this.similarityValue = similarityValue;
         }
-    }
+}

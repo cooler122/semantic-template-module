@@ -28,7 +28,7 @@ public class SemanticParserRequest implements Serializable {
     /**
      * 段对话能被记忆的轮数
      */
-    private int shortConversationMemorizedCount = 5;
+    private int shortConversationMemorizedCount = 3;
 
     /**
      * 长对话能被记忆的轮数

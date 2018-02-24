@@ -11,15 +11,20 @@ import java.util.Map;
 public class SVRuleInfo implements Serializable{
 
     //*****************************************************0.共有属性
+//    /**
+//     * 这个绑定的上下文版本号
+//     */
+//    private Integer contextId = null;
+//
+//    /**
+//     * 此SVRuleInfo的来源对话编号（一般在缺参匹配过程中记录本值，通过本值强制进行过一轮缺参匹配并缺参匹配上的缺参上下文在后续对话中不再缺参匹配）
+//     */
+//    private Integer fromContextId = null;
+
     /**
      * 账户ID
      */
     private Integer accountId;
-
-    /**
-     * 这个绑定的上下文版本号
-     */
-//    private Integer contextId;
 
     //*****************************************************1.作为第一次和第二次的初步规则筛选凭证参数：第一次筛选，preRuleWeightOccupancy和preRuleWeightOccupancy，必须达到一定阈值才能通过。 第二次筛选，按照preRuleVolumeRateOccupancy * preRuleWeightOccupancy的值进行竞争，前n（配置设置）名参与相似度计算，其他舍弃
     /**
@@ -151,6 +156,8 @@ public class SVRuleInfo implements Serializable{
      * 采用了的算法类型（默认贾卡德第三类算法）
      */
     private Integer algorithmType = Constant.JACCARD_VOLUME_WEIGHT_RATE;
+
+
 
     public Integer getSentenceVectorId() {
         return sentenceVectorId;
@@ -350,5 +357,13 @@ public class SVRuleInfo implements Serializable{
 //
 //    public void setContextId(Integer contextId) {
 //        this.contextId = contextId;
+//    }
+//
+//    public Integer getFromContextId() {
+//        return fromContextId;
+//    }
+//
+//    public void setFromContextId(Integer fromContextId) {
+//        this.fromContextId = fromContextId;
 //    }
 }

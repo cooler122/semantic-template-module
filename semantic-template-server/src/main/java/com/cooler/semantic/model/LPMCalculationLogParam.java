@@ -1,12 +1,12 @@
 package com.cooler.semantic.model;
 
+import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.data.DataComponent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 public class LPMCalculationLogParam {
+
     //------------------------------------------------------------------------------------------------------------------1.原始数据
     /**
      *  句子向量端的REWIs
@@ -16,10 +16,15 @@ public class LPMCalculationLogParam {
     /**
      * 每个历史缺参rule端的历史记录
      */
-    private Map<Integer, DataComponent<SVRuleInfo>> dataComponentMap = new HashMap<>();
+    private Map<Integer, SVRuleInfo> historySVRuleInfoMap = new HashMap<>();
+
+    /**
+     * 取消的缺参上下文ID
+     */
+    private Set<Integer> canceledLPMContextIdSet = new HashSet<>();
 
     //------------------------------------------------------------------------------------------------------------------2.（集合）初级筛选以及合并过程的变动率数据（调参门槛）
-    private List<CoupleAlterationRateData> coupleDatas = new ArrayList<>();
+    private List<CoupleAlterationRateData> coupleAlterationRateDatas = new ArrayList<>();
 
     //------------------------------------------------------------------------------------------------------------------3.（集合）失忆系数相关
     private List<AmnesiacData> amnesiacDatas = new ArrayList<>();
@@ -29,6 +34,9 @@ public class LPMCalculationLogParam {
 
     //------------------------------------------------------------------------------------------------------------------5.最优数据
     private SVRuleInfo lpmSVRuleInfo;
+
+    //------------------------------------------------------------------------------------------------------------------6.最终上面形成的json数据的Map，上面集合的其key值形式为"sentenceVectorId_contextId_日志类型标识"，用来查询
+    private Map<String, String> jsonDataMap = new HashMap<>();
 
 
     //------------------------------------------------------------------------------------------------------------------gets、sets
@@ -40,20 +48,28 @@ public class LPMCalculationLogParam {
         this.sentenceVectors = sentenceVectors;
     }
 
-    public Map<Integer, DataComponent<SVRuleInfo>> getDataComponentMap() {
-        return dataComponentMap;
+    public Map<Integer, SVRuleInfo> getHistorySVRuleInfoMap() {
+        return historySVRuleInfoMap;
     }
 
-    public void setDataComponentMap(Map<Integer, DataComponent<SVRuleInfo>> dataComponentMap) {
-        this.dataComponentMap = dataComponentMap;
+    public void setHistorySVRuleInfoMap(Map<Integer, SVRuleInfo> historySVRuleInfoMap) {
+        this.historySVRuleInfoMap = historySVRuleInfoMap;
     }
 
-    public List<CoupleAlterationRateData> getCoupleDatas() {
-        return coupleDatas;
+    public Set<Integer> getCanceledLPMContextIdSet() {
+        return canceledLPMContextIdSet;
     }
 
-    public void setCoupleDatas(List<CoupleAlterationRateData> coupleDatas) {
-        this.coupleDatas = coupleDatas;
+    public void setCanceledLPMContextIdSet(Set<Integer> canceledLPMContextIdSet) {
+        this.canceledLPMContextIdSet = canceledLPMContextIdSet;
+    }
+
+    public List<CoupleAlterationRateData> getCoupleAlterationRateDatas() {
+        return coupleAlterationRateDatas;
+    }
+
+    public void setCoupleAlterationRateDatas(List<CoupleAlterationRateData> coupleAlterationRateDatas) {
+        this.coupleAlterationRateDatas = coupleAlterationRateDatas;
     }
 
     public List<AmnesiacData> getAmnesiacDatas() {
@@ -80,4 +96,32 @@ public class LPMCalculationLogParam {
         this.lpmSVRuleInfo = lpmSVRuleInfo;
     }
 
+    public Map<String, String> getJsonDataMap() {
+        jsonDataMap.put("sentenceVectors", JSON.toJSONString(sentenceVectors));
+        jsonDataMap.put("historySVRuleInfoMap", JSON.toJSONString(historySVRuleInfoMap));
+        jsonDataMap.put("canceledLPMContextIdSet", JSON.toJSONString(canceledLPMContextIdSet));
+        for (CoupleAlterationRateData coupleAlterationRateData : coupleAlterationRateDatas) {
+            Integer sentenceVectorId = coupleAlterationRateData.getSentenceVectorId();
+            Integer contextId = coupleAlterationRateData.getContextId();
+            jsonDataMap.put("coupleAlterationRateData_" + sentenceVectorId + "_" + contextId, JSON.toJSONString(coupleAlterationRateData));
+        }
+        for (AmnesiacData amnesiacData : amnesiacDatas) {
+            Integer currentContextId = amnesiacData.getCurrentContextId();
+            Integer historyContextId = amnesiacData.getHistoryContextId();
+            jsonDataMap.put("amnesiacData_" + currentContextId + "_" + historyContextId, JSON.toJSONString(amnesiacData));
+        }
+        for (SimilarityCalculationData similarityCalculationData : similarityCalculationDatas) {
+            Integer sentenceVectorId = similarityCalculationData.getSentenceVectorId();
+            Integer contextId = similarityCalculationData.getContextId();
+            jsonDataMap.put("similarityCalculationData_" + sentenceVectorId + "_" + contextId, JSON.toJSONString(similarityCalculationData));
+        }
+        jsonDataMap.put("lpmSVRuleInfo", JSON.toJSONString(lpmSVRuleInfo));
+        return jsonDataMap;
+    }
+
+    public void setJsonDataMap(Map<String, String> jsonDataMap) {
+        this.jsonDataMap = jsonDataMap;
+
+
+    }
 }

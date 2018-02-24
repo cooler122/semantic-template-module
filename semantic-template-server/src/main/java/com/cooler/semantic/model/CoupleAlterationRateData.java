@@ -1,52 +1,50 @@
 package com.cooler.semantic.model;
 
-import com.cooler.semantic.entity.Entity;
-
 import java.util.List;
 
 public class CoupleAlterationRateData{
         /**
-         * 本轮分词ID
+         * 1.本轮分词ID
          */
         private Integer sentenceVectorId = null;
 
         /**
-         * 历史上下文ID
+         * 2.历史上下文ID
          */
         private Integer contextId = null;
 
         /**
-         * 合并的实体参数集
+         * 3.合并的实体参数集
          */
-        private List<Entity> combinedEntities = null;
+        private List<REntityWordInfo> combinedREntityWordInfos = null;
 
         /**
-         * SV端权重占比
+         * 4.SV端权重占比
          */
         private double svWeightOccupyRate = 0.0d;
 
         /**
-         * Rule端权重占比
+         * 5.Rule端权重占比
          */
         private double ruleWeightOccupyRate = 0.0d;
 
         /**
-         * 合并的实体数量阈值
+         * 6.合并的实体数量阈值
          */
         private int combinedEntityCountAccuracyThreshold = 0;
 
         /**
-         * 占SV端的权重阈值
+         * 7.占SV端的权重阈值
          */
         private double weightRateAccuracyThreshold4SV = 0.0d;
 
         /**
-         * 占Rule端的权重阈值
+         * 8.占Rule端的权重阈值
          */
         private double weightRateAccuracyThreshold4Rule = 0.0d;
 
         /**
-         * 是否跨越门槛
+         * 9.是否跨越门槛
          */
         private boolean isCrossed = false;
 
@@ -66,17 +64,17 @@ public class CoupleAlterationRateData{
             this.contextId = contextId;
         }
 
-        public List<Entity> getCombinedEntities() {
-            return combinedEntities;
+        public List<REntityWordInfo> getCombinedREntityWordInfos() {
+            return combinedREntityWordInfos;
         }
 
-        public void setCombinedEntities(List<Entity> combinedEntities) {
-            this.combinedEntities = combinedEntities;
+        public void setCombinedREntityWordInfos(List<REntityWordInfo> combinedREntityWordInfos) {
+            this.combinedREntityWordInfos = combinedREntityWordInfos;
         }
 
         public double getSvWeightOccupyRate() {
-            return svWeightOccupyRate;
-        }
+                    return svWeightOccupyRate;
+                }
 
         public void setSvWeightOccupyRate(double svWeightOccupyRate) {
             this.svWeightOccupyRate = svWeightOccupyRate;

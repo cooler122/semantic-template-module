@@ -23,21 +23,21 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
     protected ComponentBizResult<Object> runBiz(ContextOwner contextOwner, List<SentenceVector> sentenceVectors) {
         logger.trace("CPMC.换参匹配");
 
+        //1.数据准备
         DataComponent<List<DataComponent<SVRuleInfo>>> historyDataComponent = componentConstant.getDataComponent("historyDataComponents", contextOwner);
         List<DataComponent<SVRuleInfo>> historyDataComponents = historyDataComponent.getData();
         Integer currentContextId = contextOwner.getContextId();
-        Map<Integer, SVRuleInfo> contextId_svRuleInfoMap = new HashMap<>();                                             //用来记录历史上下文数据
+        Map<Integer, SVRuleInfo> contextId_svRuleInfoMap = new HashMap<>();                                             //用来记录历史上下文数据，形式为：Map<historyContextId, historyOptimalSVRuleInfo>
+        Map<Integer, Double> historyVolumeIncrementMap = new HashMap<>();                                               //记录每一轮历史对话的匹配上的REWI集合的各个比重增量的Map<contextId, 1/REWIs' size>
         Map<String, List<REntityWordInfo>> historyREWIMap = new HashMap<>();                                            //将每一轮的REWI放入Map<entityTypeId, List<REWI>>
-        Map<Integer, Double> historyVolumeIncrementMap = new HashMap<>();                                               //记录每一轮历史对话的匹配上的REWI集合的各个权重的Map<contextId, 1/REWIs' size>
 
-        for(DataComponent<SVRuleInfo> historyData : historyDataComponents){                                                       //遍历查询出来的这些历史数据
+        for(DataComponent<SVRuleInfo> historyData : historyDataComponents){                                             //遍历查询出来的这些历史数据
             if(historyData != null && historyData.getData() != null){
                 Integer historyContextId = historyData.getContextOwner().getContextId();
                 SVRuleInfo svRuleInfo = historyData.getData();
-                contextId_svRuleInfoMap.put(historyContextId, svRuleInfo);                                                //收集此上下文数据
+                contextId_svRuleInfoMap.put(historyContextId, svRuleInfo);                                              //收集此上下文数据
 //                if(svRuleInfo.getLackedRRuleEntities() == null || svRuleInfo.getLackedRRuleEntities().size() == 0){   //TODO:如果只保证历史状态为全参状态才能换参匹配，那么就要解开此注释，但本人思考，缺参状态也应该换参，保证新入实体信息给接收，这个还是根据后续效果来定吧
                 List<REntityWordInfo> matchedREntityWordInfos = svRuleInfo.getMatchedREntityWordInfos();                //取出已经匹配过的历史REWI集合记录
-
                 int historyMatchedREWISize = matchedREntityWordInfos.size() ;                                           //获取并收集每轮历史对话匹配集长度，后续用来计算个数占比
                 if(historyMatchedREWISize > 0){
                     historyVolumeIncrementMap.put(historyContextId, 1d / historyMatchedREWISize);
@@ -48,14 +48,14 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                             rEntityWordInfos = new ArrayList<>();
                         }
                         rEntityWordInfos.add(matchedREntityWordInfo);
-                        historyREWIMap.put(entityTypeId, rEntityWordInfos);
+                        historyREWIMap.put(entityTypeId, rEntityWordInfos);                                             //将历史REWI保存到historyREWIMap
                     }
                 }
 //                }
             }
         }
 
-        if(contextId_svRuleInfoMap.size() == 0) return new ComponentBizResult("CPMC_F");                 //如果没有收集到历史规则，就跳出去吧
+        if(contextId_svRuleInfoMap.size() == 0) return new ComponentBizResult("CPMC_F");                      //如果没有收集到历史规则，就跳出去吧
 
         Map<CoordinateKey, REntityWordInfo> hitCurrentREntityWordInfoMap = new HashMap<>();                             //关联数据Map<{sentenceVectorId, currentEntityType, currentEntityId}, hitCurrentREWI>
         Map<String, Double> svIdcontextId_productValueMap = new HashMap<>();                                            //统计值Map<sentenceVectorId_contextId, 统计数据值>
@@ -78,7 +78,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                     Double currentWeight = currentREntityWordInfo.getWeightMap().get(sentenceVectorId);                 //获取本句子向量的此REWI的权重
 
                     List<REntityWordInfo> historyREntityWordInfos = historyREWIMap.get(currentEntityTypeId);            //历史端：尝试搜索此entityTypeId是否存在于历史匹配的REWI集合里面
-                    if(historyREntityWordInfos != null && historyREntityWordInfos.size() > 0){                         //如果本次entityTypeId的REWI碰上了历史REWI集合
+                    if(historyREntityWordInfos != null && historyREntityWordInfos.size() > 0){                          //如果本次entityTypeId的REWI碰上了历史REWI集合
                         CoordinateKey coordinateKey = new CoordinateKey(sentenceVectorId, currentEntityType, currentEntityId);  //构建此唯一变量组作为key
                         //1.先将获得的能匹配上的 currentREntityWordInfo 对象放到关联Map中
                         hitCurrentREntityWordInfoMap.put(coordinateKey, currentREntityWordInfo);

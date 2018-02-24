@@ -43,12 +43,12 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
 
         DataComponent<SemanticParserRequest> dataComponent = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = dataComponent.getData();
-        int logType = request.getLogType();
+        int processLogType = request.getProcessLogType();
         int algorithmType = request.getAlgorithmType();                                                                 //由用户选择使用哪种算法（当前1~5种， 默认JACCARD_VOLUME_WEIGHT_RATE）
 
         //1.通过各个分词段检索出的实体，将各个实体对应的rule数据（这一步主要获得各个实体对应的ruleId）检索出来，通过预估值计算，提取最佳的前5位规则，并封装成SVRuleInfo集合返回出来
         List<SVRuleInfo> svRuleInfos = ruleSearchService.getRulesBySentenceVectors(contextOwner, sentenceVectors);
-        if(logType != Constant.NO_LOG){
+        if(processLogType != Constant.NO_PROCESS_LOG){
             componentConstant.putDataComponent(new DataComponentBase("FPM_First_Select5SVRIs", contextOwner, "List<SVRuleInfo>", svRuleInfos));     //埋点1：全参匹配初选结果集埋点，能够知道全参匹配初选过程选定了哪些rule
         }
 
@@ -66,7 +66,7 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                 rRuleEntityMap.put(entityTypeId, rRuleEntity);                                                              //将这些数据放入了Map<entityTypeId, RRE>集合中，方便后续取用
                 ruleId_RRuleEntityDataMap.put(ruleId, rRuleEntityMap);                                                      //将设置好值得Map放到大Map中Map<ruleId, Map<entityTypeId, RRuleEntity>>
             }
-            if(logType != Constant.NO_LOG){
+            if(processLogType != Constant.NO_PROCESS_LOG){
                 componentConstant.putDataComponent(new DataComponentBase("FPM_MatchMap", contextOwner, "Map<Integer, Map<String, RRuleEntity>>", ruleId_RRuleEntityDataMap));     //埋点2：全参匹配初选结果集埋点，能够知道全参匹配初选过程选定了哪些rule
             }
 
@@ -83,7 +83,7 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                 }
             });
             if(svRuleInfosResult != null && svRuleInfosResult.size() > 0){
-                if(logType != Constant.NO_LOG){
+                if(processLogType != Constant.NO_PROCESS_LOG){
                     componentConstant.putDataComponent(new DataComponentBase("FPM_MatchResults", contextOwner, "List<SVRuleInfo>", svRuleInfosResult));     //埋点3：全参匹配初选结果集埋点，能够知道全参匹配初选过程选定了哪些rule
                 }
                 SVRuleInfo optimalSvRuleInfo_FPM = svRuleInfosResult.get(0);                                                        //获取相似度值最大的那一个（最优结果）

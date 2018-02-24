@@ -63,7 +63,7 @@ public class ReferenceRuleSearchComponentImpl extends FunctionComponentBase<SVRu
         for (ReferRuleRelation referRuleRelation : referRuleRelations) {
             Integer referRuleId = referRuleRelation.getReferRuleId();
             Byte hasConditions = referRuleRelation.getHasConditions();
-            if(hasConditions == (byte)0){                                                                              //如果为0，代表没有条件
+            if(hasConditions == (byte)0){                                                                               //如果为0，代表没有条件
                 enableReferRuleIds.add(referRuleId);
             } else {                                                                                                    //如果不为0，代表有条件
                 Integer referRuleRelationId = referRuleRelation.getId();
@@ -138,7 +138,7 @@ public class ReferenceRuleSearchComponentImpl extends FunctionComponentBase<SVRu
             return new ComponentBizResult("RRSC_S", Constant.STORE_LOCAL_REMOTE, createdReferSvRuleInfo);
         }else{
 
-            return new ComponentBizResult("RRSC_F");                                                     //如果前面进入这个分支，表示有指向性规则，但各个条件的限制导致没有合适的的指向性规则，那么要返回匹配失败结果体了。
+            return new ComponentBizResult("RRSC_F");                                                          //如果前面进入这个分支，表示有指向性规则，但各个条件的限制导致没有合适的的指向性规则，那么要返回匹配失败结果体了。
         }
     }
 

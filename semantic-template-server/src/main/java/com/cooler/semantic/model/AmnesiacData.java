@@ -2,24 +2,36 @@ package com.cooler.semantic.model;
 
 public class AmnesiacData{
         /**
-         * 当前上下文ID
+         * 1.当前上下文ID
          */
         private Integer currentContextId;
 
         /**
-         * 历史上下文ID
+         * 2.历史上下文ID
          */
         private Integer historyContextId;
 
         /**
-         * 上下文距离
+         * 3.上下文距离
          */
         private int contextDistance;
 
         /**
-         * 失忆算法类型
+         * 4.失忆算法类型
          */
         private Integer amnesiacAlgorithmType;
+
+        /**
+         * 5.底数
+         */
+        private double baseNumber;
+
+        /**
+         * 6.失忆系数
+         */
+        private double coefficient;
+
+    //------------------------------------------------------------------------------------------------------------------gets、sets
 
         public Integer getCurrentContextId() {
             return currentContextId;
@@ -52,4 +64,20 @@ public class AmnesiacData{
         public void setAmnesiacAlgorithmType(Integer amnesiacAlgorithmType) {
             this.amnesiacAlgorithmType = amnesiacAlgorithmType;
         }
-    }
+
+        public double getBaseNumber() {
+            return baseNumber;
+        }
+
+        public void setBaseNumber(double baseNumber) {
+            this.baseNumber = baseNumber;
+        }
+
+        public double getCoefficient() {
+            return coefficient;
+        }
+
+        public void setCoefficient(double coefficient) {
+            this.coefficient = coefficient;
+        }
+}

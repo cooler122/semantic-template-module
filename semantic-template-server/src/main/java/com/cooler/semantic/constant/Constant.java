@@ -50,7 +50,8 @@ public class Constant{
             "createdReferSvRuleInfo",
             "sugguestData",
             "optimalSvRuleInfo",
-            "semanticParserResponse"
+            "semanticParserResponse",
+            "canceledLPMContextIdSet"
     };
 
     //------------------------------------------------------------------------------过程日志类型

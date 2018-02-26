@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 
 @Component("resultPack4NoRunningComponent")
 public class ResultPack4NoRunningComponentImpl extends FunctionComponentBase<SVRuleInfo, SemanticParserResponse> {

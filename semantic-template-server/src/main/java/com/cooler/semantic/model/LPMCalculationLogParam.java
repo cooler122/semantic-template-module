@@ -1,7 +1,9 @@
 package com.cooler.semantic.model;
 
 import com.alibaba.fastjson.JSON;
-import com.cooler.semantic.component.data.DataComponent;
+import com.cooler.semantic.model.console.AmnesiacData;
+import com.cooler.semantic.model.console.CoupleAlterationRateData;
+import com.cooler.semantic.model.console.SimilarityCalculationData;
 
 import java.util.*;
 

@@ -1,6 +1,6 @@
-package com.cooler.semantic.model;
+package com.cooler.semantic.model.console;
 
-import com.cooler.semantic.entity.Entity;
+import com.cooler.semantic.model.REntityWordInfo;
 
 import java.util.List;
 

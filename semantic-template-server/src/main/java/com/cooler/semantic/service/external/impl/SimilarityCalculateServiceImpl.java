@@ -4,7 +4,7 @@ import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.RRuleEntity;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
-import com.cooler.semantic.model.SimilarityCalculationData;
+import com.cooler.semantic.model.console.SimilarityCalculationData;
 import com.cooler.semantic.service.external.SimilarityCalculateService;
 import com.cooler.semantic.util.AlgorithmUtil;
 import org.springframework.stereotype.Service;

@@ -13,7 +13,6 @@ import com.cooler.semantic.model.SentenceVector;
 import com.cooler.semantic.service.external.RuleSearchService;
 import com.cooler.semantic.service.external.SimilarityCalculateService;
 import com.cooler.semantic.service.internal.RRuleEntityService;
-import com.cooler.semantic.service.internal.RuleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

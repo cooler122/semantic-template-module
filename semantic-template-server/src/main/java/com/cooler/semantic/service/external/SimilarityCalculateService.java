@@ -1,9 +1,8 @@
 package com.cooler.semantic.service.external;
 
 import com.cooler.semantic.entity.RRuleEntity;
-import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.SVRuleInfo;
-import com.cooler.semantic.model.SimilarityCalculationData;
+import com.cooler.semantic.model.console.SimilarityCalculationData;
 
 import java.util.List;
 import java.util.Map;

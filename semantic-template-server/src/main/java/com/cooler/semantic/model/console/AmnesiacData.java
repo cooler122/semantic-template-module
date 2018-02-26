@@ -1,4 +1,4 @@
-package com.cooler.semantic.model;
+package com.cooler.semantic.model.console;
 
 public class AmnesiacData{
         /**

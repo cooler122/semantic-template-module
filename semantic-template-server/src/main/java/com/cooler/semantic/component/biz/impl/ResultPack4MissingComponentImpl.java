@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.component.data.DataComponent;
-import com.cooler.semantic.component.data.DataComponentBase;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.RRuleEntity;
 import com.cooler.semantic.entity.SemanticParserRequest;
@@ -12,10 +11,8 @@ import com.cooler.semantic.entity.SemanticParserResponse;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.EntityQueryParam;
 import com.cooler.semantic.model.SVRuleInfo;
-import com.cooler.semantic.service.external.RedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 

@@ -8,7 +8,6 @@ import com.cooler.semantic.facade.CustomizedSemanticFacade;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.SentenceVector;
 import com.cooler.semantic.model.SentenceVectorParam;
-import com.cooler.semantic.service.external.AnaphoraResolutionService;
 import com.cooler.semantic.service.external.WeightCalculateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

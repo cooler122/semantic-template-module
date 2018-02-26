@@ -3,7 +3,6 @@ package com.cooler.semantic.component.biz.impl;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.component.data.DataComponent;
-import com.cooler.semantic.component.data.DataComponentBase;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.ContextOwner;

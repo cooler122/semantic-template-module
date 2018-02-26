@@ -1,6 +1,8 @@
 package com.cooler.semantic.model;
 
 
+import com.cooler.semantic.model.Term;
+
 import java.util.List;
 
 public class WordInfo extends Term {

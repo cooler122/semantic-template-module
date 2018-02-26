@@ -1,9 +1,11 @@
 package com.cooler.semantic.component.biz.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.constant.Constant;
+import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +25,16 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
     protected ComponentBizResult<Object> runBiz(ContextOwner contextOwner, List<SentenceVector> sentenceVectors) {
         logger.trace("CPMC.换参匹配");
 
+        DataComponent<SemanticParserRequest> dataComponent = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
+        SemanticParserRequest request = dataComponent.getData();
+        int calculationLogType = request.getCalculationLogType();
+
+
         //1.数据准备
         DataComponent<List<DataComponent<SVRuleInfo>>> historyDataComponent = componentConstant.getDataComponent("historyDataComponents", contextOwner);
         List<DataComponent<SVRuleInfo>> historyDataComponents = historyDataComponent.getData();
         Integer currentContextId = contextOwner.getContextId();
-        Map<Integer, SVRuleInfo> contextId_svRuleInfoMap = new HashMap<>();                                             //用来记录历史上下文数据，形式为：Map<historyContextId, historyOptimalSVRuleInfo>
+        Map<String, SVRuleInfo> contextId_svRuleInfoMap = new HashMap<>();                                             //用来记录历史上下文数据，形式为：Map<historyContextId, historyOptimalSVRuleInfo>
         Map<Integer, Double> historyVolumeIncrementMap = new HashMap<>();                                               //记录每一轮历史对话的匹配上的REWI集合的各个比重增量的Map<contextId, 1/REWIs' size>
         Map<String, List<REntityWordInfo>> historyREWIMap = new HashMap<>();                                            //将每一轮的REWI放入Map<entityTypeId, List<REWI>>
 
@@ -35,7 +42,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
             if(historyData != null && historyData.getData() != null){
                 Integer historyContextId = historyData.getContextOwner().getContextId();
                 SVRuleInfo svRuleInfo = historyData.getData();
-                contextId_svRuleInfoMap.put(historyContextId, svRuleInfo);                                              //收集此上下文数据
+                contextId_svRuleInfoMap.put(historyContextId + "", svRuleInfo);                                              //收集此上下文数据
 //                if(svRuleInfo.getLackedRRuleEntities() == null || svRuleInfo.getLackedRRuleEntities().size() == 0){   //TODO:如果只保证历史状态为全参状态才能换参匹配，那么就要解开此注释，但本人思考，缺参状态也应该换参，保证新入实体信息给接收，这个还是根据后续效果来定吧
                 List<REntityWordInfo> matchedREntityWordInfos = svRuleInfo.getMatchedREntityWordInfos();                //取出已经匹配过的历史REWI集合记录
                 int historyMatchedREWISize = matchedREntityWordInfos.size() ;                                           //获取并收集每轮历史对话匹配集长度，后续用来计算个数占比
@@ -57,7 +64,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
 
         if(contextId_svRuleInfoMap.size() == 0) return new ComponentBizResult("CPMC_F");                      //如果没有收集到历史规则，就跳出去吧
 
-        Map<CoordinateKey, REntityWordInfo> hitCurrentREntityWordInfoMap = new HashMap<>();                             //关联数据Map<{sentenceVectorId, currentEntityType, currentEntityId}, hitCurrentREWI>
+        Map<String, REntityWordInfo> hitCurrentREntityWordInfoMap = new HashMap<>();                             //关联数据Map<{sentenceVectorId, currentEntityType, currentEntityId}, hitCurrentREWI>
         Map<String, Double> svIdcontextId_productValueMap = new HashMap<>();                                            //统计值Map<sentenceVectorId_contextId, 统计数据值>
         Integer maxValueSentenceVectorId = null;                                                                        //最高匹配值的sentenceVectorId（和下面的contextId绑定）
         Integer maxValueContextId = null;                                                                               //最高匹配值的ContextId
@@ -79,9 +86,8 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
 
                     List<REntityWordInfo> historyREntityWordInfos = historyREWIMap.get(currentEntityTypeId);            //历史端：尝试搜索此entityTypeId是否存在于历史匹配的REWI集合里面
                     if(historyREntityWordInfos != null && historyREntityWordInfos.size() > 0){                          //如果本次entityTypeId的REWI碰上了历史REWI集合
-                        CoordinateKey coordinateKey = new CoordinateKey(sentenceVectorId, currentEntityType, currentEntityId);  //构建此唯一变量组作为key
                         //1.先将获得的能匹配上的 currentREntityWordInfo 对象放到关联Map中
-                        hitCurrentREntityWordInfoMap.put(coordinateKey, currentREntityWordInfo);
+                        hitCurrentREntityWordInfoMap.put(sentenceVectorId + "_" + currentEntityType + "_" + currentEntityId, currentREntityWordInfo);
 
                         for (REntityWordInfo historyREntityWordInfo : historyREntityWordInfos) {
                             //2.获取此historyREWI的相关数据，对其值累计到统计数据中
@@ -116,9 +122,21 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
             }
         }
 
+        CPMCalulationLogParam cpmCalculationLogParam = null;
+        if(calculationLogType != Constant.NO_CALCULATION_LOG) {
+            cpmCalculationLogParam = new CPMCalulationLogParam();
+            cpmCalculationLogParam.setContextId_svRuleInfoMap(contextId_svRuleInfoMap);
+            cpmCalculationLogParam.setHistoryREWIMap(historyREWIMap);
+            cpmCalculationLogParam.setHitCurrentREntityWordInfoMap(hitCurrentREntityWordInfoMap);
+            cpmCalculationLogParam.setSvIdcontextId_productValueMap(svIdcontextId_productValueMap);
+            cpmCalculationLogParam.setMaxValueSentenceVectorId(maxValueSentenceVectorId);
+            cpmCalculationLogParam.setMaxValueContextId(maxValueContextId);
+            cpmCalculationLogParam.setMaxValue(maxValue);
+        }
+
         if(maxValueContextId != null){
             //3.换参，设置历史规则为当前匹配规则：设置changeParamOptimalSvRuleInfo，并修改里面替换的参数，包括words和matchedREntityWordInfos
-            SVRuleInfo changeParamOptimalSvRuleInfo = contextId_svRuleInfoMap.get(maxValueContextId);                   //这里通过maxValueContextId获取的SVRuleInfo对象作为换参匹配返回的changeParamOptimalSvRuleInfo，有待后面对比全参匹配进行选择
+            SVRuleInfo changeParamOptimalSvRuleInfo = contextId_svRuleInfoMap.get(maxValueContextId + "");                   //这里通过maxValueContextId获取的SVRuleInfo对象作为换参匹配返回的changeParamOptimalSvRuleInfo，有待后面对比全参匹配进行选择
             changeParamOptimalSvRuleInfo.setMatchType(Constant.CPM);                                                   //设置匹配类型
 //            changeParamOptimalSvRuleInfo.setAlgorithmType(?);        //这个只从历史记录里面取的，以前是什么，现在还是什么，无需设置。
             List<String> words = changeParamOptimalSvRuleInfo.getWords();
@@ -129,8 +147,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                 Integer entityType = matchedREntityWordInfo.getEntityType();
                 Integer entityId = matchedREntityWordInfo.getEntityId();
                 Map<Integer, Double> historyWeightMap = matchedREntityWordInfo.getWeightMap();
-                CoordinateKey coordinateKey = new CoordinateKey(maxValueSentenceVectorId, entityType, entityId);
-                REntityWordInfo hitCurrentREntityWordInfo = hitCurrentREntityWordInfoMap.get(coordinateKey);
+                REntityWordInfo hitCurrentREntityWordInfo = hitCurrentREntityWordInfoMap.get(maxValueSentenceVectorId + "_" + entityType + "_" + entityId);
                 if(hitCurrentREntityWordInfo != null){
                     hitCurrentREntityWordInfo.setContextId(currentContextId);
                     hitCurrentREntityWordInfo.setWeightMap(historyWeightMap);                                           //注意权重还是要用历史规则里面REWI里面的权重
@@ -163,14 +180,23 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                 }
             }
             currentHitEntityWeightRate = svIdcontextId_productValueMap.get(maxValueSentenceVectorId + "_" + maxValueContextId + "_currentEntityWeight");
-
             if(historyEntitiesCount <= currentEntitiesCount || currentCoreEntitiesCount > 2 || currentHitEntityWeightRate < 0.6d){  //有这3个条件之一的，我心里就不踏实了，就强制它走一遍全参匹配
                 changeParamOptimalSvRuleInfo.setEnsureFinal(false);
             }else{
                 changeParamOptimalSvRuleInfo.setEnsureFinal(true);
             }
+            if(calculationLogType != Constant.NO_CALCULATION_LOG){
+                cpmCalculationLogParam.setChangeParamOptimalSvRuleInfo(changeParamOptimalSvRuleInfo);
+                cpmCalculationLogParam.setHistoryEntitiesCount(historyEntitiesCount);
+                cpmCalculationLogParam.setCurrentEntitiesCount(currentEntitiesCount);
+                cpmCalculationLogParam.setCurrentCoreEntitiesCount(currentCoreEntitiesCount);
+                cpmCalculationLogParam.setCurrentHitEntityWeightRate(currentHitEntityWeightRate);
+                System.out.println(JSON.toJSONString(cpmCalculationLogParam));
+            }
+
             return new ComponentBizResult("CPMC_S", Constant.STORE_LOCAL_REMOTE, changeParamOptimalSvRuleInfo);   //此结果在本地和远程都要存储
         }else{
+            System.out.println(JSON.toJSONString(cpmCalculationLogParam));
             return new ComponentBizResult("CPMC_F");
         }
     }

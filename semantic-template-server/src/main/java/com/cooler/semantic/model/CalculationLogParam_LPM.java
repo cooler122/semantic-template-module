@@ -3,11 +3,11 @@ package com.cooler.semantic.model;
 import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.model.console.AmnesiacData;
 import com.cooler.semantic.model.console.CoupleAlterationRateData;
-import com.cooler.semantic.model.console.SimilarityCalculationData;
+import com.cooler.semantic.model.console.SimilarityCalculationData_LPM;
 
 import java.util.*;
 
-public class LPMCalculationLogParam {
+public class CalculationLogParam_LPM {
 
     //------------------------------------------------------------------------------------------------------------------1.原始数据
     /**
@@ -32,7 +32,7 @@ public class LPMCalculationLogParam {
     private List<AmnesiacData> amnesiacDatas = new ArrayList<>();
 
     //------------------------------------------------------------------------------------------------------------------4.（集合）相似度计算中数据
-    private List<SimilarityCalculationData> similarityCalculationDatas = new ArrayList<>();
+    private List<SimilarityCalculationData_LPM> similarityCalculationDataLPMS = new ArrayList<>();
 
     //------------------------------------------------------------------------------------------------------------------5.最优数据
     private SVRuleInfo lpmSVRuleInfo;
@@ -82,12 +82,12 @@ public class LPMCalculationLogParam {
         this.amnesiacDatas = amnesiacDatas;
     }
 
-    public List<SimilarityCalculationData> getSimilarityCalculationDatas() {
-        return similarityCalculationDatas;
+    public List<SimilarityCalculationData_LPM> getSimilarityCalculationDataLPMS() {
+        return similarityCalculationDataLPMS;
     }
 
-    public void setSimilarityCalculationDatas(List<SimilarityCalculationData> similarityCalculationDatas) {
-        this.similarityCalculationDatas = similarityCalculationDatas;
+    public void setSimilarityCalculationDataLPMS(List<SimilarityCalculationData_LPM> similarityCalculationDataLPMS) {
+        this.similarityCalculationDataLPMS = similarityCalculationDataLPMS;
     }
 
     public SVRuleInfo getLpmSVRuleInfo() {
@@ -112,10 +112,10 @@ public class LPMCalculationLogParam {
             Integer historyContextId = amnesiacData.getHistoryContextId();
             jsonDataMap.put("amnesiacData_" + currentContextId + "_" + historyContextId, JSON.toJSONString(amnesiacData));
         }
-        for (SimilarityCalculationData similarityCalculationData : similarityCalculationDatas) {
-            Integer sentenceVectorId = similarityCalculationData.getSentenceVectorId();
-            Integer contextId = similarityCalculationData.getContextId();
-            jsonDataMap.put("similarityCalculationData_" + sentenceVectorId + "_" + contextId, JSON.toJSONString(similarityCalculationData));
+        for (SimilarityCalculationData_LPM similarityCalculationDataLPM : similarityCalculationDataLPMS) {
+            Integer sentenceVectorId = similarityCalculationDataLPM.getSentenceVectorId();
+            Integer contextId = similarityCalculationDataLPM.getContextId();
+            jsonDataMap.put("similarityCalculationData_" + sentenceVectorId + "_" + contextId, JSON.toJSONString(similarityCalculationDataLPM));
         }
         jsonDataMap.put("lpmSVRuleInfo", JSON.toJSONString(lpmSVRuleInfo));
         return jsonDataMap;

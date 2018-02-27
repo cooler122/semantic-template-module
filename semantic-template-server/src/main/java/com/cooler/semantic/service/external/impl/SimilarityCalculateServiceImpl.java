@@ -2,9 +2,10 @@ package com.cooler.semantic.service.external.impl;
 
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.RRuleEntity;
+import com.cooler.semantic.model.CalculationLogParam_FPM;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
-import com.cooler.semantic.model.console.SimilarityCalculationData;
+import com.cooler.semantic.model.console.SimilarityCalculationData_LPM;
 import com.cooler.semantic.service.external.SimilarityCalculateService;
 import com.cooler.semantic.util.AlgorithmUtil;
 import org.springframework.stereotype.Service;
@@ -14,16 +15,16 @@ import java.util.*;
 public class SimilarityCalculateServiceImpl implements SimilarityCalculateService {
 
     @Override
-    public List<SVRuleInfo> similarityCalculate_FPM(Integer algorithmType, List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap) {
+    public List<SVRuleInfo> similarityCalculate_FPM(Integer algorithmType, List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap, CalculationLogParam_FPM calculationLogParam_fpm) {
         switch (algorithmType){
             case Constant.JACCARD_VOLUME_RATE : {                                                                   //jaccard相似度（只关注实体数量占有率）
-                return jaccardSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_VOLUME_RATE);
+                return jaccardSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_VOLUME_RATE, calculationLogParam_fpm);
             }
             case Constant.JACCARD_WEIGHT_RATE : {                                                                   //jaccard相似度（只关注实体权重占有率）
-                return jaccardSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_WEIGHT_RATE);
+                return jaccardSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_WEIGHT_RATE, calculationLogParam_fpm);
             }
             case Constant.JACCARD_VOLUME_WEIGHT_RATE : {                                                           //jaccard相似度（实体数量和权重占有率之乘积）
-                return jaccardSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_VOLUME_WEIGHT_RATE);            //TODO:jaccard算法的两个因子还可以用更复杂的组合方式进行调节
+                return jaccardSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_VOLUME_WEIGHT_RATE, calculationLogParam_fpm);            //TODO:jaccard算法的两个因子还可以用更复杂的组合方式进行调节
             }
             case Constant.COSINE : {                                                                                   //余弦相似度
                 return cosineSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap);
@@ -32,22 +33,22 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                 return pearsonSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap);
             }
             default:{
-                return jaccardSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_VOLUME_WEIGHT_RATE);
+                return jaccardSimilarity_FPM(svRuleInfos, ruleId_RRuleEntityDataMap, Constant.JACCARD_VOLUME_WEIGHT_RATE, calculationLogParam_fpm);
             }
         }
     }
 
     @Override
-    public SVRuleInfo similarityCalculate_LPM(Integer algorithmType, SVRuleInfo historySvRuleInfo, Map<String, RRuleEntity> rRuleEntityMap, SimilarityCalculationData similarityCalculationData) {
+    public SVRuleInfo similarityCalculate_LPM(Integer algorithmType, SVRuleInfo historySvRuleInfo, Map<String, RRuleEntity> rRuleEntityMap, SimilarityCalculationData_LPM similarityCalculationData_lpm) {
         switch (algorithmType){
             case Constant.JACCARD_VOLUME_RATE : {                                                                   //jaccard相似度（只关注实体数量占有率）
-                return jaccardSimilarity_LMP(historySvRuleInfo, rRuleEntityMap, Constant.JACCARD_VOLUME_RATE, similarityCalculationData);
+                return jaccardSimilarity_LMP(historySvRuleInfo, rRuleEntityMap, Constant.JACCARD_VOLUME_RATE, similarityCalculationData_lpm);
             }
             case Constant.JACCARD_WEIGHT_RATE : {                                                                   //jaccard相似度（只关注实体权重占有率）
-                return jaccardSimilarity_LMP(historySvRuleInfo, rRuleEntityMap, Constant.JACCARD_WEIGHT_RATE, similarityCalculationData);
+                return jaccardSimilarity_LMP(historySvRuleInfo, rRuleEntityMap, Constant.JACCARD_WEIGHT_RATE, similarityCalculationData_lpm);
             }
             case Constant.JACCARD_VOLUME_WEIGHT_RATE : {                                                           //jaccard相似度（实体数量和权重占有率之乘积）
-                return jaccardSimilarity_LMP(historySvRuleInfo, rRuleEntityMap, Constant.JACCARD_VOLUME_WEIGHT_RATE, similarityCalculationData);            //TODO:jaccard算法的两个因子还可以用更复杂的组合方式进行调节
+                return jaccardSimilarity_LMP(historySvRuleInfo, rRuleEntityMap, Constant.JACCARD_VOLUME_WEIGHT_RATE, similarityCalculationData_lpm);            //TODO:jaccard算法的两个因子还可以用更复杂的组合方式进行调节
             }
             case Constant.COSINE : {                                                                                   //余弦相似度
                 return cosineSimilarity_LMP(historySvRuleInfo, rRuleEntityMap);
@@ -56,7 +57,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                 return pearsonSimilarity_LMP(historySvRuleInfo, rRuleEntityMap);
             }
             default:{
-                return jaccardSimilarity_LMP(historySvRuleInfo, rRuleEntityMap, Constant.JACCARD_VOLUME_WEIGHT_RATE, similarityCalculationData);
+                return jaccardSimilarity_LMP(historySvRuleInfo, rRuleEntityMap, Constant.JACCARD_VOLUME_WEIGHT_RATE, similarityCalculationData_lpm);
             }
         }
     }
@@ -69,7 +70,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
      * @param typeId    JACCARD_VOLUME_RATE 只考虑实体数量占比率；JACCARD_WEIGHT_RATE 只考虑实体权重占比率； JACCARD_VOLUME_WEIGHT_RATE 考虑两则的乘积
      * @return
      */
-    private List<SVRuleInfo> jaccardSimilarity_FPM(List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap, int typeId){
+    private List<SVRuleInfo> jaccardSimilarity_FPM(List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap, int typeId, CalculationLogParam_FPM calculationLogParam_fpm){
         for (SVRuleInfo svRuleInfo : svRuleInfos) {                                                                     //下面是3层循环，所以svRuleInfos在前面做了优化，限定数量最多为5个
             //1.准备好两方数据：句子向量的的数据在svRuleInfo的rEntityWordInfosList里面和外面；其绑定的rule的数据，全部放在入参rRuleEntityMap里面
             String sentence = svRuleInfo.getSentence();
@@ -321,20 +322,20 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
      * @param typeId JACCARD_VOLUME_RATE 只考虑实体数量占比率；JACCARD_WEIGHT_RATE 只考虑实体权重占比率； JACCARD_VOLUME_WEIGHT_RATE 考虑两则的乘积
      * @return
      */
-    private SVRuleInfo jaccardSimilarity_LMP(SVRuleInfo historySvRuleInfo, Map<String, RRuleEntity> rRuleEntityMap, int typeId, SimilarityCalculationData similarityCalculationData) {
+    private SVRuleInfo jaccardSimilarity_LMP(SVRuleInfo historySvRuleInfo, Map<String, RRuleEntity> rRuleEntityMap, int typeId, SimilarityCalculationData_LPM similarityCalculationData_lpm) {
         //1.准备好两方数据：句子向量的的数据在svRuleInfo的matchedREntityWordInfos；其绑定的rule的数据，全部放在入参rRuleEntityMap里面
         Integer sentenceVectorId = historySvRuleInfo.getSentenceVectorId();
         String sentence = historySvRuleInfo.getSentence();
         List<REntityWordInfo> matchedREntityWordInfos = historySvRuleInfo.getMatchedREntityWordInfos();                 //选择上的REW关系集合（不同分词模式选择的REW集合不同）
         int sectionSize = matchedREntityWordInfos.size();
-        if(similarityCalculationData != null){                                                                          //*********************准备缺参日志记录对象
-            List<String> intersectionEntityVolumnRates = similarityCalculationData.getIntersectionEntityVolumnRates();
-            List<String> intersectionEntityWeightRates = similarityCalculationData.getIntersectionEntityWeightRates();
+        if(similarityCalculationData_lpm != null){                                                                          //*********************准备缺参日志记录对象
+            List<String> intersectionEntityVolumnRates = similarityCalculationData_lpm.getIntersectionEntityVolumnRates();
+            List<String> intersectionEntityWeightRates = similarityCalculationData_lpm.getIntersectionEntityWeightRates();
             if(intersectionEntityVolumnRates == null){
-                similarityCalculationData.setIntersectionEntityVolumnRates(new ArrayList<String>());
+                similarityCalculationData_lpm.setIntersectionEntityVolumnRates(new ArrayList<String>());
             }
             if(intersectionEntityWeightRates == null){
-                similarityCalculationData.setIntersectionEntityWeightRates(new ArrayList<String>());
+                similarityCalculationData_lpm.setIntersectionEntityWeightRates(new ArrayList<String>());
             }
         }
 
@@ -343,7 +344,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
         Double similarity = 0d;
         Double intersectionVolumeRateOccupancy = 0d;
         Double intersectionWeightOccupancy = 0d;
-        for(int i = 0; i < matchedREntityWordInfos.size(); i ++){                                                       //遍历每一个分词段指定的实体集
+        for(int i = 0; i < matchedREntityWordInfos.size(); i ++){                                                      //遍历每一个分词段指定的实体集
             REntityWordInfo rEntityWordInfo = matchedREntityWordInfos.get(i);                                           //获取句子端REW
 
             String entityTypeId = rEntityWordInfo.getEntityTypeId();                                                    //获取关联的entityTypeId
@@ -352,7 +353,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                 //记录此句子向量中归属的实体成功匹配上绑定的规则中的一个实体了 //TODO: 那么规则中的rRuleEntity也可以在db中记录这一次匹配，可以统计一个rRuleEntity的匹配次数
 //                System.out.println("Matched！ : 原句" + sentence + ",补充后：" + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
 
-                Double sv_volumeRate = 1.0d / sectionSize;                                                             //这一项在句子中的数量比重
+                Double sv_volumeRate = 1.0d / sectionSize;                                                              //这一项在句子中的数量比重
                 Double rule_volumeRate = rRuleEntity.getVolumeRate();                                                        //这一项在规则中的数量比重
                 intersectionVolumeRateOccupancy = intersectionVolumeRateOccupancy + sv_volumeRate + rule_volumeRate;        //积累数量比重
 
@@ -361,9 +362,9 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                 Double rule_weightRate = rRuleEntity.getWeight();                                                           //rule模板中，这个实体在rule中的权重
                 intersectionWeightOccupancy = intersectionWeightOccupancy + sv_weightRate + rule_weightRate;                    //积累权重比重
 
-                if(similarityCalculationData != null){                                                                  //*************************算法内部日志准备：此对象不为null，即表示需要收集日志
-                    List<String> intersectionEntityVolumnRates = similarityCalculationData.getIntersectionEntityVolumnRates();
-                    List<String> intersectionEntityWeightRates = similarityCalculationData.getIntersectionEntityWeightRates();
+                if(similarityCalculationData_lpm != null){                                                                  //*************************算法内部日志准备：此对象不为null，即表示需要收集日志
+                    List<String> intersectionEntityVolumnRates = similarityCalculationData_lpm.getIntersectionEntityVolumnRates();
+                    List<String> intersectionEntityWeightRates = similarityCalculationData_lpm.getIntersectionEntityWeightRates();
                     StringBuffer volumnRateSB = new StringBuffer();
                     StringBuffer weightRateSB = new StringBuffer();
                     volumnRateSB.append("( ").append(rRuleEntity.getEntityId()).append("_").append(rRuleEntity.getEntityName()).append(" )_").append(sv_volumeRate).append("_").append(rule_volumeRate);
@@ -380,29 +381,29 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
         switch (typeId){
             case Constant.JACCARD_VOLUME_RATE : {
                 similarity = intersectionVolumeRateOccupancy;
-                if(similarityCalculationData != null){                                                                  //*************************算法内部日志准备
-                    similarityCalculationData.setSimilarityValue(similarity + " --> " + intersectionVolumeRateOccupancy);
+                if(similarityCalculationData_lpm != null){                                                                  //*************************算法内部日志准备
+                    similarityCalculationData_lpm.setSimilarityValue(similarity + " --> " + intersectionVolumeRateOccupancy);
                 }
                 break;
             }
             case Constant.JACCARD_WEIGHT_RATE : {
                 similarity = intersectionWeightOccupancy;
-                if(similarityCalculationData != null){                                                                  //*************************算法内部日志准备
-                    similarityCalculationData.setSimilarityValue(similarity + " --> " + intersectionWeightOccupancy);
+                if(similarityCalculationData_lpm != null){                                                                  //*************************算法内部日志准备
+                    similarityCalculationData_lpm.setSimilarityValue(similarity + " --> " + intersectionWeightOccupancy);
                 }
                 break;
             }
             case Constant.JACCARD_VOLUME_WEIGHT_RATE : {
                 similarity = intersectionVolumeRateOccupancy * intersectionWeightOccupancy;
-                if(similarityCalculationData != null){                                                                  //*************************算法内部日志准备
-                    similarityCalculationData.setSimilarityValue(similarity + " --> " + intersectionVolumeRateOccupancy + " * " + intersectionWeightOccupancy);
+                if(similarityCalculationData_lpm != null){                                                                  //*************************算法内部日志准备
+                    similarityCalculationData_lpm.setSimilarityValue(similarity + " --> " + intersectionVolumeRateOccupancy + " * " + intersectionWeightOccupancy);
                 }
                 break;
             }
             default:{
                 similarity = intersectionVolumeRateOccupancy * intersectionWeightOccupancy;
-                if(similarityCalculationData != null){                                                                  //*************************算法内部日志准备
-                    similarityCalculationData.setSimilarityValue(similarity + " --> " + intersectionVolumeRateOccupancy + " * " + intersectionWeightOccupancy);
+                if(similarityCalculationData_lpm != null){                                                                  //*************************算法内部日志准备
+                    similarityCalculationData_lpm.setSimilarityValue(similarity + " --> " + intersectionVolumeRateOccupancy + " * " + intersectionWeightOccupancy);
                 }
             }
         }

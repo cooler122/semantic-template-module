@@ -4,7 +4,7 @@ import com.cooler.semantic.model.REntityWordInfo;
 
 import java.util.List;
 
-public class SimilarityCalculationData{
+public class SimilarityCalculationData_LPM {
 
         /**
          * 1.句子向量ID

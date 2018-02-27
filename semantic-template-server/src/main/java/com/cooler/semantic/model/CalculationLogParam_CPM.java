@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CPMCalulationLogParam {
+public class CalculationLogParam_CPM {
 
     //------------------------------------------------------------------------------------------------------------------1.历史数据
     /**

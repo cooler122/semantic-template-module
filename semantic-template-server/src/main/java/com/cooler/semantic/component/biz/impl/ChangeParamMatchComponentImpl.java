@@ -122,9 +122,9 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
             }
         }
 
-        CPMCalulationLogParam cpmCalculationLogParam = null;
+        CalculationLogParam_CPM cpmCalculationLogParam = null;
         if(calculationLogType != Constant.NO_CALCULATION_LOG) {
-            cpmCalculationLogParam = new CPMCalulationLogParam();
+            cpmCalculationLogParam = new CalculationLogParam_CPM();
             cpmCalculationLogParam.setContextId_svRuleInfoMap(contextId_svRuleInfoMap);
             cpmCalculationLogParam.setHistoryREWIMap(historyREWIMap);
             cpmCalculationLogParam.setHitCurrentREntityWordInfoMap(hitCurrentREntityWordInfoMap);

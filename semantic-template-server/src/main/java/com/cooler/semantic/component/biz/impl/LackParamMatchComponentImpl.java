@@ -14,8 +14,8 @@ import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.model.SentenceVector;
 import com.cooler.semantic.model.console.AmnesiacData;
 import com.cooler.semantic.model.console.CoupleAlterationRateData;
-import com.cooler.semantic.model.LPMCalculationLogParam;
-import com.cooler.semantic.model.console.SimilarityCalculationData;
+import com.cooler.semantic.model.CalculationLogParam_LPM;
+import com.cooler.semantic.model.console.SimilarityCalculationData_LPM;
 import com.cooler.semantic.service.external.RedisService;
 import com.cooler.semantic.service.external.SimilarityCalculateService;
 import org.slf4j.Logger;
@@ -53,26 +53,26 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
         SemanticParserRequest request = dataComponent.getData();
         int algorithmType = request.getAlgorithmType();                                                                 //由用户选择使用哪种算法（当前1~5种， 默认JACCARD_VOLUME_WEIGHT_RATE）
         int calculationLogType = request.getCalculationLogType();                                                       //由用户选择何种类型打印计算日志
-        LPMCalculationLogParam lpmCalculationLogParam = null;
+        CalculationLogParam_LPM calculationLogParamLPM = null;
         List<CoupleAlterationRateData> coupleAlterationRateDatas = null;
         List<AmnesiacData> amnesiacDatas = null;
-        List<SimilarityCalculationData> similarityCalculationDatas = null;
+        List<SimilarityCalculationData_LPM> similarityCalculationDataLPMS = null;
         Integer currentContextId = contextOwner.getContextId();
         SVRuleInfo lpm_optimalSvRuleInfo = null;                                                                        //选择的最匹配的历史记录
         Double maxSimilarityDistance = 0d;
         Integer bestContextId = null;
 
         if(calculationLogType != Constant.NO_CALCULATION_LOG){
-            lpmCalculationLogParam = new LPMCalculationLogParam();
+            calculationLogParamLPM = new CalculationLogParam_LPM();
         }
-        this.saveCalculationLog(calculationLogType, CalculationLogDataType.sentenceVectors , lpmCalculationLogParam, sentenceVectors);                  //*****************缺参日志准备：1-1
+        this.saveCalculationLog(calculationLogType, CalculationLogDataType.sentenceVectors , calculationLogParamLPM, sentenceVectors);                  //*****************缺参日志准备：1-1
 
         String canceledLPMContextIdSet_DataName = accountId + "_" + userId + "_canceledLPMContextIdSet";
         DataComponentBase<Set<Integer>> canceledLPMContextIdData = (DataComponentBase<Set<Integer>>)redisService.getCacheObject(canceledLPMContextIdSet_DataName);
         Set<Integer> canceledLPMContextIdSet = null;
         if(canceledLPMContextIdData != null){
             canceledLPMContextIdSet = canceledLPMContextIdData.getData();
-            this.saveCalculationLog(calculationLogType, CalculationLogDataType.canceledLPMContextIdSet , lpmCalculationLogParam, canceledLPMContextIdSet);     //*****************缺参日志准备：1-1
+            this.saveCalculationLog(calculationLogType, CalculationLogDataType.canceledLPMContextIdSet , calculationLogParamLPM, canceledLPMContextIdSet);     //*****************缺参日志准备：1-1
         }else{
             canceledLPMContextIdSet = new HashSet();
         }
@@ -92,7 +92,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                 }
             }
         }
-        this.saveCalculationLog(calculationLogType, CalculationLogDataType.historySVRuleInfoMap , lpmCalculationLogParam, historySVRuleInfoMap);        //*****************缺参日志准备：1-2
+        this.saveCalculationLog(calculationLogType, CalculationLogDataType.historySVRuleInfoMap , calculationLogParamLPM, historySVRuleInfoMap);        //*****************缺参日志准备：1-2
 
         //2.遍历本轮参数的每个句子向量
         for (SentenceVector sentenceVector : sentenceVectors) {
@@ -201,17 +201,17 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                         }
 
                         //2.2.7.计算缺参相似度
-                        SimilarityCalculationData similarityCalculationData = null;
+                        SimilarityCalculationData_LPM similarityCalculationDataLPM = null;
                         if(calculationLogType != Constant.NO_CALCULATION_LOG){
-                            similarityCalculationData = new SimilarityCalculationData();
-                            similarityCalculationData.setSentenceVectorId(sentenceVectorId);
-                            similarityCalculationData.setContextId(currentContextId);
-                            similarityCalculationData.setSvInputREWIs(rEntityWordInfosList);
-                            similarityCalculationData.setRuleInputREWIs(historyMatchedREntityWordInfos);
-                            similarityCalculationData.setAlgorithmType(algorithmType);
-                            similarityCalculationData.setAlgorithmFormula(algorithmType + " 类型的相似度公式");
+                            similarityCalculationDataLPM = new SimilarityCalculationData_LPM();
+                            similarityCalculationDataLPM.setSentenceVectorId(sentenceVectorId);
+                            similarityCalculationDataLPM.setContextId(currentContextId);
+                            similarityCalculationDataLPM.setSvInputREWIs(rEntityWordInfosList);
+                            similarityCalculationDataLPM.setRuleInputREWIs(historyMatchedREntityWordInfos);
+                            similarityCalculationDataLPM.setAlgorithmType(algorithmType);
+                            similarityCalculationDataLPM.setAlgorithmFormula(algorithmType + " 类型的相似度公式");
                         }
-                        SVRuleInfo resultSvRuleInfo = similarityCalculateService.similarityCalculate_LPM(algorithmType, historySvRuleInfo, historyMatchedRRuleEntityMap, similarityCalculationData);      //计算相似度，historySvRuleInfo -> historyMatchedREntityWordInfos -> 相关的historyMatchedREntityWeightMap中的权重已经改变
+                        SVRuleInfo resultSvRuleInfo = similarityCalculateService.similarityCalculate_LPM(algorithmType, historySvRuleInfo, historyMatchedRRuleEntityMap, similarityCalculationDataLPM);      //计算相似度，historySvRuleInfo -> historyMatchedREntityWordInfos -> 相关的historyMatchedREntityWeightMap中的权重已经改变
 //                        System.out.println(algorithmType + "\n" + JSON.toJSONString(historySvRuleInfo) + "\n" + JSON.toJSONString(historyMatchedRRuleEntityMap) + "\n --- > \n" + JSON.toJSONString(resultSvRuleInfo));
                         Double currentSimilarity = resultSvRuleInfo.getSimilarity();
 
@@ -253,10 +253,10 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                             amnesiacData.setCoefficient(amnesiacCoefficient);
                             amnesiacDatas.add(amnesiacData);
 
-                            if(similarityCalculationDatas == null){
-                                similarityCalculationDatas = new ArrayList<>();
+                            if(similarityCalculationDataLPMS == null){
+                                similarityCalculationDataLPMS = new ArrayList<>();
                             }
-                            similarityCalculationDatas.add(similarityCalculationData);
+                            similarityCalculationDataLPMS.add(similarityCalculationDataLPM);
 
                         }
                     }
@@ -265,9 +265,9 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
             }
         }
 
-        this.saveCalculationLog(calculationLogType, CalculationLogDataType.coupleAlterationRateDatas , lpmCalculationLogParam, coupleAlterationRateDatas);          //*****************缺参日志准备：2
-        this.saveCalculationLog(calculationLogType, CalculationLogDataType.amnesiacDatas , lpmCalculationLogParam, amnesiacDatas);                                  //*****************缺参日志准备：3
-        this.saveCalculationLog(calculationLogType, CalculationLogDataType.similarityCalculationDatas , lpmCalculationLogParam, similarityCalculationDatas);        //*****************缺参日志准备：4
+        this.saveCalculationLog(calculationLogType, CalculationLogDataType.coupleAlterationRateDatas , calculationLogParamLPM, coupleAlterationRateDatas);          //*****************缺参日志准备：2
+        this.saveCalculationLog(calculationLogType, CalculationLogDataType.amnesiacDatas , calculationLogParamLPM, amnesiacDatas);                                  //*****************缺参日志准备：3
+        this.saveCalculationLog(calculationLogType, CalculationLogDataType.similarityCalculationDatas , calculationLogParamLPM, similarityCalculationDataLPMS);        //*****************缺参日志准备：4
 
 
         //3.此处缺参匹配已经匹配成功，既然已经选定了一个SVRuleInfo对象作为lpm_optimalSvRuleInfo，那么要完善此处的lpm_optimalSvRuleInfo内部结构体
@@ -281,8 +281,8 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
             }
             lpm_optimalSvRuleInfo.setWords(wordsModified);
 
-            this.saveCalculationLog(calculationLogType, CalculationLogDataType.lpmSVRuleInfo , lpmCalculationLogParam, lpm_optimalSvRuleInfo);        //*****************缺参日志准备：5
-            System.out.println(JSON.toJSONString(lpmCalculationLogParam));
+            this.saveCalculationLog(calculationLogType, CalculationLogDataType.lpmSVRuleInfo , calculationLogParamLPM, lpm_optimalSvRuleInfo);        //*****************缺参日志准备：5
+            System.out.println(JSON.toJSONString(calculationLogParamLPM));
 
             canceledLPMContextIdSet.add(bestContextId);
             redisService.setCacheObject(canceledLPMContextIdSet_DataName, new DataComponentBase(outputDataBeanId, contextOwner, HashSet.class.getSimpleName(), canceledLPMContextIdSet));
@@ -305,38 +305,38 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
      * 保存计算日志的数据
      * @param calculationLogType
      * @param calculationLogDataType
-     * @param lpmCalculationLogParam
+     * @param calculationLogParamLPM
      * @param data
      */
-    private void saveCalculationLog(int calculationLogType, CalculationLogDataType calculationLogDataType, LPMCalculationLogParam lpmCalculationLogParam, Object data){
+    private void saveCalculationLog(int calculationLogType, CalculationLogDataType calculationLogDataType, CalculationLogParam_LPM calculationLogParamLPM, Object data){
         if(calculationLogType != Constant.NO_CALCULATION_LOG && data != null){
             switch (calculationLogDataType){
                 case sentenceVectors : {
-                    lpmCalculationLogParam.setSentenceVectors((List<SentenceVector>)data);
+                    calculationLogParamLPM.setSentenceVectors((List<SentenceVector>)data);
                     break;
                 }
                 case historySVRuleInfoMap : {
-                    lpmCalculationLogParam.setHistorySVRuleInfoMap((Map<Integer, SVRuleInfo>)data);
+                    calculationLogParamLPM.setHistorySVRuleInfoMap((Map<Integer, SVRuleInfo>)data);
                     break;
                 }
                 case canceledLPMContextIdSet : {
-                    lpmCalculationLogParam.setCanceledLPMContextIdSet((Set)data);
+                    calculationLogParamLPM.setCanceledLPMContextIdSet((Set)data);
                     break;
                 }
                 case coupleAlterationRateDatas : {
-                    lpmCalculationLogParam.setCoupleAlterationRateDatas((List<CoupleAlterationRateData>)data);
+                    calculationLogParamLPM.setCoupleAlterationRateDatas((List<CoupleAlterationRateData>)data);
                     break;
                 }
                 case amnesiacDatas : {
-                    lpmCalculationLogParam.setAmnesiacDatas((List<AmnesiacData>)data);
+                    calculationLogParamLPM.setAmnesiacDatas((List<AmnesiacData>)data);
                     break;
                 }
                 case similarityCalculationDatas : {
-                    lpmCalculationLogParam.setSimilarityCalculationDatas((List<SimilarityCalculationData>)data);
+                    calculationLogParamLPM.setSimilarityCalculationDataLPMS((List<SimilarityCalculationData_LPM>)data);
                     break;
                 }
                 case lpmSVRuleInfo : {
-                    lpmCalculationLogParam.setLpmSVRuleInfo((SVRuleInfo)data);
+                    calculationLogParamLPM.setLpmSVRuleInfo((SVRuleInfo)data);
                     break;
                 }
             }

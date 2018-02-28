@@ -45,7 +45,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
     protected ComponentBizResult<Object> runBiz(ContextOwner contextOwner, List<SentenceVector> sentenceVectors) {
         logger.trace("LPMC.缺参匹配");
 
-        Integer accountId = contextOwner.getAccountId();
+        Integer accountId = contextOwner.getCoreAccountId();
         Integer userId = contextOwner.getUserId();
 
         //0.准备好用户配置数据
@@ -53,7 +53,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
         SemanticParserRequest request = dataComponent.getData();
         int algorithmType = request.getAlgorithmType();                                                                 //由用户选择使用哪种算法（当前1~5种， 默认JACCARD_VOLUME_WEIGHT_RATE）
         int calculationLogType = request.getCalculationLogType();                                                       //由用户选择何种类型打印计算日志
-        CalculationLogParam_LPM calculationLogParamLPM = null;
+        CalculationLogParam_LPM calculationLogParam_lpm = null;
         List<CoupleAlterationRateData> coupleAlterationRateDatas = null;
         List<AmnesiacData> amnesiacDatas = null;
         List<SimilarityCalculationData_LPM> similarityCalculationDataLPMS = null;
@@ -63,16 +63,16 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
         Integer bestContextId = null;
 
         if(calculationLogType != Constant.NO_CALCULATION_LOG){
-            calculationLogParamLPM = new CalculationLogParam_LPM();
+            calculationLogParam_lpm = new CalculationLogParam_LPM();
         }
-        this.saveCalculationLog(calculationLogType, CalculationLogDataType.sentenceVectors , calculationLogParamLPM, sentenceVectors);                  //*****************缺参日志准备：1-1
+        this.saveCalculationLog(calculationLogType, CalculationLogDataType.sentenceVectors , calculationLogParam_lpm, sentenceVectors);                  //*****************缺参日志准备：1-1
 
         String canceledLPMContextIdSet_DataName = accountId + "_" + userId + "_canceledLPMContextIdSet";
         DataComponentBase<Set<Integer>> canceledLPMContextIdData = (DataComponentBase<Set<Integer>>)redisService.getCacheObject(canceledLPMContextIdSet_DataName);
         Set<Integer> canceledLPMContextIdSet = null;
         if(canceledLPMContextIdData != null){
             canceledLPMContextIdSet = canceledLPMContextIdData.getData();
-            this.saveCalculationLog(calculationLogType, CalculationLogDataType.canceledLPMContextIdSet , calculationLogParamLPM, canceledLPMContextIdSet);     //*****************缺参日志准备：1-1
+            this.saveCalculationLog(calculationLogType, CalculationLogDataType.canceledLPMContextIdSet , calculationLogParam_lpm, canceledLPMContextIdSet);     //*****************缺参日志准备：1-1
         }else{
             canceledLPMContextIdSet = new HashSet();
         }
@@ -92,7 +92,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                 }
             }
         }
-        this.saveCalculationLog(calculationLogType, CalculationLogDataType.historySVRuleInfoMap , calculationLogParamLPM, historySVRuleInfoMap);        //*****************缺参日志准备：1-2
+        this.saveCalculationLog(calculationLogType, CalculationLogDataType.historySVRuleInfoMap , calculationLogParam_lpm, historySVRuleInfoMap);        //*****************缺参日志准备：1-2
 
         //2.遍历本轮参数的每个句子向量
         for (SentenceVector sentenceVector : sentenceVectors) {
@@ -265,9 +265,9 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
             }
         }
 
-        this.saveCalculationLog(calculationLogType, CalculationLogDataType.coupleAlterationRateDatas , calculationLogParamLPM, coupleAlterationRateDatas);          //*****************缺参日志准备：2
-        this.saveCalculationLog(calculationLogType, CalculationLogDataType.amnesiacDatas , calculationLogParamLPM, amnesiacDatas);                                  //*****************缺参日志准备：3
-        this.saveCalculationLog(calculationLogType, CalculationLogDataType.similarityCalculationDatas , calculationLogParamLPM, similarityCalculationDataLPMS);        //*****************缺参日志准备：4
+        this.saveCalculationLog(calculationLogType, CalculationLogDataType.coupleAlterationRateDatas , calculationLogParam_lpm, coupleAlterationRateDatas);          //*****************缺参日志准备：2
+        this.saveCalculationLog(calculationLogType, CalculationLogDataType.amnesiacDatas , calculationLogParam_lpm, amnesiacDatas);                                  //*****************缺参日志准备：3
+        this.saveCalculationLog(calculationLogType, CalculationLogDataType.similarityCalculationDatas , calculationLogParam_lpm, similarityCalculationDataLPMS);        //*****************缺参日志准备：4
 
 
         //3.此处缺参匹配已经匹配成功，既然已经选定了一个SVRuleInfo对象作为lpm_optimalSvRuleInfo，那么要完善此处的lpm_optimalSvRuleInfo内部结构体
@@ -281,12 +281,13 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
             }
             lpm_optimalSvRuleInfo.setWords(wordsModified);
 
-            this.saveCalculationLog(calculationLogType, CalculationLogDataType.lpmSVRuleInfo , calculationLogParamLPM, lpm_optimalSvRuleInfo);        //*****************缺参日志准备：5
-            System.out.println(JSON.toJSONString(calculationLogParamLPM));
+            this.saveCalculationLog(calculationLogType, CalculationLogDataType.lpmSVRuleInfo , calculationLogParam_lpm, lpm_optimalSvRuleInfo);        //*****************缺参日志准备：5
+            if(calculationLogType != Constant.NO_CALCULATION_LOG){
+                componentConstant.putDataComponent(new DataComponentBase("CalculationLogParam_LPM", contextOwner, "String", JSON.toJSONString(calculationLogParam_lpm)));     //保存缺参匹配的计算型日志
+            }
 
             canceledLPMContextIdSet.add(bestContextId);
-            redisService.setCacheObject(canceledLPMContextIdSet_DataName, new DataComponentBase(outputDataBeanId, contextOwner, HashSet.class.getSimpleName(), canceledLPMContextIdSet));
-
+            redisService.setCacheObject(canceledLPMContextIdSet_DataName, new DataComponentBase(outputDataBeanId, contextOwner, HashSet.class.getSimpleName(), canceledLPMContextIdSet));   //此处保存被选中的contextId到redis，下次使用时进行排查，进而避免无用匹配
         }
 
         return new ComponentBizResult("LPMC_S", Constant.STORE_LOCAL_REMOTE, lpm_optimalSvRuleInfo);      //无论结果是否为null，都要保存，此结果在本地和远程都要存储;

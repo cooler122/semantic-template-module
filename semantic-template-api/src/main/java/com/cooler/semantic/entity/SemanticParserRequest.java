@@ -14,7 +14,7 @@ public class SemanticParserRequest implements Serializable {
 
     //--------------------------------------------------------------------1.账户参数AP
     /**
-     * accountIds（账号列表，为了扩展查询匹配范围，可以传入多个账号，但是第一个一定要放核心账户ID，即coreAccountId）
+     * accountIds（从属的账号列表，为了扩展查询匹配范围，可以传入多个账号，但是第一个一定要放核心账户ID，即coreAccountId）
      */
     private List<Integer> accountIds;
 

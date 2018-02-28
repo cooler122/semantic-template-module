@@ -94,7 +94,7 @@ public class ReferenceRuleSearchComponentImpl extends FunctionComponentBase<SVRu
             }
             Integer enableReferRuleId = enableReferRuleIds.get(0);                                                      //需要指向的rule的ID编号
             Rule rule = ruleService.selectByPrimaryKey(enableReferRuleId);
-            List<RRuleEntity> lackRRuleEntities = rRuleEntityService.selectNecessaryByAIdRId(contextOwner.getAccountId(), enableReferRuleId);
+            List<RRuleEntity> lackRRuleEntities = rRuleEntityService.selectNecessaryByAIdRId(contextOwner.getCoreAccountId(), enableReferRuleId);
 
             String ruleName = rule.getRuleName();
             String baseMatchSentence = rule.getBaseMatchSentence();

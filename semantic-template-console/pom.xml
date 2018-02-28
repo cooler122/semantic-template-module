@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>semantic-template-module</artifactId>
         <groupId>com.cooler.semantic</groupId>
@@ -7,15 +7,103 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.cooler.semantic</groupId>
     <artifactId>semantic-template-console</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
+    <version>1.0-SNAPSHOT</version>
 
     <name>semantic-template-console</name>
     <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.spring.version>4.2.9.RELEASE</project.spring.version>
     </properties>
+
+    <build>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <!--<compilerId>eclipse</compilerId>-->
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.3.2</version>
+                <configuration>
+                    <verbose>true</verbose>
+                    <overwrite>true</overwrite>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>windows</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <classifier>windows</classifier>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <log.level>INFO</log.level>
+                <log.logDir>D:\mnt\work\semantic-template-module\logs\</log.logDir>
+                <debug.Path>D:\mnt\work\semantic-template-module\debugData\</debug.Path>
+                <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+                <jdbc.url><![CDATA[jdbc:mysql://127.0.0.1:3306/stm?useUnicode=true&amp;characterEncoding=utf-8&amp;noDatetimeStringSync=true]]></jdbc.url>
+                <jdbc.username>root</jdbc.username>
+                <jdbc.password>123456</jdbc.password>
+                <zookeeper.register.address>zookeeper://127.0.0.1:2181</zookeeper.register.address>              <!-- 服务注册中心地址 -->
+                <zookeeper.segmentation.address>zookeeper://127.0.0.1:2181</zookeeper.segmentation.address>     <!-- 分词服务地址 -->
+            </properties>
+        </profile>
+
+        <profile>
+            <id>mac</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <classifier>mac</classifier>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <log.level>INFO</log.level>
+                <log.logDir>/Users/zhangsheng/javaspace/locallogs/stm-logs/</log.logDir>
+                <debug.Path>/Users/zhangsheng/javaspace/locallogs/stm-debug-logs/</debug.Path>
+                <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+                <jdbc.url><![CDATA[jdbc:mysql://127.0.0.1:3306/stm?useUnicode=true&amp;characterEncoding=utf-8&amp;noDatetimeStringSync=true]]></jdbc.url>
+                <jdbc.username>root</jdbc.username>
+                <jdbc.password>!QAZ2wsx</jdbc.password>
+                <zookeeper.register.address>zookeeper://127.0.0.1:2181</zookeeper.register.address>             <!-- 服务注册中心地址 -->
+                <zookeeper.segmentation.address>zookeeper://127.0.0.1:2181</zookeeper.segmentation.address>     <!-- 分词服务地址 -->
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -24,5 +112,110 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- 日志相关 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.7</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>1.7.7</version>
+        </dependency>
+
+        <!-- mysql数据库连接 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.40</version>
+        </dependency>
+
+        <!-- redis相关 -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+
+        <!-- spring 相关 -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+            <version>1.7.10.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${project.spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${project.spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${project.spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${project.spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${project.spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${project.spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.8.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+
+        <!-- MyBatis相关 -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.20</version>
+        </dependency>
+
     </dependencies>
+
 </project>

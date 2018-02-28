@@ -36,7 +36,7 @@ public class SentenceProcessComponentImpl extends FunctionComponentBase<Semantic
         logger.trace("SPC.句子处理");
 
         //SO-2-1.多重分词（包含标词）
-        Integer accountId = contextOwner.getAccountId();                                                                //取出第一个accountId，进行分词
+        Integer accountId = contextOwner.getCoreAccountId();                                                                //取出第一个accountId，进行分词
         String cmd = bizData.getCmd();
         List<SentenceVectorParam> sentenceVectorParams = customizedSemanticFacade.semanticParse(cmd, accountId, Arrays.asList(1), true);
 

@@ -10,7 +10,7 @@
     <module>semantic-template-api</module>
     <module>semantic-template-server</module>
     <module>semantic-template-client</module>
-      <module>semantic-template-console</module>
+    <module>semantic-template-console</module>
   </modules>
 
   <packaging>pom</packaging>

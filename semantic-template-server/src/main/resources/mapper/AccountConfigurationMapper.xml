@@ -46,7 +46,7 @@
       short_conversation_memorized_count, long_conversation_memorized_count, 
       algorithm_type, process_log_type, calculation_log_type
       )
-    values (#{id,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
       #{canBreakContext,jdbcType=BIT}, #{canBatchQuery,jdbcType=BIT}, #{ruleMaxQueryCount,jdbcType=INTEGER}, 
       #{entityMaxQueryCount,jdbcType=INTEGER}, #{contextWaitTime,jdbcType=INTEGER}, #{accuracyThreshold,jdbcType=DOUBLE}, 
       #{shortConversationMemorizedCount,jdbcType=INTEGER}, #{longConversationMemorizedCount,jdbcType=INTEGER}, 

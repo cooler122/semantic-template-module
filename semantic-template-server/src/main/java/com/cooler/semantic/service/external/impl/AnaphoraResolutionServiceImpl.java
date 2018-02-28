@@ -27,7 +27,7 @@ public class AnaphoraResolutionServiceImpl implements AnaphoraResolutionService 
     @Override
     public Map<String, List<REntityWordInfo>> anaphoraResolution(ContextOwner contextOwner, Set<String> words) {
         //1.获取账户信息
-        Integer accountId = contextOwner.getAccountId();
+        Integer accountId = contextOwner.getCoreAccountId();
         String last1OwnerIndex = contextOwner.getLast1OwnerIndex();
 
         //2.获取上轮对话数据

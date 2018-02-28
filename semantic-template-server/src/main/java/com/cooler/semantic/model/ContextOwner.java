@@ -1,10 +1,13 @@
 package com.cooler.semantic.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class ContextOwner implements Serializable{
 
-    private Integer accountId;
+    private Integer coreAccountId;
+
+    private List<Integer> accountIds;
 
     private Integer userId;
 
@@ -20,18 +23,27 @@ public class ContextOwner implements Serializable{
 
     private String last4OwnerIndex;
 
-    public ContextOwner(Integer accountId, Integer userId, Integer contextId) {
-        this.accountId = accountId;
+    public ContextOwner(List<Integer> accountIds, Integer userId, Integer contextId) {
+        this.coreAccountId = accountIds.get(0);
+        this.accountIds = accountIds;
         this.userId = userId;
         this.contextId = contextId;
     }
 
-    public Integer getAccountId() {
-        return accountId;
+    public Integer getCoreAccountId() {
+        return accountIds.get(0);
     }
 
-    public void setAccountId(Integer accountId) {
-        this.accountId = accountId;
+    public void setCoreAccountId(Integer coreAccountId) {
+        this.coreAccountId = coreAccountId;
+    }
+
+    public List<Integer> getAccountIds() {
+        return accountIds;
+    }
+
+    public void setAccountIds(List<Integer> accountIds) {
+        this.accountIds = accountIds;
     }
 
     public Integer getUserId() {
@@ -51,55 +63,55 @@ public class ContextOwner implements Serializable{
     }
 
     public String getOwnerIndex() {
-        return accountId + "_" + userId + "_" + contextId;
+        return coreAccountId + "_" + userId + "_" + contextId;
     }
 
     public void setOwnerIndex(String ownerIndex) {
-        this.ownerIndex = accountId + "_" + userId + "_" + contextId;
+        this.ownerIndex = coreAccountId + "_" + userId + "_" + contextId;
     }
 
     public String getLast1OwnerIndex() {
-        return accountId + "_" + userId + "_" + (contextId - 1);
+        return coreAccountId + "_" + userId + "_" + (contextId - 1);
     }
 
     public void setLast1OwnerIndex(String last1OwnerIndex) {
-        this.last1OwnerIndex = accountId + "_" + userId + "_" + (contextId - 1);
+        this.last1OwnerIndex = coreAccountId + "_" + userId + "_" + (contextId - 1);
     }
 
     public String getLast2OwnerIndex() {
-        return accountId + "_" + userId + "_" + (contextId - 2);
+        return coreAccountId + "_" + userId + "_" + (contextId - 2);
     }
 
     public void setLast2OwnerIndex(String last2OwnerIndex) {
-        this.last2OwnerIndex = accountId + "_" + userId + "_" + (contextId - 2);
+        this.last2OwnerIndex = coreAccountId + "_" + userId + "_" + (contextId - 2);
     }
 
     public String getLast3OwnerIndex() {
-        return accountId + "_" + userId + "_" + (contextId - 3);
+        return coreAccountId + "_" + userId + "_" + (contextId - 3);
     }
 
     public void setLast3OwnerIndex(String last3OwnerIndex) {
-        this.last3OwnerIndex = accountId + "_" + userId + "_" + (contextId - 3);
+        this.last3OwnerIndex = coreAccountId + "_" + userId + "_" + (contextId - 3);
     }
 
     public String getLast4OwnerIndex() {
-        return accountId + "_" + userId + "_" + (contextId - 4);
+        return coreAccountId + "_" + userId + "_" + (contextId - 4);
     }
 
     public void setLast4OwnerIndex(String last4OwnerIndex) {
-        this.last4OwnerIndex = accountId + "_" + userId + "_" + (contextId - 4);
+        this.last4OwnerIndex = coreAccountId + "_" + userId + "_" + (contextId - 4);
     }
 
     public String getLastNOwnerIndex(int n){
         if(n > 5){                                                                                                      //规定最多不能回溯到前面5轮对话
             n = 5;
         }
-        return accountId + "_" + userId + "_" + (contextId - n);
+        return coreAccountId + "_" + userId + "_" + (contextId - n);
     }
 
     public String getLastNData(int n, String dataName){
         if(n > 5) n = 5;
-        return accountId + "_" + userId + "_" + (contextId - n) + "_" + dataName;
+        return coreAccountId + "_" + userId + "_" + (contextId - n) + "_" + dataName;
     }
 
     /**

@@ -8,65 +8,65 @@ public class CalculationLogParam_CPM {
 
     //------------------------------------------------------------------------------------------------------------------1.历史数据
     /**
-     * 历史记录数据
+     * 1.1.历史结果数据
      */
     private Map<String, SVRuleInfo> contextId_svRuleInfoMap = new HashMap<>();
 
     /**
-     * 历史REWIMap
+     * 1.2.历史REWIMap
      */
     Map<String, List<REntityWordInfo>> historyREWIMap = new HashMap<>();
 
     //------------------------------------------------------------------------------------------------------------------2.运行数据
     /**
-     * 关联到了的数据Map<{sentenceVectorId, currentEntityType, currentEntityId}, hitCurrentREWI>
+     * 2.1.关联到了的数据Map<{sentenceVectorId, currentEntityType, currentEntityId}, hitCurrentREWI>
      */
     Map<String, REntityWordInfo> hitCurrentREntityWordInfoMap = new HashMap<>();
 
     /**
-     * 统计值Map<sentenceVectorId_contextId, 统计数据值>
+     * 2.2.统计值Map<sentenceVectorId_contextId, 统计数据值>
      */
     Map<String, Double> svIdcontextId_productValueMap = new HashMap<>();
 
     /**
-     * 最高匹配值的sentenceVectorId（和下面的contextId绑定）
+     * 2.3.最高匹配值的sentenceVectorId（和下面的contextId绑定）
      */
     Integer maxValueSentenceVectorId = null;
 
     /**
-     * 最高匹配值的ContextId
+     * 2.4.最高匹配值的ContextId
      */
     Integer maxValueContextId = null;
 
     /**
-     * 最高匹配值（此值是匹配上的实体的(1d / currentSVSize * currentWeight) * 3 + (volumeIncrement * historyWeight)的和值）
+     * 2.5.最高匹配值（此值是匹配上的实体的(1d / currentSVSize * currentWeight) * 3 + (volumeIncrement * historyWeight)的和值）
      */
     Double maxValue = 0d;
 
     //------------------------------------------------------------------------------------------------------------------3.结果数据
     /**
-     * 换参匹配产生的最优SVRuleInfo
+     * 3.换参匹配产生的最优SVRuleInfo
      */
     SVRuleInfo changeParamOptimalSvRuleInfo = null;
 
     //------------------------------------------------------------------------------------------------------------------4.评判数据
     /**
-     * 历史规则里的实体数量
+     * 4.1.历史规则里的实体数量
      */
     int historyEntitiesCount = 0;
 
     /**
-     * 当前句子向量里的实体数量
+     * 4.2.当前句子向量里的实体数量
      */
     int currentEntitiesCount = 0;
 
     /**
-     * 当前核心实体数
+     * 4.3.当前核心实体数
      */
     int currentCoreEntitiesCount = 0;
 
     /**
-     * 可换参数所占的权重在句子向量中权重的占比
+     * 4.4.可换参数所占的权重在句子向量中权重的占比
      */
     double currentHitEntityWeightRate = 0d;
 

@@ -24,7 +24,7 @@ public class RuleSearchServiceImpl implements RuleSearchService {
             hitRuleEntityMaps = new ArrayList<>();
         }
 
-        Integer accountId = contextOwner.getAccountId();
+        Integer accountId = contextOwner.getCoreAccountId();
         List<SVRuleInfo> svRuleInfosTopFive = new ArrayList<>();                                                        //（前5名）真正用来计算相似度的RuleInfo对象
         List<SVRuleInfo> svRuleInfosBeyondFirstThreshold = new ArrayList<>();                                           //超过第一层规则端阈值的RuleInfo对象（收集了多种分词方式后形成的）
         for (int i = 0; i < sentenceVectors.size(); i ++) {

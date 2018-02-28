@@ -44,7 +44,7 @@
       base_match_sentence, state, create_time, 
       update_time)
     values (#{id,jdbcType=INTEGER}, #{ruleName,jdbcType=VARCHAR}, #{intentId,jdbcType=INTEGER}, 
-      #{senceId,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{originalSentence,jdbcType=VARCHAR}, 
+      #{senceId,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{originalSentence,jdbcType=VARCHAR},
       #{ruleTemplate,jdbcType=VARCHAR}, #{accuracyThreshold,jdbcType=DOUBLE}, #{ruleMsg,jdbcType=VARCHAR}, 
       #{baseMatchSentence,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})

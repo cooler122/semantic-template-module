@@ -2,32 +2,32 @@ package com.cooler.semantic.model.console;
 
 public class AmnesiacData{
         /**
-         * 1.当前上下文ID
+         * 1a.当前上下文ID
          */
         private Integer currentContextId;
 
         /**
-         * 2.历史上下文ID
+         * 1b.历史上下文ID
          */
         private Integer historyContextId;
 
         /**
-         * 3.上下文距离
+         * 1c.上下文距离
          */
         private int contextDistance;
 
         /**
-         * 4.失忆算法类型
+         * 2.失忆算法类型
          */
         private Integer amnesiacAlgorithmType;
 
         /**
-         * 5.底数
+         * 3.底数
          */
         private double baseNumber;
 
         /**
-         * 6.失忆系数
+         * 4.失忆系数
          */
         private double coefficient;
 

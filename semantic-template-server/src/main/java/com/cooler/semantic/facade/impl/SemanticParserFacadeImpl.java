@@ -33,7 +33,7 @@ public class SemanticParserFacadeImpl implements SemanticParserFacade {
         Integer coreAccountId = accountIds.get(0);                                                                     //用户账号
         Integer userId = request.getUserId();                                                                          //用户编号
         Integer contextId = request.getContextId();                                                                    //上下文编号
-        ContextOwner contextOwner = new ContextOwner(coreAccountId, userId, contextId);                                //上下文拥有者对象
+        ContextOwner contextOwner = new ContextOwner(accountIds, userId, contextId);                                //上下文拥有者对象
 
         //删除历史数据
         String ownerIndex = contextOwner.getOwnerIndex();

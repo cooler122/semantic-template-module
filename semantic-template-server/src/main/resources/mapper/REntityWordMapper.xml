@@ -41,7 +41,7 @@
       create_time)
     values (#{id,jdbcType=INTEGER}, #{entityId,jdbcType=INTEGER}, #{entityName,jdbcType=VARCHAR}, 
       #{wordId,jdbcType=INTEGER}, #{word,jdbcType=VARCHAR}, #{normalWord,jdbcType=VARCHAR}, 
-      #{state,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{rMsg,jdbcType=VARCHAR}, 
+      #{state,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, #{rMsg,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
 

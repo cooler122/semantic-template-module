@@ -39,6 +39,7 @@ public class EndComponentImpl extends FunctionComponentBase<Object, Object> {
                 //1.准备日志信息      //TODO：(此处如果异步处理，可能到了起始的删除日志的时候，这个还没有写进去，但一般还是比较少见这种情况的）
                 DataComponent<SemanticParserRequest> requestDataComponent = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
                 SemanticParserRequest request = requestDataComponent.getData();
+                List<Integer> accountIds = request.getAccountIds();
                 String processTrace = componentConstant.getTraceByContextOwnerIndex(contextOwner.getOwnerIndex());
                 int processLogType = request.getProcessLogType();
                 int calculationLogType = request.getCalculationLogType();
@@ -60,7 +61,15 @@ public class EndComponentImpl extends FunctionComponentBase<Object, Object> {
 
                 //3.打印计算日志
                 if(calculationLogType != Constant.NO_CALCULATION_LOG){
-                    calculationLogService.writeLog(calculationLogType, null, null);
+                    String[] calculation_log_component_ids = Constant.CALCULATION_LOG_COMPONENT_IDs;
+                    List<DataComponent<String>> dataComponents = new ArrayList<>();
+                    for (String componentId : calculation_log_component_ids) {
+                        DataComponent<String> dataComponent = componentConstant.getDataComponent(componentId, contextOwner);
+                        if(dataComponent != null){
+                            dataComponents.add(dataComponent);
+                        }
+                    }
+                    calculationLogService.writeLog(calculationLogType, dataComponents, processTrace);
                 }
             }
         };

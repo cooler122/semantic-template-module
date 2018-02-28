@@ -1,5 +1,6 @@
 package com.cooler.semantic.component.biz.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.component.data.DataComponent;
@@ -11,6 +12,7 @@ import com.cooler.semantic.model.CalculationLogParam_FPM;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.model.SentenceVector;
+import com.cooler.semantic.model.console.SimilarityCalculationData_FPM;
 import com.cooler.semantic.service.external.RuleSearchService;
 import com.cooler.semantic.service.external.SimilarityCalculateService;
 import com.cooler.semantic.service.internal.RRuleEntityService;
@@ -56,7 +58,7 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
 
         if(fmpTop5SvRuleInfos != null && fmpTop5SvRuleInfos.size() > 0){
             //2.通过svRuleInfo里面的ruleId，将每一个规则端的RRE关联数据检索出来，以备后续计算相似度（和前面预选择不同，前面预选择计算的是SV端的RRE数据）
-            List<RRuleEntity> rRuleEntities = rRuleEntityService.selectBySVRuleInfos(contextOwner.getAccountId(), fmpTop5SvRuleInfos);            //这个list理应包含所有SVRuleInfo的所有实体相关数据
+            List<RRuleEntity> rRuleEntities = rRuleEntityService.selectBySVRuleInfos(contextOwner.getCoreAccountId(), fmpTop5SvRuleInfos);            //这个list理应包含所有SVRuleInfo的所有实体相关数据
             Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap = new HashMap<>();
             for (RRuleEntity rRuleEntity : rRuleEntities) {
                 Integer ruleId = rRuleEntity.getRuleId();                                                                   //由于前面getRulesBySentenceVectors方法里面做过限定，此ruleId不会超过5个，所以下面新建里的小Map不会超过5个
@@ -73,7 +75,15 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
             }
 
             //3.计算相似度，并选择最优集合
-            List<SVRuleInfo> svRuleInfosResult = similarityCalculateService.similarityCalculate_FPM(algorithmType, fmpTop5SvRuleInfos, ruleId_RRuleEntityDataMap, calculationLogParam_fpm); //svRuleInfosResult不可能为null，且传进去多少，也返回多少
+            SimilarityCalculationData_FPM similarityCalculationData_fpm = null;
+            if(calculationLogType != Constant.NO_CALCULATION_LOG){
+                similarityCalculationData_fpm = new SimilarityCalculationData_FPM();
+                calculationLogParam_fpm.setSimilarityCalculationData_fpm(similarityCalculationData_fpm);
+                similarityCalculationData_fpm.setContextId(contextOwner.getContextId());
+                similarityCalculationData_fpm.setAlgorithmType(algorithmType);
+                similarityCalculationData_fpm.setAlgorithmFormula(algorithmType + " 类型的相似度公式");
+            }
+            List<SVRuleInfo> svRuleInfosResult = similarityCalculateService.similarityCalculate_FPM(algorithmType, fmpTop5SvRuleInfos, ruleId_RRuleEntityDataMap, similarityCalculationData_fpm); //svRuleInfosResult不可能为null，且传进去多少，也返回多少
             Collections.sort(svRuleInfosResult, new Comparator<SVRuleInfo>() {
                 @Override
                 public int compare(SVRuleInfo o1, SVRuleInfo o2) {                                                        //倒序排序，见"if(similarity1 > similarity2) return -1;"
@@ -85,16 +95,17 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                 }
             });
             if(svRuleInfosResult != null && svRuleInfosResult.size() > 0){
+                SVRuleInfo optimalSvRuleInfo_FPM = svRuleInfosResult.get(0);                                            //获取相似度值最大的那一个（最优结果）
+                optimalSvRuleInfo_FPM.setMatchType(Constant.FPM);                                                      //设置匹配类型
+                optimalSvRuleInfo_FPM.setAlgorithmType(algorithmType);                                                  //设置算法类型
+                optimalSvRuleInfo_FPM.setrEntityWordInfosList(null);                                                   //最优规则找到后，需要保存（本地、远程），此过程数据太大而且后续没有更多作用，故此处设置为null
                 if(calculationLogType != Constant.NO_CALCULATION_LOG){
-                    componentConstant.putDataComponent(new DataComponentBase("FPM_MatchResults", contextOwner, "List<SVRuleInfo>", svRuleInfosResult));     //埋点3：全参匹配初选结果集埋点，能够知道全参匹配初选过程选定了哪些rule
+                    calculationLogParam_fpm.setOptimalSvRuleInfo_FPM(optimalSvRuleInfo_FPM);
+                    componentConstant.putDataComponent(new DataComponentBase("CalculationLogParam_FPM", contextOwner, "String", JSON.toJSONString(calculationLogParam_fpm)));
                 }
-                SVRuleInfo optimalSvRuleInfo_FPM = svRuleInfosResult.get(0);                                                        //获取相似度值最大的那一个（最优结果）
-                optimalSvRuleInfo_FPM.setMatchType(Constant.FPM);                                                                   //设置匹配类型
-                optimalSvRuleInfo_FPM.setAlgorithmType(algorithmType);                                                              //设置算法类型
-                optimalSvRuleInfo_FPM.setrEntityWordInfosList(null);                                                                //最优规则找到后，需要保存（本地、远程），此过程数据太大而且后续没有更多作用，故此处设置为null
-                return new ComponentBizResult("FPMC_S", Constant.STORE_LOCAL, optimalSvRuleInfo_FPM);      //此时不计较全参匹配结果是否超过阈值，此结果在本地存储
+                return new ComponentBizResult("FPMC_S", Constant.STORE_LOCAL, optimalSvRuleInfo_FPM);  //此时不计较全参匹配结果是否超过阈值，此结果在本地存储
             }
         }
-        return new ComponentBizResult("FPMC_F", "FPMC_F_NoMatchRule");      //此结果在本地和远程都要存储
+        return new ComponentBizResult("FPMC_F", "FPMC_F_NoMatchRule");                    //此结果在本地和远程都要存储
     }
 }

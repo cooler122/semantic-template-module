@@ -54,6 +54,12 @@ public class Constant{
             "canceledLPMContextIdSet"
     };
 
+    public static final String[] CALCULATION_LOG_COMPONENT_IDs = {
+            "CalculationLogParam_LPM",
+            "CalculationLogParam_CPM",
+            "CalculationLogParam_FPM"
+    };
+
     //------------------------------------------------------------------------------过程日志类型
     public static final int NO_PROCESS_LOG = 0;                                              //无日志
     public static final int PROCESS_LOG_TEXT = 1;                                           //文本日志数据

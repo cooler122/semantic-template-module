@@ -7,47 +7,47 @@ import java.util.List;
 public class SimilarityCalculationData_LPM {
 
         /**
-         * 1.句子向量ID
+         * 1a.句子向量ID
          */
         private Integer sentenceVectorId;
 
         /**
-         * 2.上下文ID
+         * 1b.上下文ID
          */
         private Integer contextId;
 
         /**
-         * 3.句子向量实体
+         * 2a.句子向量实体
          */
         private List<List<REntityWordInfo>> svInputREWIs;
 
         /**
-         * 4.规则向量实体
+         * 2b.规则向量实体
          */
         private List<REntityWordInfo> ruleInputREWIs;
 
         /**
-         * 5.算法类型
+         * 3a.算法类型
          */
         private Integer algorithmType;
 
         /**
-         * 6.算法公式
+         * 3b.算法公式
          */
         private String algorithmFormula;
 
         /**
-         * 7.交集实体的句子向量端数量占比和规则端数量占比（此量根据算法而不同，这是贾卡德算法产生的值，这里放两个值，用字符串合起来，形式如：( entityId - entityName ) : svVolumnRate - ruleVolumnRate）
+         * 4.交集实体的句子向量端数量占比和规则端数量占比（此量根据算法而不同，这是贾卡德算法产生的值，这里放两个值，用字符串合起来，形式如：( entityId - entityName ) : svVolumnRate - ruleVolumnRate）
          */
         private List<String> intersectionEntityVolumnRates;
 
         /**
-         * 8.规则端，交集实体的数量占比和权重占比（此量根据算法而不同，这是贾卡德算法产生的值，这里放两个值，用字符串合起来，形式如：( entityId - entityName ) : svWeightRate - ruleWeightRate）
+         * 5.规则端，交集实体的数量占比和权重占比（此量根据算法而不同，这是贾卡德算法产生的值，这里放两个值，用字符串合起来，形式如：( entityId - entityName ) : svWeightRate - ruleWeightRate）
          */
         private List<String> intersectionEntityWeightRates;
 
         /**
-         * 9.相似度分值以及其细节值(形如：similarityValue -> intersectionVolumeRateOccupancy * intersectionWeightOccupancy
+         * 6.相似度分值以及其细节值(形如：similarityValue -> intersectionVolumeRateOccupancy * intersectionWeightOccupancy
          */
         private String similarityValue;
 

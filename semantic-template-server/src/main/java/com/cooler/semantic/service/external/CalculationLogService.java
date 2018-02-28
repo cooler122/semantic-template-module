@@ -11,5 +11,5 @@ public interface CalculationLogService {
      * @param dataComponents    数据组件
      * @param processTrace  轨迹
      */
-    void writeLog(int logType, List<DataComponent> dataComponents, String processTrace);
+    void writeLog(int logType, List<DataComponent<String>> dataComponents, String processTrace);
 }

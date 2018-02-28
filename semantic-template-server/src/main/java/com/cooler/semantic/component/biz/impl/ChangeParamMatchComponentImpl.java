@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.cooler.semantic.component.ComponentBizResult;
 import com.cooler.semantic.component.biz.FunctionComponentBase;
 import com.cooler.semantic.component.data.DataComponent;
+import com.cooler.semantic.component.data.DataComponentBase;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.*;
@@ -122,16 +123,16 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
             }
         }
 
-        CalculationLogParam_CPM cpmCalculationLogParam = null;
+        CalculationLogParam_CPM calculationLogParam_cpm = null;
         if(calculationLogType != Constant.NO_CALCULATION_LOG) {
-            cpmCalculationLogParam = new CalculationLogParam_CPM();
-            cpmCalculationLogParam.setContextId_svRuleInfoMap(contextId_svRuleInfoMap);
-            cpmCalculationLogParam.setHistoryREWIMap(historyREWIMap);
-            cpmCalculationLogParam.setHitCurrentREntityWordInfoMap(hitCurrentREntityWordInfoMap);
-            cpmCalculationLogParam.setSvIdcontextId_productValueMap(svIdcontextId_productValueMap);
-            cpmCalculationLogParam.setMaxValueSentenceVectorId(maxValueSentenceVectorId);
-            cpmCalculationLogParam.setMaxValueContextId(maxValueContextId);
-            cpmCalculationLogParam.setMaxValue(maxValue);
+            calculationLogParam_cpm = new CalculationLogParam_CPM();
+            calculationLogParam_cpm.setContextId_svRuleInfoMap(contextId_svRuleInfoMap);
+            calculationLogParam_cpm.setHistoryREWIMap(historyREWIMap);
+            calculationLogParam_cpm.setHitCurrentREntityWordInfoMap(hitCurrentREntityWordInfoMap);
+            calculationLogParam_cpm.setSvIdcontextId_productValueMap(svIdcontextId_productValueMap);
+            calculationLogParam_cpm.setMaxValueSentenceVectorId(maxValueSentenceVectorId);
+            calculationLogParam_cpm.setMaxValueContextId(maxValueContextId);
+            calculationLogParam_cpm.setMaxValue(maxValue);
         }
 
         if(maxValueContextId != null){
@@ -186,17 +187,17 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                 changeParamOptimalSvRuleInfo.setEnsureFinal(true);
             }
             if(calculationLogType != Constant.NO_CALCULATION_LOG){
-                cpmCalculationLogParam.setChangeParamOptimalSvRuleInfo(changeParamOptimalSvRuleInfo);
-                cpmCalculationLogParam.setHistoryEntitiesCount(historyEntitiesCount);
-                cpmCalculationLogParam.setCurrentEntitiesCount(currentEntitiesCount);
-                cpmCalculationLogParam.setCurrentCoreEntitiesCount(currentCoreEntitiesCount);
-                cpmCalculationLogParam.setCurrentHitEntityWeightRate(currentHitEntityWeightRate);
-                System.out.println(JSON.toJSONString(cpmCalculationLogParam));
+                calculationLogParam_cpm.setChangeParamOptimalSvRuleInfo(changeParamOptimalSvRuleInfo);
+                calculationLogParam_cpm.setHistoryEntitiesCount(historyEntitiesCount);
+                calculationLogParam_cpm.setCurrentEntitiesCount(currentEntitiesCount);
+                calculationLogParam_cpm.setCurrentCoreEntitiesCount(currentCoreEntitiesCount);
+                calculationLogParam_cpm.setCurrentHitEntityWeightRate(currentHitEntityWeightRate);
+                componentConstant.putDataComponent(new DataComponentBase("CalculationLogParam_CPM", contextOwner, "String", JSON.toJSONString(calculationLogParam_cpm)));     //保存缺参匹配的计算型日志
             }
 
             return new ComponentBizResult("CPMC_S", Constant.STORE_LOCAL_REMOTE, changeParamOptimalSvRuleInfo);   //此结果在本地和远程都要存储
         }else{
-            System.out.println(JSON.toJSONString(cpmCalculationLogParam));
+            System.out.println(JSON.toJSONString(calculationLogParam_cpm));
             return new ComponentBizResult("CPMC_F");
         }
     }

@@ -20,7 +20,7 @@ public class SemanticParserClient {
 
 //        String[] sentences = { "天气怎么样？", "今天", "北京", "天气怎么样？", "今天北京" };                          //测试缺参匹配（批量询问，需要设置can_batch_query = 1）
 
-        String[] sentences = { "北京今天天气怎么样？", "上海呢？", "天津呢？" , "明天呢？", "广州天气呢？", "广州今天的", "我还想知道北京的"};     //测试全参情况下的换参匹配
+//        String[] sentences = { "北京今天天气怎么样？", "上海呢？", "天津呢？" , "明天呢？", "广州天气呢？", "广州今天的", "我还想知道北京的"};     //测试全参情况下的换参匹配
 
 //        String[] sentences = { "北京天气怎么样？", "上海呢？", "天津呢？", "今天"};                                        //测试缺参情况下的换参匹配
 
@@ -40,7 +40,7 @@ public class SemanticParserClient {
 
 //        String[] sentences = {  "唱林俊杰的歌", "唱他的美人鱼", "江南"};                                                       //另一场景，测试失败情况下的指代消解（指代消解 + 换参匹配）
 
-//        String[] sentences = {  "唱周杰伦的歌" , "唱他的双节棍", "播放他的听妈妈的话", "唱林俊杰的歌", "美人鱼", "江南"};        //另一场景，测试缺参匹配（自定义分词 + 连续指代消解 + 换参匹配）
+        String[] sentences = {  "唱周杰伦的歌" , "唱他的双节棍", "播放他的听妈妈的话", "唱林俊杰的歌", "美人鱼", "江南"};        //另一场景，测试缺参匹配（自定义分词 + 连续指代消解 + 换参匹配）
 
 //        String[] sentences = {  "唱周杰伦的歌" , "唱他的双节棍", "播放他的听妈妈的话", "唱林俊杰的美人鱼", "江南"};        //另一场景，测试缺参匹配（自定义分词 + 连续指代消解 + 换参匹配）
 
@@ -67,7 +67,7 @@ public class SemanticParserClient {
     public static SemanticParserResponse buildRequest(String sentence, Integer contextId, Integer state){
         SemanticParserRequest request = new SemanticParserRequest();
         request.setCmd(sentence);                                                                                       //添加一个句子
-        request.setAccountIds(Arrays.asList(1));                                                                        //添加一个测试账户 accountId = 1
+        request.setAccountIds(Arrays.asList(1, 2, 3));                                                                        //添加一个测试账户 accountId = 1
         request.setPassword("123456");                    //TODO:看看密码有没有效果
         request.setUserId(2);                                                                                           //添加一个用户标号 userId = 2
         request.setContextId(contextId);                                                                                //添加一个上下文编号

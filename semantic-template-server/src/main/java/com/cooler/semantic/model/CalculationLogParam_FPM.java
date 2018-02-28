@@ -1,27 +1,36 @@
 package com.cooler.semantic.model;
 
 import com.cooler.semantic.entity.RRuleEntity;
+import com.cooler.semantic.model.console.SimilarityCalculationData_FPM;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CalculationLogParam_FPM {
     /**
-     * 匹配到的rule和实体数据集 ---> entityData1、entityData2、entityData3、entityData4...
+     * 1.匹配到的rule和实体数据集 ---> entityData1、entityData2、entityData3、entityData4...
      */
-    private List<Map<String, List<String>>> hitRuleEntityMaps = new ArrayList<>();
+    private List<Map<String, List<String>>> hitRuleEntityMaps = null;
 
     /**
-     * 预选出的5个SVRuleInfo集合
+     * 2.预选出的5个SVRuleInfo集合
      */
-    private List<SVRuleInfo> svRuleInfos = new ArrayList<>();
+    private List<SVRuleInfo> svRuleInfos = null;
 
     /**
-     * ruleId下面的RRE数据
+     * 3.各个ruleId下面的RRE数据
      */
-    private Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap = new HashMap<>();
+    private Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap = null;
+
+    /**
+     * 4.相似度计算数据体
+     */
+    private SimilarityCalculationData_FPM similarityCalculationData_fpm = null;
+
+    /**
+     * 5.最优结果
+     */
+    private SVRuleInfo optimalSvRuleInfo_FPM = null;
 
     //------------------------------------------------------------------------------------------------------------------gets、sets
 
@@ -47,5 +56,21 @@ public class CalculationLogParam_FPM {
 
     public void setRuleId_RRuleEntityDataMap(Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap) {
         this.ruleId_RRuleEntityDataMap = ruleId_RRuleEntityDataMap;
+    }
+
+    public SimilarityCalculationData_FPM getSimilarityCalculationData_fpm() {
+        return similarityCalculationData_fpm;
+    }
+
+    public void setSimilarityCalculationData_fpm(SimilarityCalculationData_FPM similarityCalculationData_fpm) {
+        this.similarityCalculationData_fpm = similarityCalculationData_fpm;
+    }
+
+    public SVRuleInfo getOptimalSvRuleInfo_FPM() {
+        return optimalSvRuleInfo_FPM;
+    }
+
+    public void setOptimalSvRuleInfo_FPM(SVRuleInfo optimalSvRuleInfo_FPM) {
+        this.optimalSvRuleInfo_FPM = optimalSvRuleInfo_FPM;
     }
 }

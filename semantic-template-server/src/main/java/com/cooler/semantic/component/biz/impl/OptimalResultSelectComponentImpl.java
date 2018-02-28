@@ -26,7 +26,7 @@ public class OptimalResultSelectComponentImpl extends FunctionComponentBase<SVRu
     @Override
     protected ComponentBizResult<SVRuleInfo> runBiz(ContextOwner contextOwner, SVRuleInfo svRuleInfo) {
         logger.trace("ORSC.最佳结果选择");
-        Integer accountId = contextOwner.getAccountId();
+        Integer accountId = contextOwner.getCoreAccountId();
         DataComponent<SemanticParserRequest> dataComponent = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = dataComponent.getData();
         double accuracyThreshold = request.getAccuracyThreshold();                                                     //用户设置的全局阈值

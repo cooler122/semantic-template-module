@@ -3,6 +3,7 @@ package com.cooler.semantic.service.external;
 import com.cooler.semantic.entity.RRuleEntity;
 import com.cooler.semantic.model.CalculationLogParam_FPM;
 import com.cooler.semantic.model.SVRuleInfo;
+import com.cooler.semantic.model.console.SimilarityCalculationData_FPM;
 import com.cooler.semantic.model.console.SimilarityCalculationData_LPM;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public interface SimilarityCalculateService {
      * @param ruleId_RRuleEntityDataMap     ruleId下的RRE Map分项数据集
      * @return
      */
-    List<SVRuleInfo> similarityCalculate_FPM(Integer algorithmType, List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap, CalculationLogParam_FPM calculationLogParam_fpm);
+    List<SVRuleInfo> similarityCalculate_FPM(Integer algorithmType, List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap, SimilarityCalculationData_FPM similarityCalculationData_FPM);
 
     /**
      * 缺参匹配中，为SVRuleInfo计算相似度

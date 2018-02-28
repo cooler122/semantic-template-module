@@ -1,62 +1,34 @@
 package com.cooler.semantic.model.console;
 
-import com.cooler.semantic.model.REntityWordInfo;
-
 import java.util.List;
+import java.util.Map;
 
 public class SimilarityCalculationData_FPM {
-    /**
-     * 1.句子向量ID
-     */
-    private Integer sentenceVectorId;
 
     /**
-     * 2.上下文ID
+     * 1.上下文ID
      */
     private Integer contextId;
 
     /**
-     * 3.句子向量实体
-     */
-    private List<List<REntityWordInfo>> svInputREWIs;
-
-    /**
-     * 4.规则向量实体
-     */
-    private List<REntityWordInfo> ruleInputREWIs;
-
-    /**
-     * 5.算法类型
+     * 2.算法类型
      */
     private Integer algorithmType;
 
     /**
-     * 6.算法公式
+     * 3.算法公式
      */
     private String algorithmFormula;
 
     /**
-     * 7.交集实体的句子向量端数量占比和规则端数量占比（此量根据算法而不同，这是贾卡德算法产生的值，这里放两个值，用字符串合起来，形式如：( entityId - entityName ) : svVolumnRate - ruleVolumnRate）
+     * 4.细节实体数据：Map<(svId_ruleId), (wordId_word_entityId_entityName_weight1, wordId_word_entityId_entityName_weight2, wordId_word_entityId_entityName_weight3...)>
      */
-    private List<String> intersectionEntityVolumnRates;
+    Map<String, List<String>> ids_rewDatasMap = null;
 
     /**
-     * 8.规则端，交集实体的数量占比和权重占比（此量根据算法而不同，这是贾卡德算法产生的值，这里放两个值，用字符串合起来，形式如：( entityId - entityName ) : svWeightRate - ruleWeightRate）
+     * 5.细节计算值数据：Map<(svId_ruleId), (similarityScore = intersectionVolumeRateOccupancy * intersectionWeightOccupancy) >
      */
-    private List<String> intersectionEntityWeightRates;
-
-    /**
-     * 9.相似度分值以及其细节值(形如：similarityValue -> intersectionVolumeRateOccupancy * intersectionWeightOccupancy
-     */
-    private String similarityValue;
-
-    public Integer getSentenceVectorId() {
-        return sentenceVectorId;
-    }
-
-    public void setSentenceVectorId(Integer sentenceVectorId) {
-        this.sentenceVectorId = sentenceVectorId;
-    }
+    Map<String, String> ids_scoreMap = null;
 
     public Integer getContextId() {
         return contextId;
@@ -64,22 +36,6 @@ public class SimilarityCalculationData_FPM {
 
     public void setContextId(Integer contextId) {
         this.contextId = contextId;
-    }
-
-    public List<List<REntityWordInfo>> getSvInputREWIs() {
-        return svInputREWIs;
-    }
-
-    public void setSvInputREWIs(List<List<REntityWordInfo>> svInputREWIs) {
-        this.svInputREWIs = svInputREWIs;
-    }
-
-    public List<REntityWordInfo> getRuleInputREWIs() {
-        return ruleInputREWIs;
-    }
-
-    public void setRuleInputREWIs(List<REntityWordInfo> ruleInputREWIs) {
-        this.ruleInputREWIs = ruleInputREWIs;
     }
 
     public Integer getAlgorithmType() {
@@ -98,27 +54,19 @@ public class SimilarityCalculationData_FPM {
         this.algorithmFormula = algorithmFormula;
     }
 
-    public List<String> getIntersectionEntityVolumnRates() {
-        return intersectionEntityVolumnRates;
+    public Map<String, List<String>> getIds_rewDatasMap() {
+        return ids_rewDatasMap;
     }
 
-    public void setIntersectionEntityVolumnRates(List<String> intersectionEntityVolumnRates) {
-        this.intersectionEntityVolumnRates = intersectionEntityVolumnRates;
+    public void setIds_rewDatasMap(Map<String, List<String>> ids_rewDatasMap) {
+        this.ids_rewDatasMap = ids_rewDatasMap;
     }
 
-    public List<String> getIntersectionEntityWeightRates() {
-        return intersectionEntityWeightRates;
+    public Map<String, String> getIds_scoreMap() {
+        return ids_scoreMap;
     }
 
-    public void setIntersectionEntityWeightRates(List<String> intersectionEntityWeightRates) {
-        this.intersectionEntityWeightRates = intersectionEntityWeightRates;
-    }
-
-    public String getSimilarityValue() {
-        return similarityValue;
-    }
-
-    public void setSimilarityValue(String similarityValue) {
-        this.similarityValue = similarityValue;
+    public void setIds_scoreMap(Map<String, String> ids_scoreMap) {
+        this.ids_scoreMap = ids_scoreMap;
     }
 }

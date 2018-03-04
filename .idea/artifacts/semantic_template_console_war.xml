@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="semantic-template-console:war">
+    <output-path>$PROJECT_DIR$/semantic-template-console/target</output-path>
+    <root id="archive" name="semantic-template-console-1.0-SNAPSHOT-mac.war">
+      <element id="artifact" artifact-name="semantic-template-console:war exploded" />
+    </root>
+  </artifact>
+</component>

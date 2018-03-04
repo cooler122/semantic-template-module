@@ -6,6 +6,8 @@ import com.cooler.semantic.service.LogDataProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("logDataProcessService")
 public class LogDataProcessServiceImpl implements LogDataProcessService {
 
@@ -41,4 +43,11 @@ public class LogDataProcessServiceImpl implements LogDataProcessService {
     public int updateByPrimaryKey(LogDataProcess record) {
         return logDataProcessMapper.updateByPrimaryKey(record);
     }
+
+    @Override
+    public List<LogDataProcess> selectByAIdUIdDateTime(Integer accountId, Integer userId, String fromDateTime, String toDateTime) {
+        return logDataProcessMapper.selectByAIdUIdDateTime(accountId, userId, fromDateTime, toDateTime);
+    }
+
+
 }

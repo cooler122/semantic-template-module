@@ -36,24 +36,28 @@
       <arg column="select_result" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
+
   <sql id="Base_Column_List">
-    id, date_time, account_id, user_id, context_id, process_trace, detail_context_owner, 
-    sentence, sentence_modified, response_msg, state, score, response_type, response_timestamp, 
-    configure_params, sv_ids, sv_words, sv_weights, lpm_rule_score, lpm_matched_rew, 
-    lpm_matched_rre, lpm_lacked_rre, cpm_rule_score, cpm_matched_rew, cpm_matched_rre, 
-    cpm_lacked_rre, fpm_rule_score, fpm_matched_rew, fpm_matched_rre, fpm_lacked_rre, 
+    id, date_time, account_id, user_id, context_id, process_trace, detail_context_owner,
+    sentence, sentence_modified, response_msg, state, score, response_type, response_timestamp,
+    configure_params, sv_ids, sv_words, sv_weights, lpm_rule_score, lpm_matched_rew,
+    lpm_matched_rre, lpm_lacked_rre, cpm_rule_score, cpm_matched_rew, cpm_matched_rre,
+    cpm_lacked_rre, fpm_rule_score, fpm_matched_rew, fpm_matched_rre, fpm_lacked_rre,
     select_result
   </sql>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from log_data_process
     where id = #{id,jdbcType=INTEGER}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from log_data_process
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <insert id="insert" parameterType="com.cooler.semantic.entity.LogDataProcess">
     insert into log_data_process (id, date_time, account_id, 
       user_id, context_id, process_trace, 
@@ -78,6 +82,7 @@
       #{fpmMatchedRew,jdbcType=VARCHAR}, #{fpmMatchedRre,jdbcType=VARCHAR}, #{fpmLackedRre,jdbcType=VARCHAR}, 
       #{selectResult,jdbcType=VARCHAR})
   </insert>
+
   <insert id="insertSelective" parameterType="com.cooler.semantic.entity.LogDataProcess">
     insert into log_data_process
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -271,6 +276,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.LogDataProcess">
     update log_data_process
     <set>
@@ -367,6 +373,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.LogDataProcess">
     update log_data_process
     set date_time = #{dateTime,jdbcType=TIMESTAMP},
@@ -401,5 +408,15 @@
       select_result = #{selectResult,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--业务逻辑 -->
+  <select id="selectByAIdUIdDateTime" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from log_data_process
+    where account_id = #{accountId,jdbcType=INTEGER} and
+          user_id = #{userId,jdbcType=INTEGER } and
+          date_time between #{fromDateTime,jdbcType=VARCHAR} and #{toDateTime,jdbcType=VARCHAR}
+  </select>
 
 </mapper>

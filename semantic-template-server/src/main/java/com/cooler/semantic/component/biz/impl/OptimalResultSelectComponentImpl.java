@@ -6,12 +6,17 @@ import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.ContextOwner;
+import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.internal.RuleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Component("optimalResultSelectComponent")
 public class OptimalResultSelectComponentImpl extends FunctionComponentBase<SVRuleInfo, SVRuleInfo> {
@@ -79,7 +84,15 @@ public class OptimalResultSelectComponentImpl extends FunctionComponentBase<SVRu
             }
         }
         if(optimalSvRuleInfo_DataComponent != null && optimalSvRuleInfo_DataComponent.getData() != null){
-            return new ComponentBizResult(resultCode, Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo_DataComponent.getData());  //此结果在本地和远程都要存储，无论它是否超过规则规定的阈值，都将记为历史记录
+            SVRuleInfo optimalSvRuleInfo = optimalSvRuleInfo_DataComponent.getData();
+            Integer sentenceVectorId = optimalSvRuleInfo.getSentenceVectorId();
+            List<REntityWordInfo> matchedREntityWordInfos = optimalSvRuleInfo.getMatchedREntityWordInfos();
+            for (REntityWordInfo matchedREntityWordInfo : matchedREntityWordInfos) {
+                Double finalWeight = matchedREntityWordInfo.getWeights().get(sentenceVectorId);
+                matchedREntityWordInfo.setWeights(Arrays.asList(finalWeight));                                          //实际上对于本轮对话，此处权重以没有作用，这里还是将最终确定用上的权重在这里设置，是为了下几轮对话，也许下几轮对话会用上。
+            }
+            optimalSvRuleInfo.setSentenceVectorId(0);                                                                   //上面将确定后的权重改变到了第0个位置，那么将此最佳SVRuleInfo的SentenceVectorId设置为0
+            return new ComponentBizResult(resultCode, Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo);  //此结果在本地和远程都要存储，无论它是否超过规则规定的阈值，都将记为历史记录
         }else{
             return new ComponentBizResult(resultCode);
         }

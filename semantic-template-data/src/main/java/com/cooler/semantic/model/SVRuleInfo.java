@@ -122,6 +122,12 @@ public class SVRuleInfo implements Serializable{
      */
     private boolean isLongConversationRule = false;
 
+
+    /**
+     * 多余的词语集合
+     */
+    private List<WordInfo> redundantWordInfos;
+
     /**
      * 此分词模式，选择并，匹配上的REW集合
      */
@@ -221,6 +227,14 @@ public class SVRuleInfo implements Serializable{
 
     public void setrEntityWordInfosList(List<List<REntityWordInfo>> rEntityWordInfosList) {
         this.rEntityWordInfosList = rEntityWordInfosList;
+    }
+
+    public List<WordInfo> getRedundantWordInfos() {
+        return redundantWordInfos;
+    }
+
+    public void setRedundantWordInfos(List<WordInfo> redundantWordInfos) {
+        this.redundantWordInfos = redundantWordInfos;
     }
 
     public List<Double> getWeights() {
@@ -335,12 +349,12 @@ public class SVRuleInfo implements Serializable{
         this.businessNecessaryParamMap = businessNecessaryParamMap;
     }
 
-    public boolean isLongConversationRule() {
+    public boolean getIsLongConversationRule() {
         return isLongConversationRule;
     }
 
-    public void setLongConversationRule(boolean longConversationRule) {
-        isLongConversationRule = longConversationRule;
+    public void setIsLongConversationRule(boolean islongConversationRule) {
+        isLongConversationRule = islongConversationRule;
     }
 
     public List<MatchedEntityParam> getAccumulatedMatchedEntityParams() {

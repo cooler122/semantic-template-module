@@ -30,6 +30,10 @@ public class WeightCalculateServiceImpl implements WeightCalculateService {
         wordClassRateMap.put("nr", 3.0);    //人名
         wordClassRateMap.put("ns", 3.0);    //地名
         wordClassRateMap.put("ntc", 3.0);   //公司名
+        wordClassRateMap.put("rvt", 3.0);   //时间疑问代词
+        wordClassRateMap.put("rzt", 3.0);   //时间指示代词
+        wordClassRateMap.put("t", 3.0);   //时间词
+        wordClassRateMap.put("tg", 1.5);   //时间词性语素
 
         wordClassRateMap.put("v", 3.0);     //动词
         wordClassRateMap.put("vd", 2.0);    //副动词

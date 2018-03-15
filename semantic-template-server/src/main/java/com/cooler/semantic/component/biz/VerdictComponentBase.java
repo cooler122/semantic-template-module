@@ -176,7 +176,7 @@ public class VerdictComponentBase<I> implements SemanticComponent{
         if(referRuleRelations.size() == 0){
             return new ComponentBizResult("D7_N");
         }else{
-            svRuleInfo.setLongConversationRule(true);                                                                  //此处设置此SVRuleInfo是长对话规则
+            svRuleInfo.setIsLongConversationRule(true);                                                                  //此处设置此SVRuleInfo是长对话规则
             return new ComponentBizResult("D7_Y");
         }
     }

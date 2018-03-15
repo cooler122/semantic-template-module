@@ -11,6 +11,9 @@
     <typeAliases>
         <typeAlias alias="logDataCalculation" type="com.cooler.semantic.entity.LogDataCalculation"/>
         <typeAlias alias="logDataProcess" type="com.cooler.semantic.entity.LogDataProcess"/>
+
+        <typeAlias alias="logDataProcessDTO" type="com.cooler.semantic.dto.LogDataProcessDTO"/>
+
     </typeAliases>
 
 </configuration>

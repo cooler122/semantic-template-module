@@ -177,7 +177,7 @@
                             </li>
                             <li>
                                 <a href="#">
-                                    <span class="avatar"><img src="img/avatar.jpg" alt="Avatar"></span>
+                                    <span class="avatar"><img src="../static/img/avatar.jpg" alt="Avatar"></span>
                                     <span class="header">
 											<span class="from">
 										    	Dennis Ji
@@ -193,7 +193,7 @@
                             </li>
                             <li>
                                 <a href="#">
-                                    <span class="avatar"><img src="img/avatar.jpg" alt="Avatar"></span>
+                                    <span class="avatar"><img src="../static/img/avatar.jpg" alt="Avatar"></span>
                                     <span class="header">
 											<span class="from">
 										    	Dennis Ji
@@ -209,7 +209,7 @@
                             </li>
                             <li>
                                 <a href="#">
-                                    <span class="avatar"><img src="img/avatar.jpg" alt="Avatar"></span>
+                                    <span class="avatar"><img src="../static/img/avatar.jpg" alt="Avatar"></span>
                                     <span class="header">
 											<span class="from">
 										    	Dennis Ji
@@ -225,7 +225,7 @@
                             </li>
                             <li>
                                 <a href="#">
-                                    <span class="avatar"><img src="img/avatar.jpg" alt="Avatar"></span>
+                                    <span class="avatar"><img src="../static/img/avatar.jpg" alt="Avatar"></span>
                                     <span class="header">
 											<span class="from">
 										    	Dennis Ji
@@ -241,7 +241,7 @@
                             </li>
                             <li>
                                 <a href="#">
-                                    <span class="avatar"><img src="img/avatar.jpg" alt="Avatar"></span>
+                                    <span class="avatar"><img src="../static/img/avatar.jpg" alt="Avatar"></span>
                                     <span class="header">
 											<span class="from">
 										    	Dennis Ji

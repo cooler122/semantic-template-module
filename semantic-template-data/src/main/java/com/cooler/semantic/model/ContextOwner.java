@@ -1,6 +1,7 @@
 package com.cooler.semantic.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 public class ContextOwner implements Serializable{
@@ -100,6 +101,10 @@ public class ContextOwner implements Serializable{
 
     public void setLast4OwnerIndex(String last4OwnerIndex) {
         this.last4OwnerIndex = coreAccountId + "_" + userId + "_" + (contextId - 4);
+    }
+
+    public String getDetailContextOwner(){
+        return Arrays.toString(this.getAccountIds().toArray()) + "_" + this.getUserId() + "_" + this.getContextId();
     }
 
     public String getLastNOwnerIndex(int n){

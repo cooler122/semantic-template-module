@@ -63,14 +63,14 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
             }
         }
 
-        if(contextId_svRuleInfoMap.size() == 0) return new ComponentBizResult("CPMC_F");                      //如果没有收集到历史规则，就跳出去吧
+        if(contextId_svRuleInfoMap.size() == 0) return new ComponentBizResult("CPMC_F");                 //如果没有收集到历史规则，就跳出去吧
 
-        Map<String, REntityWordInfo> hitCurrentREntityWordInfoMap = new HashMap<>();                             //关联数据Map<{sentenceVectorId, currentEntityType, currentEntityId}, hitCurrentREWI>
+        Map<String, REntityWordInfo> hitCurrentREntityWordInfoMap = new HashMap<>();                                    //关联数据Map<{sentenceVectorId, currentEntityType, currentEntityId}, hitCurrentREWI>
         Map<String, Double> svIdcontextId_productValueMap = new HashMap<>();                                            //统计值Map<sentenceVectorId_contextId, 统计数据值>
         Integer maxValueSentenceVectorId = null;                                                                        //最高匹配值的sentenceVectorId（和下面的contextId绑定）
         Integer maxValueContextId = null;                                                                               //最高匹配值的ContextId
         Double maxValue = 0d;                                                                                           //最高匹配值（此值是匹配上的实体的(1d / currentSVSize * currentWeight) * 3 + (volumeIncrement * historyWeight)的和值）
-
+        Map<Integer, Map<String, WordInfo>> redundantWordInfoMaps = new HashMap<>();                                    //准备好一个多余词语大Map放入每一种分词方式下的小Map
 
         //2.计算最佳上下文：准备好关联数据，选好最高得分的contextId，确定换参匹配，匹配哪个历史上下文
         for (SentenceVector sentenceVector : sentenceVectors) {                                                         //句子端：查询本次检索出来的句子向量
@@ -79,11 +79,16 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
             int currentSVSize = currentREntityWordInfosList.size();                                                     //句子向量长度
 
             for (List<REntityWordInfo> currentREntityWordInfos : currentREntityWordInfosList) {
+                Map<String, WordInfo> redundantWordInfoMap = new HashMap<>();
                 for (REntityWordInfo currentREntityWordInfo : currentREntityWordInfos) {
                     Integer currentEntityType = currentREntityWordInfo.getEntityType();
                     Integer currentEntityId = currentREntityWordInfo.getEntityId();
                     String currentEntityTypeId = currentREntityWordInfo.getEntityTypeId();                              //获取REWI的entityTypeId
-                    Double currentWeight = currentREntityWordInfo.getWeightMap().get(sentenceVectorId);                 //获取本句子向量的此REWI的权重
+                    Integer wordId = currentREntityWordInfo.getWordId();
+                    String word = currentREntityWordInfo.getWord();
+                    Double currentWeight = currentREntityWordInfo.getWeights().get(sentenceVectorId);                 //获取本句子向量的此REWI的权重
+                    currentWeight = (currentWeight != null) ? currentWeight : 0d;
+                    redundantWordInfoMap.put(word, new WordInfo(wordId, word, currentWeight));                          //对于每一种分词类型下的每一个分词段，都放到小多余词语Map里面
 
                     List<REntityWordInfo> historyREntityWordInfos = historyREWIMap.get(currentEntityTypeId);            //历史端：尝试搜索此entityTypeId是否存在于历史匹配的REWI集合里面
                     if(historyREntityWordInfos != null && historyREntityWordInfos.size() > 0){                          //如果本次entityTypeId的REWI碰上了历史REWI集合
@@ -95,8 +100,8 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                             Integer contextId = historyREntityWordInfo.getContextId();                                  //这个小历史REWI集合虽然共有一个相同的entityTypeId，但有不同的contextId，即会话版本不同
                             Double volumeIncrement = historyVolumeIncrementMap.get(contextId);                          //获得此会话的数量单元增量
                             volumeIncrement = volumeIncrement != null ? volumeIncrement : 0d;                           //volumeIncrement确保有值
-                            Map<Integer, Double> weightMap = historyREntityWordInfo.getWeightMap();
-                            Double historyWeight = weightMap.get(sentenceVectorId);                                     //获得此实体在这个会话里面的权重
+                            List<Double> weights = historyREntityWordInfo.getWeights();
+                            Double historyWeight = weights.get(0);                                     //获得此实体在这个会话里面的权重
                             historyWeight = historyWeight != null ? historyWeight : 0d;                                 //排除historyWeight为null的情况
 
                             double productValueIncrement = (1d / currentSVSize * currentWeight) * 3 + (volumeIncrement * historyWeight);//当前句子REWI积值*3 和历史REWI积值 之和
@@ -120,6 +125,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
                         }
                     }
                 }
+                redundantWordInfoMaps.put(sentenceVectorId, redundantWordInfoMap);
             }
         }
 
@@ -135,7 +141,7 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
             calculationLogParam_cpm.setMaxValue(maxValue);
         }
 
-        if(maxValueContextId != null){
+        if(maxValueContextId != null && maxValueSentenceVectorId != null){
             //3.换参，设置历史规则为当前匹配规则：设置changeParamOptimalSvRuleInfo，并修改里面替换的参数，包括words和matchedREntityWordInfos
             SVRuleInfo changeParamOptimalSvRuleInfo = contextId_svRuleInfoMap.get(maxValueContextId + "");                   //这里通过maxValueContextId获取的SVRuleInfo对象作为换参匹配返回的changeParamOptimalSvRuleInfo，有待后面对比全参匹配进行选择
             changeParamOptimalSvRuleInfo.setMatchType(Constant.CPM);                                                   //设置匹配类型
@@ -143,23 +149,41 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
             List<String> words = changeParamOptimalSvRuleInfo.getWords();
             List<REntityWordInfo> matchedREntityWordInfosModified = new ArrayList<>();                                  //准备一个新的REWI集合，作为换参SVRuleInfo的匹配REWI集合
             List<REntityWordInfo> matchedREntityWordInfos = changeParamOptimalSvRuleInfo.getMatchedREntityWordInfos();             //获取旧的REWI集合
+            Map<String, WordInfo> maxValueRedundantWordInfoMap = redundantWordInfoMaps.get(maxValueSentenceVectorId);   //maxValueSentenceVectorId下的最佳redundantWordInfoMap
             for(int i = 0; i < matchedREntityWordInfos.size(); i ++){
                 REntityWordInfo matchedREntityWordInfo = matchedREntityWordInfos.get(i);
                 Integer entityType = matchedREntityWordInfo.getEntityType();
                 Integer entityId = matchedREntityWordInfo.getEntityId();
-                Map<Integer, Double> historyWeightMap = matchedREntityWordInfo.getWeightMap();
+                Double historyWeight = matchedREntityWordInfo.getWeights().get(0);
                 REntityWordInfo hitCurrentREntityWordInfo = hitCurrentREntityWordInfoMap.get(maxValueSentenceVectorId + "_" + entityType + "_" + entityId);
                 if(hitCurrentREntityWordInfo != null){
                     hitCurrentREntityWordInfo.setContextId(currentContextId);
-                    hitCurrentREntityWordInfo.setWeightMap(historyWeightMap);                                           //注意权重还是要用历史规则里面REWI里面的权重
+                    hitCurrentREntityWordInfo.getWeights().set(maxValueSentenceVectorId, historyWeight);                                           //注意权重还是要用历史规则里面REWI里面的权重
                     matchedREntityWordInfosModified.add(hitCurrentREntityWordInfo);
                     words.set(i, hitCurrentREntityWordInfo.getWord());
+
+                    maxValueRedundantWordInfoMap.remove(hitCurrentREntityWordInfo.getWord());                           //匹配上了，就将此词语从此Map中去掉
                 }else{
                     matchedREntityWordInfo.setContextId(currentContextId);
+//                    Double maxValueSentenceVectorWeight = matchedREntityWordInfo.getWeights().get(maxValueSentenceVectorId);
+//                    matchedREntityWordInfo.setWeights(Arrays.asList(maxValueSentenceVectorWeight));                     //一旦确认了最佳svId，就只设置它一个的weight了
                     matchedREntityWordInfosModified.add(matchedREntityWordInfo);
                 }
             }
             changeParamOptimalSvRuleInfo.setMatchedREntityWordInfos(matchedREntityWordInfosModified);                   //重新设置修改的REWI集合
+            List<WordInfo> redundantWordInfos = new ArrayList<>();
+            redundantWordInfos.addAll(maxValueRedundantWordInfoMap.values());
+            changeParamOptimalSvRuleInfo.setRedundantWordInfos(redundantWordInfos);                                     //设置多余词语
+
+            List<String> wordsModified = new ArrayList<>();
+            StringBuffer wordSB = new StringBuffer();
+            for (REntityWordInfo matchedREntityWordInfo : matchedREntityWordInfosModified) {
+                String word = matchedREntityWordInfo.getWord();
+                wordsModified.add(word);
+                wordSB.append(word);
+            }
+            changeParamOptimalSvRuleInfo.setWords(wordsModified);                                                       //设置新的分词集合
+            changeParamOptimalSvRuleInfo.setSentenceModified(wordSB.toString());                                        //设置新的修改句子
 
             //4.计算相关判断标准，确定换参结果是否是最终确定性结果：看是否changeParamOptimalSvRuleInfo，作为最终optimalSvRuleInfo，如果确定是，则无需走全参匹配过程，反之则走
             int historyEntitiesCount = 0;                                                                               //历史规则里的实体数量

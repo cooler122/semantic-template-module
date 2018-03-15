@@ -81,5 +81,7 @@ public class Constant{
     public static final int AB_INTERFACE_QUESTION_RESPONSE_MODE = 3;                 //先问接口，若失败则问答题模式
     public static final int AB_INTERFACE_CHOICE_QUESTION_MODE = 4;                   //先问接口，若失败则选择题模式
 
+    public static final int DEFAULT_SV_COUNT = 4;                                       //默认每一句话有多少分词方式
+
 
 }

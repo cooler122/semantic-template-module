@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -20,8 +21,11 @@ public class CalculationLogServiceImpl implements CalculationLogService {
     private static Logger logger = LoggerFactory.getLogger(CalculationLogServiceImpl.class.getName());
     @Autowired
     private LogDataCalculationMapper logDataCalculationMapper;
+
+    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     @Override
-    public void writeLog(int logType, List<DataComponent<String>> dataComponents, String processTrace) {
+    public void writeLog(ContextOwner contextOwner, int logType, List<DataComponent<String>> dataComponents, String processTrace, long currentTimeMillis) {
         switch (logType){
             case Constant.CALCULATION_LOG_TEXT : {
                 //writeTextLog(dataComponents, processTrace);
@@ -32,7 +36,7 @@ public class CalculationLogServiceImpl implements CalculationLogService {
                 break;
             }
             case Constant.CALCULATION_LOG_DATA_BASE : {
-                writeDataBaseLog(dataComponents, processTrace);
+                writeDataBaseLog(contextOwner, dataComponents, processTrace, currentTimeMillis);
                 break;
             }
             default : {
@@ -41,18 +45,20 @@ public class CalculationLogServiceImpl implements CalculationLogService {
         }
     }
 
-    private void writeDataBaseLog(List<DataComponent<String>> dataComponents, String processTrace) {
+    private void writeDataBaseLog(ContextOwner contextOwner, List<DataComponent<String>> dataComponents, String processTrace, long currentTimeMillis) {
         LogDataCalculation logDataCalculation = new LogDataCalculation();
+        logDataCalculation.setCurrentTimeMillis(currentTimeMillis);
+        String currentDateTime = format.format(currentTimeMillis);
+        logDataCalculation.setDateTime(currentDateTime);
+        logDataCalculation.setProcessTrace(processTrace);
+        logDataCalculation.setAccountId(contextOwner.getCoreAccountId());
+        logDataCalculation.setUserId(contextOwner.getUserId());
+        logDataCalculation.setContextId(contextOwner.getContextId());
+        logDataCalculation.setDetailContextOwner(contextOwner.getDetailContextOwner());
+
         for (DataComponent<String> dataComponent : dataComponents) {
             String dataComponentId = dataComponent.getId();
-            ContextOwner contextOwner = dataComponent.getContextOwner();
             String data = dataComponent.getData();
-            logDataCalculation.setDateTime(new Date());
-            logDataCalculation.setAccountId(contextOwner.getCoreAccountId());
-            logDataCalculation.setUserId(contextOwner.getUserId());
-            logDataCalculation.setContextId(contextOwner.getContextId());
-            logDataCalculation.setProcessTrace(processTrace);
-            logDataCalculation.setDetailContextOwner(Arrays.toString(contextOwner.getAccountIds().toArray()) + "_" + contextOwner.getUserId() + "_" + contextOwner.getContextId());
             if(dataComponentId.equals(Constant.CALCULATION_LOG_COMPONENT_IDs[0])){                                 //CalculationLogParam_LPM
                 logDataCalculation.setLpmJsonData(data);
             }else if(dataComponentId.equals(Constant.CALCULATION_LOG_COMPONENT_IDs[1])){                          //CalculationLogParam_CPM

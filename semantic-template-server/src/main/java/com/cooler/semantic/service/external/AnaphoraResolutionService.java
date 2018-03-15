@@ -12,7 +12,8 @@ public interface AnaphoraResolutionService {
      * 指代消解
      * @param contextOwner      账户ID
      * @param words  被测试词语
-     * @return  指代消解后的新句子向量
+     * @param sentenceVectorSize    本轮分词模式数量
+     * @return
      */
-    Map<String, List<REntityWordInfo>> anaphoraResolution(ContextOwner contextOwner, Set<String> words);
+    Map<String, List<REntityWordInfo>> anaphoraResolution(ContextOwner contextOwner, Set<String> words, int sentenceVectorSize);
 }

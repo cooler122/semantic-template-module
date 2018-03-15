@@ -25,7 +25,7 @@ public class AnaphoraResolutionServiceImpl implements AnaphoraResolutionService 
     private RedisService<SVRuleInfo> redisService;
 
     @Override
-    public Map<String, List<REntityWordInfo>> anaphoraResolution(ContextOwner contextOwner, Set<String> words) {
+    public Map<String, List<REntityWordInfo>> anaphoraResolution(ContextOwner contextOwner, Set<String> words, int sentenceVectorSize) {
         //1.获取账户信息
         Integer accountId = contextOwner.getCoreAccountId();
         String last1OwnerIndex = contextOwner.getLast1OwnerIndex();
@@ -54,6 +54,11 @@ public class AnaphoraResolutionServiceImpl implements AnaphoraResolutionService 
                 List<REntityWordInfo> matchedREntityWordInfos = svRuleInfo.getMatchedREntityWordInfos();                //上一轮对话，匹配上的REW集合
                 Map<Integer, REntityWordInfo> lastREntityWordInfoMap = new HashMap<>();                                 //将上衣轮所有REW转为Map形式，以备后面查被指代实体
                 for (REntityWordInfo matchedREntityWordInfo : matchedREntityWordInfos) {
+                    List<Double> weights = new ArrayList<>();                                                           //上一轮的REWI，用到这一轮，就要设置响应个槽位
+                    for (int i = 0; i < sentenceVectorSize; i++) {
+                        weights.add(null);
+                    }
+                    matchedREntityWordInfo.setWeights(weights);
                     lastREntityWordInfoMap.put(matchedREntityWordInfo.getEntityId(), matchedREntityWordInfo);
                 }
 

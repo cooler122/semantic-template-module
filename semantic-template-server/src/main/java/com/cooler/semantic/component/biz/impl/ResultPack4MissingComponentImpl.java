@@ -32,11 +32,11 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
         logger.trace("RPC4M.缺参结果包装");
         String sentence = svRuleInfo.getSentence();
         Double similarity = svRuleInfo.getSimilarity();
+        String sentenceModified = svRuleInfo.getSentenceModified();
         similarity = new BigDecimal(similarity).setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
         List<RRuleEntity> lackedRRuleEntities = svRuleInfo.getLackedRRuleEntities();
         int lackedSize = lackedRRuleEntities.size();
-        String sentenceModified = StringUtils.collectionToDelimitedString(svRuleInfo.getWords(), "");
-        svRuleInfo.setSentenceModified(sentenceModified);
+
         String responseMsg = "";
 
         DataComponent sugguestDataDataComponent = componentConstant.getDataComponent("sugguestData", contextOwner);         //看看前面是否获取了建议语句

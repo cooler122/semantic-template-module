@@ -5,6 +5,7 @@ import com.cooler.semantic.entity.RRuleEntity;
 import com.cooler.semantic.model.CalculationLogParam_FPM;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
+import com.cooler.semantic.model.WordInfo;
 import com.cooler.semantic.model.console.SimilarityCalculationData_FPM;
 import com.cooler.semantic.model.console.SimilarityCalculationData_LPM;
 import com.cooler.semantic.service.external.SimilarityCalculateService;
@@ -95,6 +96,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             int entitySize = rEntityWordInfosList.size();
             Map<String, RRuleEntity> rRuleEntityMap = ruleId_RRuleEntityDataMap.get(ruleId);                            //获取这条rule下面保存的所有RRE对象Map
 
+            List<WordInfo> redundantWordInfos = new ArrayList<>();                                                       //多余的词语集合
             List<REntityWordInfo> matchedREntityWordInfos = new ArrayList<>();                                          //选择上的REW关系集合（不同分词模式选择的REW集合不同）
             List<RRuleEntity> matchedRRuleEntities = new ArrayList<>();                                                 //匹配上的RRE关系集合
             List<RRuleEntity> lackedRRuleEntities = new ArrayList<>();                                                  //没匹配上的RRE关系集合
@@ -108,10 +110,9 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             Double similarity = 0d;
             Double intersectionVolumeRateOccupancy = 0d;
             Double intersectionWeightOccupancy = 0d;
-            for(int i = 0; i < rEntityWordInfosList.size(); i ++){                                                          //遍历svRuleInfo绑定的一个分词方式指定的实体集群
+            A:for(int i = 0; i < rEntityWordInfosList.size(); i ++){                                                          //遍历svRuleInfo绑定的一个分词方式指定的实体集群
                 List<REntityWordInfo> rEntityWordInfos = rEntityWordInfosList.get(i);                                        //第i个word分词段归属到的实体集合
-
-                for(int j = 0; j < rEntityWordInfos.size(); j ++){                                                              //遍历每一个分词段指定的实体集
+                B:for(int j = 0; j < rEntityWordInfos.size(); j ++){                                                              //遍历每一个分词段指定的实体集
                     REntityWordInfo rEntityWordInfo = rEntityWordInfos.get(j);
                     String entityTypeId = rEntityWordInfo.getEntityTypeId();
                     RRuleEntity rRuleEntity = rRuleEntityMap.get(entityTypeId);                                                  //按照这个key，检索到，就表示被记录，表示能匹配上
@@ -139,10 +140,18 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                             .append("_").append(rEntityWordInfo.getWord())
                             .append("_").append(rEntityWordInfo.getEntityId())
                             .append("_").append(rEntityWordInfo.getEntityName())
-                            .append("_").append(rEntityWordInfo.getWeightMap().get(sentenceVectorId));
+                            .append("_").append(rEntityWordInfo.getWeights().get(sentenceVectorId));
                             rewDatas.add(stringBuffer.toString());
                             ids_rewDatasMap.put(currentKey, rewDatas);
                         }
+                        break B;                                                                                               //一个ruleId下，只要一个词语的一个实体被匹配上即可，无需遍历所有此词语下的实体
+                    }else{
+                        String word = rEntityWordInfo.getWord();
+                        Integer wordId = rEntityWordInfo.getWordId();
+                        Double weight = rEntityWordInfo.getWeights().get(sentenceVectorId);
+                        weight = (weight != null) ? weight : 0d;
+                        WordInfo redundantWordInfo = new WordInfo(wordId, word, weight);
+                        redundantWordInfos.add(redundantWordInfo);
                     }
                 }
             }
@@ -168,6 +177,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             }
             svRuleInfo.setSimilarity(similarity);
 
+            svRuleInfo.setRedundantWordInfos(redundantWordInfos);
             svRuleInfo.setMatchedREntityWordInfos(matchedREntityWordInfos);
             svRuleInfo.setMatchedRRuleEntities(matchedRRuleEntities);
             svRuleInfo.setLackedRRuleEntities(lackedRRuleEntities);
@@ -389,8 +399,8 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                 Double rule_volumeRate = rRuleEntity.getVolumeRate();                                                        //这一项在规则中的数量比重
                 intersectionVolumeRateOccupancy = intersectionVolumeRateOccupancy + sv_volumeRate + rule_volumeRate;        //积累数量比重
 
-                Map<Integer, Double> weightMap = rEntityWordInfo.getWeightMap();
-                Double sv_weightRate = weightMap.get(sentenceVectorId);                                                     //句子向量中，分词归属到的实体的权重
+                List<Double> weights = rEntityWordInfo.getWeights();
+                Double sv_weightRate = weights.get(sentenceVectorId);                                                     //句子向量中，分词归属到的实体的权重
                 Double rule_weightRate = rRuleEntity.getWeight();                                                           //rule模板中，这个实体在rule中的权重
                 intersectionWeightOccupancy = intersectionWeightOccupancy + sv_weightRate + rule_weightRate;                    //积累权重比重
 
@@ -473,8 +483,8 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             if(rRuleEntity != null){
                 //记录此句子向量中归属的实体成功匹配上绑定的规则中的一个实体了 //TODO: 那么规则中的rRuleEntity也可以在db中记录这一次匹配，可以统计一个rRuleEntity的匹配次数
 //                System.out.println("Matched！ : 原句" + sentence + ", 分词方式：" + Arrays.toString(words.toArray()) + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
-                Map<Integer, Double> weightMap = rEntityWordInfo.getWeightMap();
-                Double sv_weight = weightMap.get(sentenceVectorId);                                                     //句子向量中，分词归属到的实体的权重
+                List<Double> rEWIWeights = rEntityWordInfo.getWeights();
+                Double sv_weight = rEWIWeights.get(sentenceVectorId);                                                     //句子向量中，分词归属到的实体的权重
                 Double rule_weight = rRuleEntity.getWeight();                                                           //rule模板中，这个实体在rule中的权重
                 numerator += sv_weight * rule_weight;
             }
@@ -529,8 +539,8 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
             if(rRuleEntity != null){
                 //记录此句子向量中归属的实体成功匹配上绑定的规则中的一个实体了 //TODO: 那么规则中的rRuleEntity也可以在db中记录这一次匹配，可以统计一个rRuleEntity的匹配次数
 //                System.out.println("Matched！ : 原句" + sentence + ", 分词方式：" + Arrays.toString(words.toArray()) + JSON.toJSONString(rEntityWordInfo) + " --- " + JSON.toJSONString(rRuleEntity));
-                Map<Integer, Double> weightMap = rEntityWordInfo.getWeightMap();
-                Double sv_weight = weightMap.get(sentenceVectorId);                                                     //句子向量中，分词归属到的实体的权重
+                List<Double> rEWIWeights = rEntityWordInfo.getWeights();
+                Double sv_weight = rEWIWeights.get(sentenceVectorId);                                                     //句子向量中，分词归属到的实体的权重
                 Double rule_weight = rRuleEntity.getWeight();                                                           //rule模板中，这个实体在rule中的权重
                 sv_weights.add(sv_weight);
                 rule_weights.add(rule_weight);

@@ -1,6 +1,7 @@
 package com.cooler.semantic.service.external;
 
 import com.cooler.semantic.component.data.DataComponent;
+import com.cooler.semantic.model.ContextOwner;
 
 import java.util.List;
 
@@ -11,5 +12,5 @@ public interface ProcessLogService {
      * @param dataComponents    数据组件
      * @param processTrace  轨迹
      */
-    void writeLog(int logType, List<DataComponent> dataComponents, String processTrace);
+    void writeLog(ContextOwner contextOwner, int logType, List<DataComponent> dataComponents, String processTrace, long currentTimeMillis);
 }

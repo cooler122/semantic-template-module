@@ -104,7 +104,7 @@ public class ReferenceRuleSearchComponentImpl extends FunctionComponentBase<SVRu
             String[] baseMatchWords = baseMatchSentence.split(",");
 
             SVRuleInfo createdReferSvRuleInfo = new SVRuleInfo();
-            createdReferSvRuleInfo.setLongConversationRule(true);
+            createdReferSvRuleInfo.setIsLongConversationRule(true);
             createdReferSvRuleInfo.setAccountId(accountId);
             createdReferSvRuleInfo.setSentenceVectorId(0);
             createdReferSvRuleInfo.setSentence(sentence);

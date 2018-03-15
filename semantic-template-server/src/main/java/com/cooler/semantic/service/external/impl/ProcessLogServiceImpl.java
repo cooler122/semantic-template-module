@@ -5,15 +5,14 @@ import com.cooler.semantic.component.data.DataComponent;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.dao.LogDataProcessMapper;
 import com.cooler.semantic.entity.*;
-import com.cooler.semantic.model.REntityWordInfo;
-import com.cooler.semantic.model.SVRuleInfo;
-import com.cooler.semantic.model.SentenceVector;
+import com.cooler.semantic.model.*;
 import com.cooler.semantic.service.external.ProcessLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -25,8 +24,10 @@ public class ProcessLogServiceImpl implements ProcessLogService {
     @Autowired
     private LogDataProcessMapper logDataProcessMapper;
 
+    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     @Override
-    public void writeLog(int logType, List<DataComponent> dataComponents, String processTrace) {
+    public void writeLog(ContextOwner contextOwner, int logType, List<DataComponent> dataComponents, String processTrace, long currentTimeMillis) {
         switch (logType){
             case Constant.PROCESS_LOG_TEXT : {
                 writeTextLog(dataComponents, processTrace);
@@ -37,7 +38,7 @@ public class ProcessLogServiceImpl implements ProcessLogService {
                 break;
             }
             case Constant.PROCESS_LOG_DATA_BASE : {
-                writeDataBaseLog(dataComponents, processTrace);
+                writeDataBaseLog(contextOwner, dataComponents, processTrace, currentTimeMillis);
                 break;
             }
             default : {
@@ -51,9 +52,11 @@ public class ProcessLogServiceImpl implements ProcessLogService {
      * @param dataComponents
      * @param processTrace
      */
-    private void writeDataBaseLog(List<DataComponent> dataComponents, String processTrace) {
+    private void writeDataBaseLog(ContextOwner contextOwner, List<DataComponent> dataComponents, String processTrace, long currentTimeMillis) {
         LogDataProcess logDataProcess = new LogDataProcess();
-        logDataProcess.setDateTime(new Date());
+        logDataProcess.setCurrentTimeMillis(currentTimeMillis);
+        String currentDateTime = format.format(currentTimeMillis);
+        logDataProcess.setDateTime(currentDateTime);
         logDataProcess.setProcessTrace(processTrace);
 
         for (DataComponent dataComponent : dataComponents) {
@@ -154,12 +157,14 @@ public class ProcessLogServiceImpl implements ProcessLogService {
      */
     private void putSVRuleInfoParams(SVRuleInfo svRuleInfo, LogDataProcess logDataProcess, int resultType){
         if(svRuleInfo == null) return;         //这种情况有可能发生，当没有匹配到任何规则的时候，svRuleInfo将为空，有时候lastState<0时，下一轮对话尝试缺参匹配，下一轮如果跳到另一个场景了，那么缺参匹配就会产生空svRuleInfo
-        Integer sentenceVectorId = svRuleInfo.getSentenceVectorId();
+//        Integer sentenceVectorId = svRuleInfo.getSentenceVectorId();
 
-        StringBuffer rule_score_sb = new StringBuffer();
+        StringBuffer redundant_wi_sb = new StringBuffer();
         StringBuffer matched_rew_sb = new StringBuffer();
         StringBuffer matched_rre_sb = new StringBuffer();                                                    //包含wordId_word_normalWord
         StringBuffer lacked_rre_sb = new StringBuffer();
+
+        List<WordInfo> redundantWordInfos = svRuleInfo.getRedundantWordInfos();
         List<REntityWordInfo> matchedREntityWordInfos = svRuleInfo.getMatchedREntityWordInfos();
         List<RRuleEntity> matchedRRuleEntities = svRuleInfo.getMatchedRRuleEntities();
         List<RRuleEntity> lackedRRuleEntities = svRuleInfo.getLackedRRuleEntities();
@@ -169,7 +174,15 @@ public class ProcessLogServiceImpl implements ProcessLogService {
         Integer algorithmType = svRuleInfo.getAlgorithmType();
         Double similarity = svRuleInfo.getSimilarity();
         Double runningAccuracyThreshold = svRuleInfo.getRunningAccuracyThreshold();
-        rule_score_sb.append(ruleId).append("| ").append(ruleName).append("| ").append(algorithmType).append("| ").append(String.format("%.3f",similarity)).append("| ").append(String.format("%.3f",runningAccuracyThreshold));
+
+        if(redundantWordInfos != null && redundantWordInfos.size() > 0){
+            for (WordInfo redundantWordInfo : redundantWordInfos) {
+                int wordId = redundantWordInfo.getWordId();
+                String word = redundantWordInfo.getWord();
+                double weight = redundantWordInfo.getWeight();
+                redundant_wi_sb.append("(").append(wordId).append("_").append(word).append(")(").append(weight).append(")|");
+            }
+        }
 
         if(matchedREntityWordInfos != null && matchedREntityWordInfos.size() > 0){
             for (REntityWordInfo matchedREntityWordInfo : matchedREntityWordInfos) {
@@ -178,9 +191,9 @@ public class ProcessLogServiceImpl implements ProcessLogService {
                 Integer wordId = matchedREntityWordInfo.getWordId();
                 String word = matchedREntityWordInfo.getWord();
 //            String normalWord = matchedREntityWordInfo.getNormalWord();
-                Double weight = matchedREntityWordInfo.getWeightMap().get(sentenceVectorId);
+                Double weight = matchedREntityWordInfo.getWeights().get(0);
                 weight = (weight == null ? 0d : weight);
-                matched_rew_sb.append("(").append(entityTypeId).append("_").append(entityName).append(")(").append(String.format("%.3f", weight)).append(")(").append(wordId).append("_").append(word).append(")| ");
+                matched_rew_sb.append("(").append(wordId).append("_").append(word).append(")").append("(").append(String.format("%.3f", weight)).append(")->(").append(entityTypeId).append("_").append(entityName).append(")| ");
             }
         }
 
@@ -205,21 +218,21 @@ public class ProcessLogServiceImpl implements ProcessLogService {
 
         switch (resultType){
             case  Constant.LPM : {
-                logDataProcess.setLpmRuleScore(rule_score_sb.toString());
+                logDataProcess.setLpmRedundantWi(redundant_wi_sb.toString());
                 logDataProcess.setLpmMatchedRew(matched_rew_sb.toString());
                 logDataProcess.setLpmMatchedRre(matched_rre_sb.toString());
                 logDataProcess.setLpmLackedRre(lacked_rre_sb.toString());
                 break;
             }
             case  Constant.CPM : {
-                logDataProcess.setCpmRuleScore(rule_score_sb.toString());
+                logDataProcess.setCpmRedundantWi(redundant_wi_sb.toString());
                 logDataProcess.setCpmMatchedRew(matched_rew_sb.toString());
                 logDataProcess.setCpmMatchedRre(matched_rre_sb.toString());
                 logDataProcess.setCpmLackedRre(lacked_rre_sb.toString());
                 break;
             }
             case  Constant.FPM : {
-                logDataProcess.setFpmRuleScore(rule_score_sb.toString());
+                logDataProcess.setFpmRedundantWi(redundant_wi_sb.toString());
                 logDataProcess.setFpmMatchedRew(matched_rew_sb.toString());
                 logDataProcess.setFpmMatchedRre(matched_rre_sb.toString());
                 logDataProcess.setFpmLackedRre(lacked_rre_sb.toString());

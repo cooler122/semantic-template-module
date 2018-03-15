@@ -1,16 +1,17 @@
 package com.cooler.semantic.model;
 
+import com.cooler.semantic.constant.Constant;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 /**
  * Created by zhangsheng on 2017/12/31.
  */
 public class REntityWordInfo implements Serializable{
-
-    private Logger logger = LoggerFactory.getLogger(REntityWordInfo.class);
 
     /**
      * 词语ID
@@ -25,7 +26,8 @@ public class REntityWordInfo implements Serializable{
     /**
      * 句子端的设置权重（针对于每一个分词模式下，每一个此REW的权重）
      */
-    private Map<Integer, Double> weightMap = new HashMap<>();
+//    private Map<Integer, Double> weightMap = new HashMap<>();
+    private List<Double> weights;
 
     /**
      * 词性
@@ -62,6 +64,27 @@ public class REntityWordInfo implements Serializable{
      */
     private Integer contextId;
 
+    public REntityWordInfo() {
+        weights = new ArrayList<>();
+        for(int i = 0; i < Constant.DEFAULT_SV_COUNT; i ++){
+            weights.add(null);                                                                                        //先让每一个REWI占Constant.DEFAULT_SV_COUNT个权重位置
+        }
+    }
+
+    public REntityWordInfo(int sentenceVectorSize) {
+        weights = new ArrayList<>();
+        for(int i = 0; i < sentenceVectorSize; i ++){
+            weights.add(null);                                                                                        //先让每一个REWI占sentenceVectorSize个权重位置
+        }
+    }
+
+    public void setWeights(int sentenceVectorSize){
+        List<Double> weights = new ArrayList<>();
+        for(int i = 0; i < sentenceVectorSize; i ++){
+            weights.add(null);                                                                                        //先让每一个REWI占sentenceVectorSize个权重位置
+        }
+        this.weights = weights;
+    }
 
     public String getWord() {
         return word;
@@ -79,12 +102,21 @@ public class REntityWordInfo implements Serializable{
         this.wordId = wordId;
     }
 
-    public Map<Integer, Double> getWeightMap() {
-        return weightMap;
+//    public Map<Integer, Double> getWeightMap() {
+//        return weightMap;
+//    }
+//
+//    public void setWeightMap(Map<Integer, Double> weightMap) {
+//        this.weightMap = weightMap;
+//    }
+
+
+    public List<Double> getWeights() {
+        return weights;
     }
 
-    public void setWeightMap(Map<Integer, Double> weightMap) {
-        this.weightMap = weightMap;
+    public void setWeights(List<Double> weights) {
+        this.weights = weights;
     }
 
     public String getNature() {
@@ -148,8 +180,13 @@ public class REntityWordInfo implements Serializable{
         try{
             rEntityWordInfo = (REntityWordInfo)super.clone();
         } catch(CloneNotSupportedException e) {
-            logger.error(e.toString());
+            e.printStackTrace();
         }
         return rEntityWordInfo;
+    }
+
+    @Override
+    public String toString() {
+        return entityType + "_" + entityId + "_" + entityName;
     }
 }

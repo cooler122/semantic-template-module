@@ -52,8 +52,8 @@ public class StartComponentImpl extends FunctionComponentBase<Object, Object> {
                 Integer historyContextId = historyDataComponent.getContextOwner().getContextId();
                 SVRuleInfo svRuleInfo = historyDataComponent.getData();
                 if(svRuleInfo != null){
-                    if((svRuleInfo.isLongConversationRule() && currentContextId - historyContextId <= longConversationMemorizedCount) ||
-                            (!svRuleInfo.isLongConversationRule() && currentContextId - historyContextId <= shortConversationMemorizedCount)){
+                    if((svRuleInfo.getIsLongConversationRule() && currentContextId - historyContextId <= longConversationMemorizedCount) ||
+                            (!svRuleInfo.getIsLongConversationRule() && currentContextId - historyContextId <= shortConversationMemorizedCount)){
                         enableHistoryDataComponents.add(historyDataComponent);
                     }
                 }

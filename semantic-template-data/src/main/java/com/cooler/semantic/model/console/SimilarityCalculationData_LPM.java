@@ -1,5 +1,6 @@
 package com.cooler.semantic.model.console;
 
+import com.cooler.semantic.entity.RRuleEntity;
 import com.cooler.semantic.model.REntityWordInfo;
 
 import java.util.List;
@@ -19,12 +20,17 @@ public class SimilarityCalculationData_LPM {
         /**
          * 2a.句子向量实体
          */
-        private List<List<REntityWordInfo>> svInputREWIs;
+        private List<REntityWordInfo> svInputREWIs;
 
         /**
-         * 2b.规则向量实体
+         * 2b.规则匹配上的实体
          */
-        private List<REntityWordInfo> ruleInputREWIs;
+        private List<RRuleEntity> ruleMatchedRREs;
+
+        /**
+         * 2c.规则缺失的实体
+         */
+        private List<RRuleEntity> ruleLackedRREs;
 
         /**
          * 3a.算法类型
@@ -70,25 +76,33 @@ public class SimilarityCalculationData_LPM {
             this.contextId = contextId;
         }
 
-        public List<List<REntityWordInfo>> getSvInputREWIs() {
+        public List<REntityWordInfo> getSvInputREWIs() {
             return svInputREWIs;
         }
 
-        public void setSvInputREWIs(List<List<REntityWordInfo>> svInputREWIs) {
+        public void setSvInputREWIs(List<REntityWordInfo> svInputREWIs) {
             this.svInputREWIs = svInputREWIs;
         }
 
-        public List<REntityWordInfo> getRuleInputREWIs() {
-            return ruleInputREWIs;
+        public List<RRuleEntity> getRuleMatchedRREs() {
+            return ruleMatchedRREs;
         }
 
-        public void setRuleInputREWIs(List<REntityWordInfo> ruleInputREWIs) {
-            this.ruleInputREWIs = ruleInputREWIs;
+        public void setRuleMatchedRREs(List<RRuleEntity> ruleMatchedRREs) {
+            this.ruleMatchedRREs = ruleMatchedRREs;
+        }
+
+        public List<RRuleEntity> getRuleLackedRREs() {
+            return ruleLackedRREs;
+        }
+
+        public void setRuleLackedRREs(List<RRuleEntity> ruleLackedRREs) {
+            this.ruleLackedRREs = ruleLackedRREs;
         }
 
         public Integer getAlgorithmType() {
-            return algorithmType;
-        }
+                    return algorithmType;
+                }
 
         public void setAlgorithmType(Integer algorithmType) {
             this.algorithmType = algorithmType;

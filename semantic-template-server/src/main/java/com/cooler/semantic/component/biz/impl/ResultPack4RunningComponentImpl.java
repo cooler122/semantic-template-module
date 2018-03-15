@@ -25,10 +25,9 @@ public class ResultPack4RunningComponentImpl extends FunctionComponentBase<SVRul
         logger.trace("RPC4R.运行中意图结果包装");
         String sentence = svRuleInfo.getSentence();
         Double similarity = svRuleInfo.getSimilarity();
+        String sentenceModified = svRuleInfo.getSentenceModified();
         similarity = new BigDecimal(similarity).setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
         long responseTimestamp = System.currentTimeMillis();
-        String sentenceModified = StringUtils.collectionToDelimitedString(svRuleInfo.getWords(), "");
-        svRuleInfo.setSentenceModified(sentenceModified);
 
         SemanticParserResponse semanticParserResponse = new SemanticParserResponse();
         semanticParserResponse.setSentence(sentence);

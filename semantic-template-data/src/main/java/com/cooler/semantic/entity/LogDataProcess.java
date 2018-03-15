@@ -5,7 +5,9 @@ import java.util.Date;
 public class LogDataProcess {
     private Integer id;
 
-    private Date dateTime;
+    private Long currentTimeMillis;
+
+    private String dateTime;
 
     private Integer accountId;
 
@@ -39,7 +41,7 @@ public class LogDataProcess {
 
     private String svWeights;
 
-    private String lpmRuleScore;
+    private String lpmRedundantWi;
 
     private String lpmMatchedRew;
 
@@ -47,7 +49,7 @@ public class LogDataProcess {
 
     private String lpmLackedRre;
 
-    private String cpmRuleScore;
+    private String cpmRedundantWi;
 
     private String cpmMatchedRew;
 
@@ -55,7 +57,7 @@ public class LogDataProcess {
 
     private String cpmLackedRre;
 
-    private String fpmRuleScore;
+    private String fpmRedundantWi;
 
     private String fpmMatchedRew;
 
@@ -65,8 +67,9 @@ public class LogDataProcess {
 
     private String selectResult;
 
-    public LogDataProcess(Integer id, Date dateTime, Integer accountId, Integer userId, Integer contextId, String processTrace, String detailContextOwner, String sentence, String sentenceModified, String responseMsg, Integer state, Double score, Integer responseType, String responseTimestamp, String configureParams, String svIds, String svWords, String svWeights, String lpmRuleScore, String lpmMatchedRew, String lpmMatchedRre, String lpmLackedRre, String cpmRuleScore, String cpmMatchedRew, String cpmMatchedRre, String cpmLackedRre, String fpmRuleScore, String fpmMatchedRew, String fpmMatchedRre, String fpmLackedRre, String selectResult) {
+    public LogDataProcess(Integer id, Long currentTimeMillis, String dateTime, Integer accountId, Integer userId, Integer contextId, String processTrace, String detailContextOwner, String sentence, String sentenceModified, String responseMsg, Integer state, Double score, Integer responseType, String responseTimestamp, String configureParams, String svIds, String svWords, String svWeights, String lpmRedundantWi, String lpmMatchedRew, String lpmMatchedRre, String lpmLackedRre, String cpmRedundantWi, String cpmMatchedRew, String cpmMatchedRre, String cpmLackedRre, String fpmRedundantWi, String fpmMatchedRew, String fpmMatchedRre, String fpmLackedRre, String selectResult) {
         this.id = id;
+        this.currentTimeMillis = currentTimeMillis;
         this.dateTime = dateTime;
         this.accountId = accountId;
         this.userId = userId;
@@ -84,15 +87,15 @@ public class LogDataProcess {
         this.svIds = svIds;
         this.svWords = svWords;
         this.svWeights = svWeights;
-        this.lpmRuleScore = lpmRuleScore;
+        this.lpmRedundantWi = lpmRedundantWi;
         this.lpmMatchedRew = lpmMatchedRew;
         this.lpmMatchedRre = lpmMatchedRre;
         this.lpmLackedRre = lpmLackedRre;
-        this.cpmRuleScore = cpmRuleScore;
+        this.cpmRedundantWi = cpmRedundantWi;
         this.cpmMatchedRew = cpmMatchedRew;
         this.cpmMatchedRre = cpmMatchedRre;
         this.cpmLackedRre = cpmLackedRre;
-        this.fpmRuleScore = fpmRuleScore;
+        this.fpmRedundantWi = fpmRedundantWi;
         this.fpmMatchedRew = fpmMatchedRew;
         this.fpmMatchedRre = fpmMatchedRre;
         this.fpmLackedRre = fpmLackedRre;
@@ -111,11 +114,19 @@ public class LogDataProcess {
         this.id = id;
     }
 
-    public Date getDateTime() {
+    public Long getCurrentTimeMillis() {
+        return currentTimeMillis;
+    }
+
+    public void setCurrentTimeMillis(Long currentTimeMillis) {
+        this.currentTimeMillis = currentTimeMillis;
+    }
+
+    public String getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(Date dateTime) {
+    public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
     }
 
@@ -247,12 +258,12 @@ public class LogDataProcess {
         this.svWeights = svWeights == null ? null : svWeights.trim();
     }
 
-    public String getLpmRuleScore() {
-        return lpmRuleScore;
+    public String getLpmRedundantWi() {
+        return lpmRedundantWi;
     }
 
-    public void setLpmRuleScore(String lpmRuleScore) {
-        this.lpmRuleScore = lpmRuleScore == null ? null : lpmRuleScore.trim();
+    public void setLpmRedundantWi(String lpmRedundantWi) {
+        this.lpmRedundantWi = lpmRedundantWi == null ? null : lpmRedundantWi.trim();
     }
 
     public String getLpmMatchedRew() {
@@ -279,12 +290,12 @@ public class LogDataProcess {
         this.lpmLackedRre = lpmLackedRre == null ? null : lpmLackedRre.trim();
     }
 
-    public String getCpmRuleScore() {
-        return cpmRuleScore;
+    public String getCpmRedundantWi() {
+        return cpmRedundantWi;
     }
 
-    public void setCpmRuleScore(String cpmRuleScore) {
-        this.cpmRuleScore = cpmRuleScore == null ? null : cpmRuleScore.trim();
+    public void setCpmRedundantWi(String cpmRedundantWi) {
+        this.cpmRedundantWi = cpmRedundantWi == null ? null : cpmRedundantWi.trim();
     }
 
     public String getCpmMatchedRew() {
@@ -311,12 +322,12 @@ public class LogDataProcess {
         this.cpmLackedRre = cpmLackedRre == null ? null : cpmLackedRre.trim();
     }
 
-    public String getFpmRuleScore() {
-        return fpmRuleScore;
+    public String getFpmRedundantWi() {
+        return fpmRedundantWi;
     }
 
-    public void setFpmRuleScore(String fpmRuleScore) {
-        this.fpmRuleScore = fpmRuleScore == null ? null : fpmRuleScore.trim();
+    public void setFpmRedundantWi(String fpmRedundantWi) {
+        this.fpmRedundantWi = fpmRedundantWi == null ? null : fpmRedundantWi.trim();
     }
 
     public String getFpmMatchedRew() {

@@ -8,10 +8,7 @@ import com.cooler.semantic.component.data.DataComponentBase;
 import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.RRuleEntity;
 import com.cooler.semantic.entity.SemanticParserRequest;
-import com.cooler.semantic.model.CalculationLogParam_FPM;
-import com.cooler.semantic.model.ContextOwner;
-import com.cooler.semantic.model.SVRuleInfo;
-import com.cooler.semantic.model.SentenceVector;
+import com.cooler.semantic.model.*;
 import com.cooler.semantic.model.console.SimilarityCalculationData_FPM;
 import com.cooler.semantic.service.external.RuleSearchService;
 import com.cooler.semantic.service.external.SimilarityCalculateService;
@@ -98,7 +95,19 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                 SVRuleInfo optimalSvRuleInfo_FPM = svRuleInfosResult.get(0);                                            //获取相似度值最大的那一个（最优结果）
                 optimalSvRuleInfo_FPM.setMatchType(Constant.FPM);                                                      //设置匹配类型
                 optimalSvRuleInfo_FPM.setAlgorithmType(algorithmType);                                                  //设置算法类型
+                optimalSvRuleInfo_FPM.setSentenceModified(optimalSvRuleInfo_FPM.getSentence());                         //全参匹配不改变句子，但还是要设置
                 optimalSvRuleInfo_FPM.setrEntityWordInfosList(null);                                                   //最优规则找到后，需要保存（本地、远程），此过程数据太大而且后续没有更多作用，故此处设置为null
+                StringBuffer sentenceModifiedSB = new StringBuffer();
+                for (String wordModified : optimalSvRuleInfo_FPM.getWords()) {
+                    sentenceModifiedSB.append(wordModified);
+                }
+                optimalSvRuleInfo_FPM.setSentenceModified(sentenceModifiedSB.toString());
+
+//                Integer finalSentenceVectorId = optimalSvRuleInfo_FPM.getSentenceVectorId();
+//                List<REntityWordInfo> matchedREntityWordInfos = optimalSvRuleInfo_FPM.getMatchedREntityWordInfos();     //当最优规则产生后，其分词向量ID确定，那么其matchedREntityWordInfos里面每一个REWI都设置好最终权重了。
+//                for (REntityWordInfo matchedREntityWordInfo : matchedREntityWordInfos) {
+//                    matchedREntityWordInfo.setWeights(Arrays.asList(matchedREntityWordInfo.getWeights().get(finalSentenceVectorId)));
+//                }
                 if(calculationLogType != Constant.NO_CALCULATION_LOG){
                     calculationLogParam_fpm.setOptimalSvRuleInfo_FPM(optimalSvRuleInfo_FPM);
                     componentConstant.putDataComponent(new DataComponentBase("CalculationLogParam_FPM", contextOwner, "String", JSON.toJSONString(calculationLogParam_fpm)));

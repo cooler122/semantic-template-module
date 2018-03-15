@@ -1,6 +1,7 @@
 package com.cooler.semantic.service.impl;
 
 import com.cooler.semantic.dao.LogDataProcessMapper;
+import com.cooler.semantic.dto.LogDataProcessDTO;
 import com.cooler.semantic.entity.LogDataProcess;
 import com.cooler.semantic.service.LogDataProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class LogDataProcessServiceImpl implements LogDataProcessService {
     }
 
     @Override
-    public List<LogDataProcess> selectByAIdUIdDateTime(Integer accountId, Integer userId, String fromDateTime, String toDateTime) {
+    public List<LogDataProcessDTO> selectByAIdUIdDateTime(Integer accountId, Integer userId, String fromDateTime, String toDateTime) {
         return logDataProcessMapper.selectByAIdUIdDateTime(accountId, userId, fromDateTime, toDateTime);
     }
 

@@ -41,4 +41,19 @@ public class LogDataCalculationServiceImpl implements LogDataCalculationService 
     public int updateByPrimaryKey(LogDataCalculation record) {
         return logDataCalculationMapper.updateByPrimaryKey(record);
     }
+
+    @Override
+    public LogDataCalculation selectBy4Params(Integer accountId, Integer userId, Integer contextId, Long currentTimeMillis) {
+        return logDataCalculationMapper.selectBy4Params(accountId, userId, contextId, currentTimeMillis);
+    }
+
+    @Override
+    public int checkBy4Params(Integer accountId, Integer userId, Integer contextId, Long currentTimeMillis) {
+        return logDataCalculationMapper.checkBy4Params(accountId, userId, contextId, currentTimeMillis);
+    }
+
+    @Override
+    public LogDataCalculation getLogDataCalculation(Integer accountId, Integer userId, Integer contextId, Long currentTimeMillis) {
+        return logDataCalculationMapper.getLogDataCalculation(accountId, userId, contextId, currentTimeMillis);
+    }
 }

@@ -41,6 +41,7 @@ public class EntityAssignComponentImpl extends FunctionComponentBase<List<Senten
         Integer contextId = contextOwner.getContextId();
         boolean hadAnaphoraResolution = false;
         Map<String, List<REntityWordInfo>> rEntityWordInfosMap = new HashMap<>();
+        int sentenceVectorSize = sentenceVectors.size();
 
         //1.先将所有分词组合出现的分词段收集起来，这里使用Set就直接去重了，查询出这些词语的REntityWord对象集合
         Set<String> allWords = new HashSet<>();
@@ -55,7 +56,7 @@ public class EntityAssignComponentImpl extends FunctionComponentBase<List<Senten
         }
 
         //3.1.指代性实体归属：查找指代性词语，归属指代性实体
-        Map<String, List<REntityWordInfo>> word_anaphoraEntitiesMap = anaphoraResolutionService.anaphoraResolution(contextOwner, allWords);
+        Map<String, List<REntityWordInfo>> word_anaphoraEntitiesMap = anaphoraResolutionService.anaphoraResolution(contextOwner, allWords, sentenceVectorSize);
         if(word_anaphoraEntitiesMap != null && word_anaphoraEntitiesMap.size() > 0){
             Set<String> anaphoraWords = word_anaphoraEntitiesMap.keySet();                                              //已经归属好的指代性词语（实际上来源于上一轮的REW）
             for (String anaphoraWord : anaphoraWords) {
@@ -84,7 +85,7 @@ public class EntityAssignComponentImpl extends FunctionComponentBase<List<Senten
             String word = rEntityWord.getWord();
             List<REntityWordInfo> rEntityWordInfos = rEntityWordInfosMap.get(word);
 
-            REntityWordInfo rEntityWordInfo = new REntityWordInfo();
+            REntityWordInfo rEntityWordInfo = new REntityWordInfo(sentenceVectorSize);
             rEntityWordInfo.setWordId(rEntityWord.getWordId());
             rEntityWordInfo.setWord(rEntityWord.getWord());
             rEntityWordInfo.setEntityId(rEntityWord.getEntityId());
@@ -112,7 +113,7 @@ public class EntityAssignComponentImpl extends FunctionComponentBase<List<Senten
                 String word = wordCN.getWord();
 
                 List<REntityWordInfo> rEntityWordInfos = rEntityWordInfosMap.get(word);                                 //此集合已经在上面设置过集合对象，不可能为null
-                REntityWordInfo rEntityWordInfo = new REntityWordInfo();
+                REntityWordInfo rEntityWordInfo = new REntityWordInfo(sentenceVectorSize);
                 rEntityWordInfo.setWordId(wordId);
                 rEntityWordInfo.setWord(word);
                 rEntityWordInfo.setEntityId(wordId);                                                                    //这里是常量实体，则将entityId和entityName设置为wordID和word
@@ -138,10 +139,12 @@ public class EntityAssignComponentImpl extends FunctionComponentBase<List<Senten
             for(int i = 0; i < words.size(); i ++){
                 String word = words.get(i);
                 List<REntityWordInfo> rEntityWordInfos = rEntityWordInfosMap.get(word);
+                for (int j = 0; j < rEntityWordInfos.size(); j ++) {
+                    REntityWordInfo rEntityWordInfo = rEntityWordInfos.get(j);
 
-                for (REntityWordInfo rEntityWordInfo : rEntityWordInfos) {
-                    Map<Integer, Double> weightMap = rEntityWordInfo.getWeightMap();
-                    weightMap.put(sentenceVectorId, weights.get(i));                                                    //将weight和nature复制到rEntityWordInfo中
+                    List<Double> weightsTmp = rEntityWordInfo.getWeights();
+
+                    weightsTmp.set(sentenceVectorId, weights.get(i));                                                    //将weight和nature复制到rEntityWordInfo中
                     rEntityWordInfo.setNature(natures.get(i));
                 }
                 rEntityWordInfosList.add(rEntityWordInfos);

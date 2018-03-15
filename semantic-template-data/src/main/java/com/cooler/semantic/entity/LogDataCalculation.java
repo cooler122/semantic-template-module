@@ -5,7 +5,9 @@ import java.util.Date;
 public class LogDataCalculation {
     private Integer id;
 
-    private Date dateTime;
+    private Long currentTimeMillis;
+
+    private String dateTime;
 
     private Integer accountId;
 
@@ -23,8 +25,9 @@ public class LogDataCalculation {
 
     private String fpmJsonData;
 
-    public LogDataCalculation(Integer id, Date dateTime, Integer accountId, Integer userId, Integer contextId, String processTrace, String detailContextOwner, String cpmJsonData, String lpmJsonData, String fpmJsonData) {
+    public LogDataCalculation(Integer id, Long currentTimeMillis, String dateTime, Integer accountId, Integer userId, Integer contextId, String processTrace, String detailContextOwner, String cpmJsonData, String lpmJsonData, String fpmJsonData) {
         this.id = id;
+        this.currentTimeMillis = currentTimeMillis;
         this.dateTime = dateTime;
         this.accountId = accountId;
         this.userId = userId;
@@ -48,11 +51,19 @@ public class LogDataCalculation {
         this.id = id;
     }
 
-    public Date getDateTime() {
+    public Long getCurrentTimeMillis() {
+        return currentTimeMillis;
+    }
+
+    public void setCurrentTimeMillis(Long currentTimeMillis) {
+        this.currentTimeMillis = currentTimeMillis;
+    }
+
+    public String getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(Date dateTime) {
+    public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
     }
 

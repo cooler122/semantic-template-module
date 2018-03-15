@@ -1,375 +1,386 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cooler.semantic.dao.LogDataProcessMapper">
-  <resultMap id="BaseResultMap" type="com.cooler.semantic.entity.LogDataProcess">
-    <constructor>
-      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="date_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
-      <arg column="account_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="context_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="process_trace" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="detail_context_owner" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sentence" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sentence_modified" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="response_msg" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="state" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="score" javaType="java.lang.Double" jdbcType="DOUBLE" />
-      <arg column="response_type" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="response_timestamp" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="configure_params" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sv_ids" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sv_words" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="sv_weights" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="lpm_rule_score" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="lpm_matched_rew" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="lpm_matched_rre" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="lpm_lacked_rre" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="cpm_rule_score" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="cpm_matched_rew" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="cpm_matched_rre" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="cpm_lacked_rre" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="fpm_rule_score" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="fpm_matched_rew" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="fpm_matched_rre" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="fpm_lacked_rre" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="select_result" javaType="java.lang.String" jdbcType="VARCHAR" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cooler.semantic.dao.LogDataProcessMapper" >
+  <resultMap id="BaseResultMap" type="com.cooler.semantic.entity.LogDataProcess" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="current_time_millis" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="date_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="account_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="context_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="process_trace" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="detail_context_owner" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sentence" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sentence_modified" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="response_msg" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="state" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="score" jdbcType="DOUBLE" javaType="java.lang.Double" />
+      <arg column="response_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="response_timestamp" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="configure_params" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sv_ids" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sv_words" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sv_weights" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="lpm_redundant_wi" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="lpm_matched_rew" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="lpm_matched_rre" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="lpm_lacked_rre" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="cpm_redundant_wi" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="cpm_matched_rew" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="cpm_matched_rre" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="cpm_lacked_rre" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="fpm_redundant_wi" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="fpm_matched_rew" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="fpm_matched_rre" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="fpm_lacked_rre" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="select_result" jdbcType="VARCHAR" javaType="java.lang.String" />
     </constructor>
   </resultMap>
-  <sql id="Base_Column_List">
-    id, date_time, account_id, user_id, context_id, process_trace, detail_context_owner, 
-    sentence, sentence_modified, response_msg, state, score, response_type, response_timestamp, 
-    configure_params, sv_ids, sv_words, sv_weights, lpm_rule_score, lpm_matched_rew, 
-    lpm_matched_rre, lpm_lacked_rre, cpm_rule_score, cpm_matched_rew, cpm_matched_rre, 
-    cpm_lacked_rre, fpm_rule_score, fpm_matched_rew, fpm_matched_rre, fpm_lacked_rre, 
-    select_result
+  <sql id="Base_Column_List" >
+    id, current_time_millis, date_time, account_id, user_id, context_id, process_trace,
+    detail_context_owner, sentence, sentence_modified, response_msg, state, score, response_type, 
+    response_timestamp, configure_params, sv_ids, sv_words, sv_weights, lpm_redundant_wi, 
+    lpm_matched_rew, lpm_matched_rre, lpm_lacked_rre, cpm_redundant_wi, cpm_matched_rew, 
+    cpm_matched_rre, cpm_lacked_rre, fpm_redundant_wi, fpm_matched_rew, fpm_matched_rre, 
+    fpm_lacked_rre, select_result
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from log_data_process
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from log_data_process
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.cooler.semantic.entity.LogDataProcess">
-    insert into log_data_process (id, date_time, account_id, 
-      user_id, context_id, process_trace, 
-      detail_context_owner, sentence, sentence_modified, 
-      response_msg, state, score, 
-      response_type, response_timestamp, configure_params, 
-      sv_ids, sv_words, sv_weights, 
-      lpm_rule_score, lpm_matched_rew, lpm_matched_rre, 
-      lpm_lacked_rre, cpm_rule_score, cpm_matched_rew, 
-      cpm_matched_rre, cpm_lacked_rre, fpm_rule_score, 
-      fpm_matched_rew, fpm_matched_rre, fpm_lacked_rre, 
-      select_result)
-    values (#{id,jdbcType=INTEGER}, #{dateTime,jdbcType=TIMESTAMP}, #{accountId,jdbcType=INTEGER},
-      #{userId,jdbcType=INTEGER}, #{contextId,jdbcType=INTEGER}, #{processTrace,jdbcType=VARCHAR}, 
-      #{detailContextOwner,jdbcType=VARCHAR}, #{sentence,jdbcType=VARCHAR}, #{sentenceModified,jdbcType=VARCHAR}, 
-      #{responseMsg,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{score,jdbcType=DOUBLE}, 
-      #{responseType,jdbcType=INTEGER}, #{responseTimestamp,jdbcType=VARCHAR}, #{configureParams,jdbcType=VARCHAR}, 
-      #{svIds,jdbcType=VARCHAR}, #{svWords,jdbcType=VARCHAR}, #{svWeights,jdbcType=VARCHAR}, 
-      #{lpmRuleScore,jdbcType=VARCHAR}, #{lpmMatchedRew,jdbcType=VARCHAR}, #{lpmMatchedRre,jdbcType=VARCHAR}, 
-      #{lpmLackedRre,jdbcType=VARCHAR}, #{cpmRuleScore,jdbcType=VARCHAR}, #{cpmMatchedRew,jdbcType=VARCHAR}, 
-      #{cpmMatchedRre,jdbcType=VARCHAR}, #{cpmLackedRre,jdbcType=VARCHAR}, #{fpmRuleScore,jdbcType=VARCHAR}, 
-      #{fpmMatchedRew,jdbcType=VARCHAR}, #{fpmMatchedRre,jdbcType=VARCHAR}, #{fpmLackedRre,jdbcType=VARCHAR}, 
-      #{selectResult,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.cooler.semantic.entity.LogDataProcess" >
+    insert into log_data_process (id, current_time_millis, date_time,
+      account_id, user_id, context_id, 
+      process_trace, detail_context_owner, sentence, 
+      sentence_modified, response_msg, state, 
+      score, response_type, response_timestamp, 
+      configure_params, sv_ids, sv_words, 
+      sv_weights, lpm_redundant_wi, lpm_matched_rew, 
+      lpm_matched_rre, lpm_lacked_rre, cpm_redundant_wi, 
+      cpm_matched_rew, cpm_matched_rre, cpm_lacked_rre, 
+      fpm_redundant_wi, fpm_matched_rew, fpm_matched_rre, 
+      fpm_lacked_rre, select_result)
+    values (#{id,jdbcType=INTEGER}, #{currentTimeMillis,jdbcType=BIGINT}, #{dateTime,jdbcType=TIMESTAMP},
+      #{accountId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{contextId,jdbcType=INTEGER}, 
+      #{processTrace,jdbcType=VARCHAR}, #{detailContextOwner,jdbcType=VARCHAR}, #{sentence,jdbcType=VARCHAR}, 
+      #{sentenceModified,jdbcType=VARCHAR}, #{responseMsg,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, 
+      #{score,jdbcType=DOUBLE}, #{responseType,jdbcType=INTEGER}, #{responseTimestamp,jdbcType=VARCHAR}, 
+      #{configureParams,jdbcType=VARCHAR}, #{svIds,jdbcType=VARCHAR}, #{svWords,jdbcType=VARCHAR}, 
+      #{svWeights,jdbcType=VARCHAR}, #{lpmRedundantWi,jdbcType=VARCHAR}, #{lpmMatchedRew,jdbcType=VARCHAR}, 
+      #{lpmMatchedRre,jdbcType=VARCHAR}, #{lpmLackedRre,jdbcType=VARCHAR}, #{cpmRedundantWi,jdbcType=VARCHAR}, 
+      #{cpmMatchedRew,jdbcType=VARCHAR}, #{cpmMatchedRre,jdbcType=VARCHAR}, #{cpmLackedRre,jdbcType=VARCHAR}, 
+      #{fpmRedundantWi,jdbcType=VARCHAR}, #{fpmMatchedRew,jdbcType=VARCHAR}, #{fpmMatchedRre,jdbcType=VARCHAR}, 
+      #{fpmLackedRre,jdbcType=VARCHAR}, #{selectResult,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.cooler.semantic.entity.LogDataProcess">
+  <insert id="insertSelective" parameterType="com.cooler.semantic.entity.LogDataProcess" >
     insert into log_data_process
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         id,
       </if>
-      <if test="dateTime != null">
+      <if test="currentTimeMillis != null" >
+        current_time_millis,
+      </if>
+      <if test="dateTime != null" >
         date_time,
       </if>
-      <if test="accountId != null">
+      <if test="accountId != null" >
         account_id,
       </if>
-      <if test="userId != null">
+      <if test="userId != null" >
         user_id,
       </if>
-      <if test="contextId != null">
+      <if test="contextId != null" >
         context_id,
       </if>
-      <if test="processTrace != null">
+      <if test="processTrace != null" >
         process_trace,
       </if>
-      <if test="detailContextOwner != null">
+      <if test="detailContextOwner != null" >
         detail_context_owner,
       </if>
-      <if test="sentence != null">
+      <if test="sentence != null" >
         sentence,
       </if>
-      <if test="sentenceModified != null">
+      <if test="sentenceModified != null" >
         sentence_modified,
       </if>
-      <if test="responseMsg != null">
+      <if test="responseMsg != null" >
         response_msg,
       </if>
-      <if test="state != null">
+      <if test="state != null" >
         state,
       </if>
-      <if test="score != null">
+      <if test="score != null" >
         score,
       </if>
-      <if test="responseType != null">
+      <if test="responseType != null" >
         response_type,
       </if>
-      <if test="responseTimestamp != null">
+      <if test="responseTimestamp != null" >
         response_timestamp,
       </if>
-      <if test="configureParams != null">
+      <if test="configureParams != null" >
         configure_params,
       </if>
-      <if test="svIds != null">
+      <if test="svIds != null" >
         sv_ids,
       </if>
-      <if test="svWords != null">
+      <if test="svWords != null" >
         sv_words,
       </if>
-      <if test="svWeights != null">
+      <if test="svWeights != null" >
         sv_weights,
       </if>
-      <if test="lpmRuleScore != null">
-        lpm_rule_score,
+      <if test="lpmRedundantWi != null" >
+        lpm_redundant_wi,
       </if>
-      <if test="lpmMatchedRew != null">
+      <if test="lpmMatchedRew != null" >
         lpm_matched_rew,
       </if>
-      <if test="lpmMatchedRre != null">
+      <if test="lpmMatchedRre != null" >
         lpm_matched_rre,
       </if>
-      <if test="lpmLackedRre != null">
+      <if test="lpmLackedRre != null" >
         lpm_lacked_rre,
       </if>
-      <if test="cpmRuleScore != null">
-        cpm_rule_score,
+      <if test="cpmRedundantWi != null" >
+        cpm_redundant_wi,
       </if>
-      <if test="cpmMatchedRew != null">
+      <if test="cpmMatchedRew != null" >
         cpm_matched_rew,
       </if>
-      <if test="cpmMatchedRre != null">
+      <if test="cpmMatchedRre != null" >
         cpm_matched_rre,
       </if>
-      <if test="cpmLackedRre != null">
+      <if test="cpmLackedRre != null" >
         cpm_lacked_rre,
       </if>
-      <if test="fpmRuleScore != null">
-        fpm_rule_score,
+      <if test="fpmRedundantWi != null" >
+        fpm_redundant_wi,
       </if>
-      <if test="fpmMatchedRew != null">
+      <if test="fpmMatchedRew != null" >
         fpm_matched_rew,
       </if>
-      <if test="fpmMatchedRre != null">
+      <if test="fpmMatchedRre != null" >
         fpm_matched_rre,
       </if>
-      <if test="fpmLackedRre != null">
+      <if test="fpmLackedRre != null" >
         fpm_lacked_rre,
       </if>
-      <if test="selectResult != null">
+      <if test="selectResult != null" >
         select_result,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="dateTime != null">
+      <if test="currentTimeMillis != null" >
+        #{currentTimeMillis,jdbcType=BIGINT},
+      </if>
+      <if test="dateTime != null" >
         #{dateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="accountId != null">
+      <if test="accountId != null" >
         #{accountId,jdbcType=INTEGER},
       </if>
-      <if test="userId != null">
+      <if test="userId != null" >
         #{userId,jdbcType=INTEGER},
       </if>
-      <if test="contextId != null">
+      <if test="contextId != null" >
         #{contextId,jdbcType=INTEGER},
       </if>
-      <if test="processTrace != null">
+      <if test="processTrace != null" >
         #{processTrace,jdbcType=VARCHAR},
       </if>
-      <if test="detailContextOwner != null">
+      <if test="detailContextOwner != null" >
         #{detailContextOwner,jdbcType=VARCHAR},
       </if>
-      <if test="sentence != null">
+      <if test="sentence != null" >
         #{sentence,jdbcType=VARCHAR},
       </if>
-      <if test="sentenceModified != null">
+      <if test="sentenceModified != null" >
         #{sentenceModified,jdbcType=VARCHAR},
       </if>
-      <if test="responseMsg != null">
+      <if test="responseMsg != null" >
         #{responseMsg,jdbcType=VARCHAR},
       </if>
-      <if test="state != null">
+      <if test="state != null" >
         #{state,jdbcType=INTEGER},
       </if>
-      <if test="score != null">
+      <if test="score != null" >
         #{score,jdbcType=DOUBLE},
       </if>
-      <if test="responseType != null">
+      <if test="responseType != null" >
         #{responseType,jdbcType=INTEGER},
       </if>
-      <if test="responseTimestamp != null">
+      <if test="responseTimestamp != null" >
         #{responseTimestamp,jdbcType=VARCHAR},
       </if>
-      <if test="configureParams != null">
+      <if test="configureParams != null" >
         #{configureParams,jdbcType=VARCHAR},
       </if>
-      <if test="svIds != null">
+      <if test="svIds != null" >
         #{svIds,jdbcType=VARCHAR},
       </if>
-      <if test="svWords != null">
+      <if test="svWords != null" >
         #{svWords,jdbcType=VARCHAR},
       </if>
-      <if test="svWeights != null">
+      <if test="svWeights != null" >
         #{svWeights,jdbcType=VARCHAR},
       </if>
-      <if test="lpmRuleScore != null">
-        #{lpmRuleScore,jdbcType=VARCHAR},
+      <if test="lpmRedundantWi != null" >
+        #{lpmRedundantWi,jdbcType=VARCHAR},
       </if>
-      <if test="lpmMatchedRew != null">
+      <if test="lpmMatchedRew != null" >
         #{lpmMatchedRew,jdbcType=VARCHAR},
       </if>
-      <if test="lpmMatchedRre != null">
+      <if test="lpmMatchedRre != null" >
         #{lpmMatchedRre,jdbcType=VARCHAR},
       </if>
-      <if test="lpmLackedRre != null">
+      <if test="lpmLackedRre != null" >
         #{lpmLackedRre,jdbcType=VARCHAR},
       </if>
-      <if test="cpmRuleScore != null">
-        #{cpmRuleScore,jdbcType=VARCHAR},
+      <if test="cpmRedundantWi != null" >
+        #{cpmRedundantWi,jdbcType=VARCHAR},
       </if>
-      <if test="cpmMatchedRew != null">
+      <if test="cpmMatchedRew != null" >
         #{cpmMatchedRew,jdbcType=VARCHAR},
       </if>
-      <if test="cpmMatchedRre != null">
+      <if test="cpmMatchedRre != null" >
         #{cpmMatchedRre,jdbcType=VARCHAR},
       </if>
-      <if test="cpmLackedRre != null">
+      <if test="cpmLackedRre != null" >
         #{cpmLackedRre,jdbcType=VARCHAR},
       </if>
-      <if test="fpmRuleScore != null">
-        #{fpmRuleScore,jdbcType=VARCHAR},
+      <if test="fpmRedundantWi != null" >
+        #{fpmRedundantWi,jdbcType=VARCHAR},
       </if>
-      <if test="fpmMatchedRew != null">
+      <if test="fpmMatchedRew != null" >
         #{fpmMatchedRew,jdbcType=VARCHAR},
       </if>
-      <if test="fpmMatchedRre != null">
+      <if test="fpmMatchedRre != null" >
         #{fpmMatchedRre,jdbcType=VARCHAR},
       </if>
-      <if test="fpmLackedRre != null">
+      <if test="fpmLackedRre != null" >
         #{fpmLackedRre,jdbcType=VARCHAR},
       </if>
-      <if test="selectResult != null">
+      <if test="selectResult != null" >
         #{selectResult,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.LogDataProcess">
+  <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.LogDataProcess" >
     update log_data_process
-    <set>
-      <if test="dateTime != null">
+    <set >
+      <if test="currentTimeMillis != null" >
+        current_time_millis = #{currentTimeMillis,jdbcType=BIGINT},
+      </if>
+      <if test="dateTime != null" >
         date_time = #{dateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="accountId != null">
+      <if test="accountId != null" >
         account_id = #{accountId,jdbcType=INTEGER},
       </if>
-      <if test="userId != null">
+      <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
       </if>
-      <if test="contextId != null">
+      <if test="contextId != null" >
         context_id = #{contextId,jdbcType=INTEGER},
       </if>
-      <if test="processTrace != null">
+      <if test="processTrace != null" >
         process_trace = #{processTrace,jdbcType=VARCHAR},
       </if>
-      <if test="detailContextOwner != null">
+      <if test="detailContextOwner != null" >
         detail_context_owner = #{detailContextOwner,jdbcType=VARCHAR},
       </if>
-      <if test="sentence != null">
+      <if test="sentence != null" >
         sentence = #{sentence,jdbcType=VARCHAR},
       </if>
-      <if test="sentenceModified != null">
+      <if test="sentenceModified != null" >
         sentence_modified = #{sentenceModified,jdbcType=VARCHAR},
       </if>
-      <if test="responseMsg != null">
+      <if test="responseMsg != null" >
         response_msg = #{responseMsg,jdbcType=VARCHAR},
       </if>
-      <if test="state != null">
+      <if test="state != null" >
         state = #{state,jdbcType=INTEGER},
       </if>
-      <if test="score != null">
+      <if test="score != null" >
         score = #{score,jdbcType=DOUBLE},
       </if>
-      <if test="responseType != null">
+      <if test="responseType != null" >
         response_type = #{responseType,jdbcType=INTEGER},
       </if>
-      <if test="responseTimestamp != null">
+      <if test="responseTimestamp != null" >
         response_timestamp = #{responseTimestamp,jdbcType=VARCHAR},
       </if>
-      <if test="configureParams != null">
+      <if test="configureParams != null" >
         configure_params = #{configureParams,jdbcType=VARCHAR},
       </if>
-      <if test="svIds != null">
+      <if test="svIds != null" >
         sv_ids = #{svIds,jdbcType=VARCHAR},
       </if>
-      <if test="svWords != null">
+      <if test="svWords != null" >
         sv_words = #{svWords,jdbcType=VARCHAR},
       </if>
-      <if test="svWeights != null">
+      <if test="svWeights != null" >
         sv_weights = #{svWeights,jdbcType=VARCHAR},
       </if>
-      <if test="lpmRuleScore != null">
-        lpm_rule_score = #{lpmRuleScore,jdbcType=VARCHAR},
+      <if test="lpmRedundantWi != null" >
+        lpm_redundant_wi = #{lpmRedundantWi,jdbcType=VARCHAR},
       </if>
-      <if test="lpmMatchedRew != null">
+      <if test="lpmMatchedRew != null" >
         lpm_matched_rew = #{lpmMatchedRew,jdbcType=VARCHAR},
       </if>
-      <if test="lpmMatchedRre != null">
+      <if test="lpmMatchedRre != null" >
         lpm_matched_rre = #{lpmMatchedRre,jdbcType=VARCHAR},
       </if>
-      <if test="lpmLackedRre != null">
+      <if test="lpmLackedRre != null" >
         lpm_lacked_rre = #{lpmLackedRre,jdbcType=VARCHAR},
       </if>
-      <if test="cpmRuleScore != null">
-        cpm_rule_score = #{cpmRuleScore,jdbcType=VARCHAR},
+      <if test="cpmRedundantWi != null" >
+        cpm_redundant_wi = #{cpmRedundantWi,jdbcType=VARCHAR},
       </if>
-      <if test="cpmMatchedRew != null">
+      <if test="cpmMatchedRew != null" >
         cpm_matched_rew = #{cpmMatchedRew,jdbcType=VARCHAR},
       </if>
-      <if test="cpmMatchedRre != null">
+      <if test="cpmMatchedRre != null" >
         cpm_matched_rre = #{cpmMatchedRre,jdbcType=VARCHAR},
       </if>
-      <if test="cpmLackedRre != null">
+      <if test="cpmLackedRre != null" >
         cpm_lacked_rre = #{cpmLackedRre,jdbcType=VARCHAR},
       </if>
-      <if test="fpmRuleScore != null">
-        fpm_rule_score = #{fpmRuleScore,jdbcType=VARCHAR},
+      <if test="fpmRedundantWi != null" >
+        fpm_redundant_wi = #{fpmRedundantWi,jdbcType=VARCHAR},
       </if>
-      <if test="fpmMatchedRew != null">
+      <if test="fpmMatchedRew != null" >
         fpm_matched_rew = #{fpmMatchedRew,jdbcType=VARCHAR},
       </if>
-      <if test="fpmMatchedRre != null">
+      <if test="fpmMatchedRre != null" >
         fpm_matched_rre = #{fpmMatchedRre,jdbcType=VARCHAR},
       </if>
-      <if test="fpmLackedRre != null">
+      <if test="fpmLackedRre != null" >
         fpm_lacked_rre = #{fpmLackedRre,jdbcType=VARCHAR},
       </if>
-      <if test="selectResult != null">
+      <if test="selectResult != null" >
         select_result = #{selectResult,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.LogDataProcess">
+  <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.LogDataProcess" >
     update log_data_process
-    set date_time = #{dateTime,jdbcType=TIMESTAMP},
+    set current_time_millis = #{currentTimeMillis,jdbcType=BIGINT},
+      date_time = #{dateTime,jdbcType=TIMESTAMP},
       account_id = #{accountId,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=INTEGER},
       context_id = #{contextId,jdbcType=INTEGER},
@@ -386,20 +397,19 @@
       sv_ids = #{svIds,jdbcType=VARCHAR},
       sv_words = #{svWords,jdbcType=VARCHAR},
       sv_weights = #{svWeights,jdbcType=VARCHAR},
-      lpm_rule_score = #{lpmRuleScore,jdbcType=VARCHAR},
+      lpm_redundant_wi = #{lpmRedundantWi,jdbcType=VARCHAR},
       lpm_matched_rew = #{lpmMatchedRew,jdbcType=VARCHAR},
       lpm_matched_rre = #{lpmMatchedRre,jdbcType=VARCHAR},
       lpm_lacked_rre = #{lpmLackedRre,jdbcType=VARCHAR},
-      cpm_rule_score = #{cpmRuleScore,jdbcType=VARCHAR},
+      cpm_redundant_wi = #{cpmRedundantWi,jdbcType=VARCHAR},
       cpm_matched_rew = #{cpmMatchedRew,jdbcType=VARCHAR},
       cpm_matched_rre = #{cpmMatchedRre,jdbcType=VARCHAR},
       cpm_lacked_rre = #{cpmLackedRre,jdbcType=VARCHAR},
-      fpm_rule_score = #{fpmRuleScore,jdbcType=VARCHAR},
+      fpm_redundant_wi = #{fpmRedundantWi,jdbcType=VARCHAR},
       fpm_matched_rew = #{fpmMatchedRew,jdbcType=VARCHAR},
       fpm_matched_rre = #{fpmMatchedRre,jdbcType=VARCHAR},
       fpm_lacked_rre = #{fpmLackedRre,jdbcType=VARCHAR},
       select_result = #{selectResult,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
 </mapper>

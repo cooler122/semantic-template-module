@@ -43,6 +43,7 @@ public class EndComponentImpl extends FunctionComponentBase<Object, Object> {
                 String processTrace = componentConstant.getTraceByContextOwnerIndex(contextOwner.getOwnerIndex());
                 int processLogType = request.getProcessLogType();
                 int calculationLogType = request.getCalculationLogType();
+                long currentTimeMillis = System.currentTimeMillis();
 
                 //2.打印流程日志
                 if(processLogType != Constant.NO_PROCESS_LOG){
@@ -55,7 +56,7 @@ public class EndComponentImpl extends FunctionComponentBase<Object, Object> {
                         }
                     }
                     if(dataComponents.size() > 0){
-                        processLogService.writeLog(processLogType, dataComponents, processTrace);
+                        processLogService.writeLog(contextOwner, processLogType, dataComponents, processTrace, currentTimeMillis);
                     }
                 }
 
@@ -69,7 +70,7 @@ public class EndComponentImpl extends FunctionComponentBase<Object, Object> {
                             dataComponents.add(dataComponent);
                         }
                     }
-                    calculationLogService.writeLog(calculationLogType, dataComponents, processTrace);
+                    calculationLogService.writeLog(contextOwner, calculationLogType, dataComponents, processTrace, currentTimeMillis);
                 }
             }
         };

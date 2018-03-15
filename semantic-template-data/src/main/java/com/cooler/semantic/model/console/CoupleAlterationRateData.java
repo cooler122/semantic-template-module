@@ -114,11 +114,11 @@ public class CoupleAlterationRateData{
             this.weightRateAccuracyThreshold4Rule = weightRateAccuracyThreshold4Rule;
         }
 
-        public boolean isCrossed() {
+        public boolean getIsCrossed() {
             return isCrossed;
         }
 
-        public void setCrossed(boolean crossed) {
-            isCrossed = crossed;
+        public void setIsCrossed(boolean isCrossed) {
+            this.isCrossed = isCrossed;
         }
     }

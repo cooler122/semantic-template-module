@@ -1,5 +1,6 @@
 package com.cooler.semantic.service;
 
+import com.cooler.semantic.dto.LogDataProcessDTO;
 import com.cooler.semantic.entity.LogDataProcess;
 
 import java.util.List;
@@ -26,9 +27,9 @@ public interface LogDataProcessService {
      * @param toDateTime
      * @return
      */
-    List<LogDataProcess> selectByAIdUIdDateTime(Integer accountId,
-                                                Integer userId,
-                                                String fromDateTime,
-                                                String toDateTime );
+    List<LogDataProcessDTO> selectByAIdUIdDateTime(Integer accountId,
+                                                   Integer userId,
+                                                   String fromDateTime,
+                                                   String toDateTime );
 
 }

@@ -15,4 +15,9 @@ public interface LogDataCalculationService {
 
     int updateByPrimaryKey(LogDataCalculation record);
 
+    LogDataCalculation selectBy4Params(Integer accountId, Integer userId, Integer contextId, Long currentTimeMillis);
+
+    int checkBy4Params(Integer accountId, Integer userId, Integer contextId, Long currentTimeMillis);
+
+    LogDataCalculation getLogDataCalculation(Integer accountId, Integer userId, Integer contextId, Long currentTimeMillis);
 }

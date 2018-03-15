@@ -5,7 +5,8 @@
   <resultMap id="BaseResultMap" type="com.cooler.semantic.entity.LogDataCalculation" >
     <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="date_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="current_time_millis" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="date_time" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="account_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="context_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
@@ -18,10 +19,14 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, date_time, account_id, user_id, context_id, process_trace, detail_context_owner, cpm_json_data, lpm_json_data, fpm_json_data
+    id, current_time_millis, date_time, account_id, user_id, context_id, process_trace, detail_context_owner, cpm_json_data, lpm_json_data, fpm_json_data
   </sql>
 
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <sql id="Simple_Column_List" >
+    id, current_time_millis, date_time, account_id, user_id, context_id, process_trace, detail_context_owner
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap"  parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from log_data_calculation
@@ -34,11 +39,11 @@
   </delete>
 
   <insert id="insert" parameterType="com.cooler.semantic.entity.LogDataCalculation" >
-    insert into log_data_calculation (id, date_time, account_id, 
+    insert into log_data_calculation (id, current_time_millis, date_time, account_id,
       user_id, context_id, process_trace, 
       detail_context_owner, cpm_json_data, lpm_json_data, 
       fpm_json_data)
-    values (#{id,jdbcType=INTEGER}, #{dateTime,jdbcType=TIMESTAMP}, #{accountId,jdbcType=INTEGER},
+    values (#{id,jdbcType=INTEGER}, #{currentTimeMillis,jdbcType=BIGINT}, #{dateTime,jdbcType=TIMESTAMP}, #{accountId,jdbcType=INTEGER},
       #{userId,jdbcType=INTEGER}, #{contextId,jdbcType=INTEGER}, #{processTrace,jdbcType=VARCHAR}, 
       #{detailContextOwner,jdbcType=VARCHAR}, #{cpmJsonData,jdbcType=LONGVARCHAR}, #{lpmJsonData,jdbcType=LONGVARCHAR}, 
       #{fpmJsonData,jdbcType=LONGVARCHAR})
@@ -49,6 +54,9 @@
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
+      </if>
+      <if test="currentTimeMillis != null" >
+        current_time_millis,
       </if>
       <if test="dateTime != null" >
         date_time,
@@ -81,6 +89,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
+      </if>
+      <if test="currentTimeMillis != null" >
+        #{currentTimeMillis,jdbcType=BIGINT},
       </if>
       <if test="dateTime != null" >
         #{dateTime,jdbcType=TIMESTAMP},
@@ -115,6 +126,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.LogDataCalculation" >
     update log_data_calculation
     <set >
+      <if test="currentTimeMillis != null" >
+        current_time_millis = #{currentTimeMillis,jdbcType=BIGINT},
+      </if>
       <if test="dateTime != null" >
         date_time = #{dateTime,jdbcType=TIMESTAMP},
       </if>
@@ -148,7 +162,9 @@
 
   <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.LogDataCalculation" >
     update log_data_calculation
-    set date_time = #{dateTime,jdbcType=TIMESTAMP},
+    set
+      current_time_millis = #{currentTimeMillis,jdbcType=BIGINT},
+      date_time = #{dateTime,jdbcType=TIMESTAMP},
       account_id = #{accountId,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=INTEGER},
       context_id = #{contextId,jdbcType=INTEGER},
@@ -159,5 +175,36 @@
       fpm_json_data = #{fpmJsonData,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 业务相关 -->
+  <select id="selectBy4Params" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from log_data_calculation
+    where account_id = #{accountId,jdbcType=INTEGER}
+        and user_id = #{userId,jdbcType=INTEGER}
+        and context_id = #{contextId,jdbcType=INTEGER}
+        and current_time_millis = #{currentTimeMillis,jdbcType=BIGINT}
+  </select>
+
+  <select id="checkBy4Params" resultType="java.lang.Integer">
+    select
+    count(1)
+    from log_data_calculation
+    where account_id = #{accountId,jdbcType=INTEGER}
+    and user_id = #{userId,jdbcType=INTEGER}
+    and context_id = #{contextId,jdbcType=INTEGER}
+    and current_time_millis = #{currentTimeMillis,jdbcType=BIGINT}
+  </select>
+
+  <select id="getLogDataCalculation" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from log_data_calculation
+    where account_id = #{accountId,jdbcType=INTEGER}
+    and user_id = #{userId,jdbcType=INTEGER}
+    and context_id = #{contextId,jdbcType=INTEGER}
+    and current_time_millis = #{currentTimeMillis,jdbcType=BIGINT}
+  </select>
 
 </mapper>

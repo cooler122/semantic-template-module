@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<div class="sidebar" id="sidebar" style="width: 100px; height:100%;">
+<div id="sidebar" class="sidebar" style="width: 100px; height:100%;">
 
     <div class="sidebar-shortcuts" id="sidebar-shortcuts">
         <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
@@ -31,7 +31,7 @@
 
             <span class="btn btn-danger"></span>
         </div>
-    </div><!-- #sidebar-shortcuts -->
+    </div>
 
     <ul class="nav nav-list">
         <li class="active">
@@ -64,10 +64,9 @@
                 <span class="menu-text"> 统计 </span>
             </a>
         </li>
-    </ul><!-- /.nav-list -->
+    </ul>
 
     <div class="sidebar-collapse" id="sidebar-collapse">
-        <i class="icon-double-angle-left" data-icon1="icon-double-angle-left"
-           data-icon2="icon-double-angle-right"></i>
+        <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
     </div>
 </div>

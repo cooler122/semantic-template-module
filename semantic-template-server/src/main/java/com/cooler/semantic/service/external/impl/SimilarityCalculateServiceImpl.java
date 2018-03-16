@@ -140,7 +140,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                             .append("_").append(rEntityWordInfo.getWord())
                             .append("_").append(rEntityWordInfo.getEntityId())
                             .append("_").append(rEntityWordInfo.getEntityName())
-                            .append("_").append(rEntityWordInfo.getWeights().get(sentenceVectorId));
+                            .append("_").append(rEntityWordInfo.getWeights().get(0));
                             rewDatas.add(stringBuffer.toString());
                             ids_rewDatasMap.put(currentKey, rewDatas);
                         }
@@ -148,7 +148,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                     }else{
                         String word = rEntityWordInfo.getWord();
                         Integer wordId = rEntityWordInfo.getWordId();
-                        Double weight = rEntityWordInfo.getWeights().get(sentenceVectorId);
+                        Double weight = rEntityWordInfo.getWeights().get(0);
                         weight = (weight != null) ? weight : 0d;
                         WordInfo redundantWordInfo = new WordInfo(wordId, word, weight);
                         redundantWordInfos.add(redundantWordInfo);

@@ -104,7 +104,7 @@
                             responseMsgSpan = "                                                            <div class=\"modifiedSentence\">" + sentenceModified + "</div><div style=\"color: red;\">" + responseMsg + "</div>"  ;
                         }
                         $("#conversationData").append("<tr>\n" +
-                            "                                                    <td width=\"20%\" onclick=\"getOneLogDataProcess(" + id + ")\">" + contextId + "&nbsp;&nbsp;<i id=\"eye_"+ id + "\"\" class=\"icon-eye-open hidden\"/><br/><span class=\"dateTime\">" + dateTime + "</span></td>\n" +
+                            "                                                    <td width=\"20%\" onclick=\"getOneLogDataProcess(" + id + ")\">" + contextId + "&nbsp;&nbsp;<i id=\"eye_"+ id + "\"\" class=\"icon-eye-open hidden\"/><br/><span class=\"dateTime\" style=\"display:none\">" + dateTime + "</span></td>\n" +
                             "                                                    <td width=\"40%\">\n" +
                             "                                                        <div onclick=\"getOneLogDataProcess(" + id + ")\">\n" +
                             "                                                           " + sentence + "&nbsp;\n" +
@@ -356,9 +356,6 @@
 <div class="main-container" id="main-container">
 
     <div class="main-container-inner">
-        <a class="menu-toggler" id="menu-toggler" href="#">
-            <span class="menu-text"></span>
-        </a>
 
         <%@ include file="/sidebar.jsp" %>
 

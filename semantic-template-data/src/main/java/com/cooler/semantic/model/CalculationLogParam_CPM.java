@@ -1,5 +1,6 @@
 package com.cooler.semantic.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,14 +9,14 @@ public class CalculationLogParam_CPM {
 
     //------------------------------------------------------------------------------------------------------------------1.历史数据
     /**
-     * 1.1.历史结果数据
+     * 1.1.句子向量端的REWIs
      */
-    private Map<String, SVRuleInfo> contextId_svRuleInfoMap = new HashMap<>();
+    private List<SentenceVector> sentenceVectors = new ArrayList<>();
 
     /**
-     * 1.2.历史REWIMap
+     * 1.2.历史结果数据
      */
-    Map<String, List<REntityWordInfo>> historyREWIMap = new HashMap<>();
+    private Map<Integer, SVRuleInfo> historySVRuleInfoMap = new HashMap<>();
 
     //------------------------------------------------------------------------------------------------------------------2.运行数据
     /**
@@ -70,20 +71,20 @@ public class CalculationLogParam_CPM {
      */
     double currentHitEntityWeightRate = 0d;
 
-    public Map<String, SVRuleInfo> getContextId_svRuleInfoMap() {
-        return contextId_svRuleInfoMap;
+    public List<SentenceVector> getSentenceVectors() {
+        return sentenceVectors;
     }
 
-    public void setContextId_svRuleInfoMap(Map<String, SVRuleInfo> contextId_svRuleInfoMap) {
-        this.contextId_svRuleInfoMap = contextId_svRuleInfoMap;
+    public void setSentenceVectors(List<SentenceVector> sentenceVectors) {
+        this.sentenceVectors = sentenceVectors;
     }
 
-    public Map<String, List<REntityWordInfo>> getHistoryREWIMap() {
-        return historyREWIMap;
+    public Map<Integer, SVRuleInfo> getHistorySVRuleInfoMap() {
+        return historySVRuleInfoMap;
     }
 
-    public void setHistoryREWIMap(Map<String, List<REntityWordInfo>> historyREWIMap) {
-        this.historyREWIMap = historyREWIMap;
+    public void setHistorySVRuleInfoMap(Map<Integer, SVRuleInfo> historySVRuleInfoMap) {
+        this.historySVRuleInfoMap = historySVRuleInfoMap;
     }
 
     public Map<String, REntityWordInfo> getHitCurrentREntityWordInfoMap() {

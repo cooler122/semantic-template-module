@@ -115,15 +115,16 @@ public class LogDataController {
         String lpmJsonData = logDataCalculation.getLpmJsonData();
         if(lpmJsonData != null){
             CalculationLogParam_LPM calculationLogParam_lpm = JSON.parseObject(lpmJsonData, CalculationLogParam_LPM.class);
-            List<SentenceVector> sentenceVectors = calculationLogParam_lpm.getSentenceVectors();
-            Map<Integer, SVRuleInfo> historySVRuleInfoMap = calculationLogParam_lpm.getHistorySVRuleInfoMap();
+
+            List<SentenceVector> sentenceVectors_lpm = calculationLogParam_lpm.getSentenceVectors();
+            Map<Integer, SVRuleInfo> historySVRuleInfoMap_lpm = calculationLogParam_lpm.getHistorySVRuleInfoMap();
             Set<Integer> canceledLPMContextIdSet = calculationLogParam_lpm.getCanceledLPMContextIdSet();
             List<AmnesiacData> amnesiacDatas = calculationLogParam_lpm.getAmnesiacDatas();
             List<CoupleAlterationRateData> coupleAlterationRateDatas = calculationLogParam_lpm.getCoupleAlterationRateDatas();
             List<SimilarityCalculationData_LPM> similarityCalculationDataLPMS = calculationLogParam_lpm.getSimilarityCalculationDataLPMS();
 
-            model.addAttribute("sentenceVectors", sentenceVectors);
-            model.addAttribute("historySVRuleInfoMap", historySVRuleInfoMap);
+            model.addAttribute("sentenceVectors_lpm", sentenceVectors_lpm);
+            model.addAttribute("historySVRuleInfoMap_lpm", historySVRuleInfoMap_lpm);
             model.addAttribute("canceledLPMContextIdSet", canceledLPMContextIdSet);
             model.addAttribute("amnesiacDatas", amnesiacDatas);
             model.addAttribute("coupleAlterationRateDatas", coupleAlterationRateDatas);
@@ -131,12 +132,45 @@ public class LogDataController {
             return 1;
         }
         return 0;
-
     }
 
     private Integer createData_CPM(LogDataCalculation logDataCalculation, Model model) {
         String cpmJsonData = logDataCalculation.getCpmJsonData();
         if(cpmJsonData != null){
+            CalculationLogParam_CPM calculationLogParam_cpm = JSON.parseObject(cpmJsonData, CalculationLogParam_CPM.class);
+
+            List<SentenceVector> sentenceVectors_cpm = calculationLogParam_cpm.getSentenceVectors();
+            Map<Integer, SVRuleInfo> historySVRuleInfoMap_cpm = calculationLogParam_cpm.getHistorySVRuleInfoMap();
+            Map<String, REntityWordInfo> hitCurrentREntityWordInfoMap = calculationLogParam_cpm.getHitCurrentREntityWordInfoMap();
+            Map<String, Double> svIdcontextId_productValueMap = calculationLogParam_cpm.getSvIdcontextId_productValueMap();
+            Integer maxValueSentenceVectorId = calculationLogParam_cpm.getMaxValueSentenceVectorId();
+            Integer maxValueContextId = calculationLogParam_cpm.getMaxValueContextId();
+            Double maxValue = calculationLogParam_cpm.getMaxValue();
+            SentenceVector oldBestSentenceVector = sentenceVectors_cpm.get(maxValueSentenceVectorId);
+            SVRuleInfo oldBestSvRuleInfo = historySVRuleInfoMap_cpm.get(maxValueContextId);
+            SVRuleInfo changeParamOptimalSvRuleInfo = calculationLogParam_cpm.getChangeParamOptimalSvRuleInfo();
+            int historyEntitiesCount = calculationLogParam_cpm.getHistoryEntitiesCount();
+            int currentEntitiesCount = calculationLogParam_cpm.getCurrentEntitiesCount();
+            int currentCoreEntitiesCount = calculationLogParam_cpm.getCurrentCoreEntitiesCount();
+            double currentHitEntityWeightRate = calculationLogParam_cpm.getCurrentHitEntityWeightRate();
+
+            model.addAttribute("sentenceVectors_cpm", sentenceVectors_cpm);
+            model.addAttribute("historySVRuleInfoMap_cpm", historySVRuleInfoMap_cpm);
+
+            model.addAttribute("hitCurrentREntityWordInfoMap", hitCurrentREntityWordInfoMap);
+            model.addAttribute("svIdcontextId_productValueMap", svIdcontextId_productValueMap);
+            model.addAttribute("maxValueSentenceVectorId", maxValueSentenceVectorId);
+            model.addAttribute("maxValueContextId", maxValueContextId);
+            model.addAttribute("maxValue", maxValue);
+
+            model.addAttribute("oldBestSentenceVector", oldBestSentenceVector);
+            model.addAttribute("oldBestSvRuleInfo", oldBestSvRuleInfo);
+            model.addAttribute("changeParamOptimalSvRuleInfo", changeParamOptimalSvRuleInfo);
+
+            model.addAttribute("historyEntitiesCount", historyEntitiesCount);
+            model.addAttribute("currentEntitiesCount", currentEntitiesCount);
+            model.addAttribute("currentCoreEntitiesCount", currentCoreEntitiesCount);
+            model.addAttribute("currentHitEntityWeightRate", currentHitEntityWeightRate);
             return 10;
         }
         return 0;

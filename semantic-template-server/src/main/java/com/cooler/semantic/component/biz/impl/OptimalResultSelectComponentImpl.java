@@ -88,7 +88,7 @@ public class OptimalResultSelectComponentImpl extends FunctionComponentBase<SVRu
             Integer sentenceVectorId = optimalSvRuleInfo.getSentenceVectorId();
             List<REntityWordInfo> matchedREntityWordInfos = optimalSvRuleInfo.getMatchedREntityWordInfos();
             for (REntityWordInfo matchedREntityWordInfo : matchedREntityWordInfos) {
-                Double finalWeight = matchedREntityWordInfo.getWeights().get(sentenceVectorId);
+                Double finalWeight = matchedREntityWordInfo.getWeights().get(0);
                 matchedREntityWordInfo.setWeights(Arrays.asList(finalWeight));                                          //实际上对于本轮对话，此处权重以没有作用，这里还是将最终确定用上的权重在这里设置，是为了下几轮对话，也许下几轮对话会用上。
             }
             optimalSvRuleInfo.setSentenceVectorId(0);                                                                   //上面将确定后的权重改变到了第0个位置，那么将此最佳SVRuleInfo的SentenceVectorId设置为0

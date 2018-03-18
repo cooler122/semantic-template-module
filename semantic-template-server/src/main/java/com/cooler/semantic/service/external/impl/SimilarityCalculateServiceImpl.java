@@ -1,6 +1,7 @@
 package com.cooler.semantic.service.external.impl;
 
 import com.cooler.semantic.constant.Constant;
+import com.cooler.semantic.entity.REntityWord;
 import com.cooler.semantic.entity.RRuleEntity;
 import com.cooler.semantic.model.CalculationLogParam_FPM;
 import com.cooler.semantic.model.REntityWordInfo;
@@ -74,7 +75,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
      */
     private List<SVRuleInfo> jaccardSimilarity_FPM(List<SVRuleInfo> svRuleInfos, Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap, int typeId, SimilarityCalculationData_FPM similarityCalculationData_fpm){
         boolean enableCalculateLog = false;
-        Map<String, List<String>> ids_rewDatasMap = null;
+        Map<String, List<REntityWordInfo>> ids_rewDatasMap = null;
         Map<String, String> ids_scoreMap = null;
         if(similarityCalculationData_fpm != null){                                                                     //如果此对象不为空，则代表当前需要打印计算日志
             enableCalculateLog = true;
@@ -133,16 +134,10 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                         lackedRRuleEntities.remove(rRuleEntity);                                                                //匹配上的参数就不是缺失参数了
 
                         if(enableCalculateLog){
-                            List<String> rewDatas = ids_rewDatasMap.get(currentKey);
-                            if(rewDatas == null) rewDatas = new ArrayList<>();
-                            StringBuffer stringBuffer = new StringBuffer();
-                            stringBuffer.append(rEntityWordInfo.getWordId())
-                            .append("_").append(rEntityWordInfo.getWord())
-                            .append("_").append(rEntityWordInfo.getEntityId())
-                            .append("_").append(rEntityWordInfo.getEntityName())
-                            .append("_").append(rEntityWordInfo.getWeights().get(sentenceVectorId));
-                            rewDatas.add(stringBuffer.toString());
-                            ids_rewDatasMap.put(currentKey, rewDatas);
+                            List<REntityWordInfo> rewis = ids_rewDatasMap.get(currentKey);                                        //TODO:这个日志里面还可以装入缺失实体相关信息，日志直接装REWI对象得了
+                            if(rewis == null) rewis = new ArrayList<>();
+                            rewis.add(rEntityWordInfo);
+                            ids_rewDatasMap.put(currentKey, rewis);
                         }
                         break B;                                                                                               //一个ruleId下，只要一个词语的一个实体被匹配上即可，无需遍历所有此词语下的实体
                     }else{
@@ -186,7 +181,7 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
                 StringBuffer sb = new StringBuffer();
                 sb.append(similarity).append(" = ").append(intersectionVolumeRateOccupancy != 0d ? intersectionVolumeRateOccupancy + " * " : "").append(intersectionWeightOccupancy != 0d ? intersectionWeightOccupancy : "");
                 ids_scoreMap.put(currentKey, sb.toString());
-                similarityCalculationData_fpm.setIds_rewDatasMap(ids_rewDatasMap);
+                similarityCalculationData_fpm.setIds_rewisMap(ids_rewDatasMap);
                 similarityCalculationData_fpm.setIds_scoreMap(ids_scoreMap);
             }
         }

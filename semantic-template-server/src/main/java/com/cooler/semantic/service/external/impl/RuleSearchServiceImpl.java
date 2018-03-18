@@ -18,7 +18,7 @@ public class RuleSearchServiceImpl implements RuleSearchService {
     @Override
     public List<SVRuleInfo> getRulesBySentenceVectors(ContextOwner contextOwner, List<SentenceVector> sentenceVectors, CalculationLogParam_FPM calculationLogParam_fpm) {
         boolean enableCalculationLog = false;
-        List<Map<String, List<String>>> hitRuleEntityMaps = null;
+        List<Map<String, List<RRuleEntity>>> hitRuleEntityMaps = null;
         if(calculationLogParam_fpm != null){                                                                           //验证是否开启计算型日志
             enableCalculationLog = true;
             hitRuleEntityMaps = new ArrayList<>();
@@ -44,7 +44,7 @@ public class RuleSearchServiceImpl implements RuleSearchService {
             List<RRuleEntity> rRuleEntities = rRuleEntityMapper.selectByREntityWordInfos(accountId, rEntityWordInfosParam);         //TODO:这句查询业务完全可以放到ES里面去做
 
 
-            Map<String, List<String>> hitRuleEntityMap = null;                                                          //记录每一个ruleId下的实体数据集合，作为日志数据
+            Map<String, List<RRuleEntity>> hitRuleEntityMap = null;                                                          //记录每一个ruleId下的实体数据集合，作为日志数据
             Map<Integer, SVRuleInfo> ruleInfoMap = new HashMap<>();                                                     //记录每一个ruleId下的乘积
             for (RRuleEntity rRuleEntity : rRuleEntities) {
                 Integer ruleId = rRuleEntity.getRuleId();
@@ -61,9 +61,9 @@ public class RuleSearchServiceImpl implements RuleSearchService {
 
                 if(enableCalculationLog){
                     if(hitRuleEntityMap == null) hitRuleEntityMap = new HashMap<>();
-                    List<String> entityDatas = hitRuleEntityMap.get(ruleId + "");
+                    List<RRuleEntity> entityDatas = hitRuleEntityMap.get(ruleId + "");
                     if(entityDatas == null) entityDatas = new ArrayList<>();
-                    entityDatas.add(rRuleEntity.getEntityId() + "_" + rRuleEntity.getEntityName() + "_" + rRuleEntity.getWeight());
+                    entityDatas.add(rRuleEntity);
                     hitRuleEntityMap.put(ruleId + "", entityDatas);
                 }
             }
@@ -100,8 +100,8 @@ public class RuleSearchServiceImpl implements RuleSearchService {
         }
 
         if(enableCalculationLog){
-            calculationLogParam_fpm.setHitRuleEntityMaps(hitRuleEntityMaps);
-            calculationLogParam_fpm.setSvRuleInfos(svRuleInfosTopFive);
+            calculationLogParam_fpm.setHitRRuleEntityMaps(hitRuleEntityMaps);
+            calculationLogParam_fpm.setSvRuleInfosTopFive(svRuleInfosTopFive);
         }
         return svRuleInfosTopFive;
     }

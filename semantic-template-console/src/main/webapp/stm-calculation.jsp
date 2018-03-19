@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -109,6 +110,10 @@
                         <span id="LPM" onclick="showContent('LPM')" style="color: red">LPM匹配数据</span>
                         <span id="CPM" onclick="showContent('CPM')">CPM匹配数据</span>
                         <span id="FPM" onclick="showContent('FPM')">FPM匹配数据</span>
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        <span class="label label-success arrowed-in arrowed-in-right">账户信息： ${detailContextOwner}</span>
+                        <span class="label label-success arrowed-in arrowed-in-right">用户编号： ${userId}</span>
+                        <span class="label label-success arrowed-in arrowed-in-right">当前会话编号：   ${contextId}</span>
                     </div>
 
                     <%--LPM数据 start--%>
@@ -135,22 +140,22 @@
                                                 <c:forEach var="sentenceVector" items="${sentenceVectors_lpm}">
                                                         <tr class="odd">
                                                             <td id="lpm_sv_"${sentenceVector.id}></td>
-                                                            <td>${contextId}</td>
+                                                            <td>编号： ${sentenceVector.id}</td>
                                                             <td colspan="5">
                                                                 <c:forEach items="${sentenceVector.words}" var="word">
-                                                                    <span class="label label-warning">${word}</span>
+                                                                    <span class="label label-success">${word}</span>
                                                                 </c:forEach>
                                                             </td>
                                                         </tr>
                                                         <c:forEach begin="0" end="${sentenceVector.words.size() - 1}" varStatus="status">
                                                             <tr class="even">
-                                                                <td class="center  sorting_1  "></td>
+                                                                <td></td>
                                                                 <td>${sentenceVector.words[status.index]}</td>
                                                                 <td>${sentenceVector.natures[status.index]}</td>
                                                                 <td>${sentenceVector.weights[status.index]}</td>
                                                                 <td colspan="3">
                                                                     <c:forEach items="${sentenceVector.rEntityWordInfosList[status.index]}" var="rewi">
-                                                                        <span class="badge badge-important">${rewi.entityType}_${rewi.entityId}_${rewi.entityName}</span>
+                                                                        <span class="label label-warning">${rewi.entityType}_${rewi.entityId}_${rewi.entityName}_${rewi.weights.get(0)}</span>
                                                                     </c:forEach>
                                                                 </td>
                                                             </tr>
@@ -174,8 +179,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-6">
 
+                        <div class="col-xs-6">
                             <div class="table-header" style="line-height: 20px;">
                                 规则向量数据
                             </div>
@@ -187,16 +192,14 @@
 
                                                 <c:forEach var="historySVRuleInfoEntity" items="${historySVRuleInfoMap_lpm}">
                                                     <tr class="odd">
-                                                        <td class="center  sorting_1" width="5%"></td>
-                                                        <td width="15%"></td>
-                                                        <td width="15%"></td>
-                                                        <td width="10%"></td>
-                                                        <td width="15%"></td>
                                                         <td width="25%"></td>
+                                                        <td width="15%"></td>
+                                                        <td width="15%"></td>
+                                                        <td width="15%"></td>
+                                                        <td width="15%"></td>
                                                         <td width="15%"></td>
                                                     </tr>
                                                     <tr class="odd">
-                                                        <td></td>
                                                         <td>
                                                             <c:if test="${historySVRuleInfoEntity.value.lackedRRuleEntities.size() > 0}">${historySVRuleInfoEntity.key}</c:if>
                                                             <c:if test="${historySVRuleInfoEntity.value.lackedRRuleEntities.size() <= 0}"><i class="icon-warning-sign bigger-120"></i> <s>${historySVRuleInfoEntity.key}</s></c:if>
@@ -208,15 +211,13 @@
                                                         </td>
                                                         <td>${historySVRuleInfoEntity.value.matchType}</td>
                                                         <td>${historySVRuleInfoEntity.value.runningAccuracyThreshold}</td>
-                                                        <td>${historySVRuleInfoEntity.value.algorithmType}</td>
+                                                        <td>${historySVRuleInfoEntity.value.similarity}</td>
                                                     </tr>
                                                     <tr class="odd">
-                                                        <td class="center  sorting_1"></td>
                                                         <td colspan="3">${historySVRuleInfoEntity.value.sentence}</td>
                                                         <td colspan="3">${historySVRuleInfoEntity.value.sentenceModified}</td>
                                                     </tr>
                                                     <tr class="odd">
-                                                        <td class="center  sorting_1  "></td>
                                                         <td>多余词语</td>
                                                         <td colspan="5">
                                                             <c:forEach items="${historySVRuleInfoEntity.value.redundantWordInfos}" var="redundantWordInfo">
@@ -225,30 +226,27 @@
                                                         </td>
                                                     </tr>
                                                     <tr class="odd">
-                                                        <td class="center  sorting_1  "></td>
                                                         <td>匹配的REWIs</td>
                                                         <td colspan="5">
                                                             <c:forEach items="${historySVRuleInfoEntity.value.matchedREntityWordInfos}" var="matchedREntityWordInfo">
-                                                                <span class="label label-warning" style="position: relative;">${matchedREntityWordInfo.wordId}_${matchedREntityWordInfo.word} -> ${matchedREntityWordInfo.entityId}_${matchedREntityWordInfo.entityName}</span>
+                                                                <span class="label label-warning" style="position: relative;">${matchedREntityWordInfo.wordId}_${matchedREntityWordInfo.word} -> ${matchedREntityWordInfo.entityId}_${matchedREntityWordInfo.entityName}_${matchedREntityWordInfo.weights.get(0)}</span>
                                                             </c:forEach>
                                                         </td>
                                                     </tr>
                                                     <tr class="odd">
-                                                        <td class="center  sorting_1  "></td>
                                                         <td>匹配的RREs</td>
                                                         <td colspan="5">
                                                             <c:forEach items="${historySVRuleInfoEntity.value.matchedRRuleEntities}" var="matchedRRuleEntity">
-                                                                <span class="badge badge-important" style="position: relative;">${matchedRRuleEntity.entityType}_${matchedRRuleEntity.entityId}_${matchedRRuleEntity.entityName}</span>
+                                                                <span class="badge badge-important" style="position: relative;">${matchedRRuleEntity.entityType}_${matchedRRuleEntity.entityId}_${matchedRRuleEntity.entityName}_${matchedRRuleEntity.weight}</span>
                                                             </c:forEach>
                                                         </td>
                                                     </tr>
                                                     <tr class="odd">
-                                                        <td class="center  sorting_1  "></td>
                                                         <td>缺失的RREs</td>
                                                         <td colspan="5">
                                                             <c:if test="${historySVRuleInfoEntity.value.lackedRRuleEntities.size() > 0}">
                                                                 <c:forEach items="${historySVRuleInfoEntity.value.lackedRRuleEntities}" var="lackedRRuleEntity">
-                                                                    <span class="badge" style="position: relative;">${lackedRRuleEntity.entityType}_${lackedRRuleEntity.entityId}_${lackedRRuleEntity.entityName}</span>
+                                                                    <span class="badge" style="position: relative;">${lackedRRuleEntity.entityType}_${lackedRRuleEntity.entityId}_${lackedRRuleEntity.entityName}_${lackedRRuleEntity.weight}</span>
                                                                 </c:forEach>
                                                             </c:if>
                                                             <c:if test="${historySVRuleInfoEntity.value.lackedRRuleEntities.size() <= 0}">
@@ -257,7 +255,6 @@
                                                                     没有缺失参数，无需补充参数
                                                                 </span>
                                                             </c:if>
-
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
@@ -280,6 +277,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-xs-12">
                             <br/>
                             <div class="alert alert-warning" style="padding: 5px;">
@@ -290,7 +288,7 @@
                                 <c:forEach var="canceledLPMContextId" items="${canceledLPMContextIdSet}">
                                      ${canceledLPMContextId}
                                 </c:forEach>
-                                <br/>
+                                <hr/>
                                 实体数量阈值: <span class="label label-success arrowed-in arrowed-in-right">1</span>
                                 句子端权重阈值: <span class="label label-success arrowed-in arrowed-in-right">0.2</span>
                                 规则端权重阈值： <span class="label label-success arrowed-in arrowed-in-right">0.1</span>
@@ -314,10 +312,9 @@
                                     <table id="sample-table-2" class="table table-striped table-bordered table-hover dataTable" aria-describedby="sample-table-2_info">
                                         <thead>
                                         <tr role="row">
-                                            <th colspan="1" width="4%;">距离</th>
-                                            <th colspan="1" width="8%;">会话ID-分词ID</th>
+                                            <th colspan="1" width="8%;">会话-分词ID</th>
                                             <th colspan="1" width="8%;">历史会话ID</th>
-                                            <th colspan="1" width="32%;">合并的实体集</th>
+                                            <th colspan="1" width="36%;">合并的实体集</th>
                                             <th colspan="1" width="8%;">句子端权重占比</th>
                                             <th colspan="1" width="8%;">规则端权重占比</th>
                                             <th colspan="1" width="8%;">失忆算法类型</th>
@@ -332,17 +329,11 @@
                                             <c:forEach begin="0" end="${coupleAlterationRateDatas.size()}" varStatus="status">
                                                 <c:if test="${coupleAlterationRateDatas[status.index].contextId != null}">
                                                 <tr class="odd">
-                                                    <td class="center  sorting_1  ">
-                                                        <label>
-                                                            <input type="checkbox" class="ace">
-                                                            <span class="lbl"></span>
-                                                        </label>
-                                                    </td>
                                                     <td>${contextId} - ${coupleAlterationRateDatas[status.index].sentenceVectorId}</td>
                                                     <td>${coupleAlterationRateDatas[status.index].contextId}</td>
                                                     <td>
                                                         <c:forEach var="combinedREntityWordInfo" items="${coupleAlterationRateDatas[status.index].combinedREntityWordInfos}">
-                                                            <span class="label label-warning">${combinedREntityWordInfo.wordId}_${combinedREntityWordInfo.word}</span>
+                                                            <span class="label label-warning">${combinedREntityWordInfo.wordId}_${combinedREntityWordInfo.word}_${combinedREntityWordInfo.weights.get(0)}</span>
                                                             →
                                                             <span class="badge" style="position: relative;">${combinedREntityWordInfo.entityType}_${combinedREntityWordInfo.entityId}_${combinedREntityWordInfo.entityName}</span>
                                                         </c:forEach>
@@ -362,6 +353,7 @@
                             </div>
                             <br/>
                         </div>
+
                         <div class="col-xs-12">
                             <div class="table-header" style="line-height: 20px;">
                                 计算数据
@@ -402,7 +394,7 @@
                                                 <ul class="list-unstyled spaced2" style="text-align:left">
                                                     <li>
                                                         <c:forEach var="rewi" items="${similarityCalculationDataLPM.svInputREWIs}">
-                                                            <span class="label label-warning">${rewi.wordId}_${rewi.word} </span> <span class="badge badge-danger">${rewi.entityTypeId}_${rewi.entityName}_${rewi.weights[0]}</span><br/>
+                                                            <span class="label label-success">${rewi.wordId}_${rewi.word} </span> <span class="label label-warning">${rewi.entityTypeId}_${rewi.entityName}_${rewi.weights[0]}</span><br/>
                                                         </c:forEach>
                                                     </li>
                                                 </ul>
@@ -412,7 +404,7 @@
                                                 <ul class="list-unstyled spaced2" style="text-align:left">
                                                     <li>
                                                         <c:forEach var="matchedRRE" items="${similarityCalculationDataLPM.ruleMatchedRREs}">
-                                                            <span class="badge badge-success">${matchedRRE.entityTypeId}_${matchedRRE.entityName}_${matchedRRE.weight} </span><br/>
+                                                            <span class="badge badge-important">${matchedRRE.entityTypeId}_${matchedRRE.entityName}_${matchedRRE.weight} </span><br/>
                                                         </c:forEach>
                                                         <c:forEach var="lackedRRE" items="${similarityCalculationDataLPM.ruleLackedRREs}">
                                                             <span class="badge">${lackedRRE.entityTypeId}_${lackedRRE.entityName}_${lackedRRE.weight} </span>
@@ -447,6 +439,7 @@
 
                             </div>
                         </div>
+
                     </div>
                     <%--LPM数据 end--%>
 
@@ -477,7 +470,7 @@
                                                     <td>${contextId}</td>
                                                     <td colspan="5">
                                                         <c:forEach items="${sentenceVector.words}" var="word">
-                                                            <span class="label label-warning">${word}</span>
+                                                            <span class="label label-success">${word}</span>
                                                         </c:forEach>
                                                     </td>
                                                 </tr>
@@ -489,7 +482,7 @@
                                                         <td>${sentenceVector.weights[status.index]}</td>
                                                         <td colspan="3">
                                                             <c:forEach items="${sentenceVector.rEntityWordInfosList[status.index]}" var="rewi">
-                                                                <span class="badge badge-important">${rewi.entityType}_${rewi.entityId}_${rewi.entityName}</span>
+                                                                <span class="label label-warning">${rewi.entityType}_${rewi.entityId}_${rewi.entityName}</span>
                                                             </c:forEach>
                                                         </td>
                                                     </tr>
@@ -513,6 +506,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-xs-6">
 
                             <div class="table-header" style="line-height: 20px;">
@@ -526,16 +520,15 @@
 
                                             <c:forEach var="historySVRuleInfoEntity" items="${historySVRuleInfoMap_cpm}">
                                                 <tr class="odd">
-                                                    <td class="center  sorting_1" width="5%"></td>
-                                                    <td width="15%"></td>
+
+                                                    <td width="25%"></td>
                                                     <td width="15%"></td>
                                                     <td width="10%"></td>
                                                     <td width="15%"></td>
-                                                    <td width="25%"></td>
+                                                    <td width="20%"></td>
                                                     <td width="15%"></td>
                                                 </tr>
                                                 <tr class="odd">
-                                                    <td></td>
                                                     <td>
                                                         <c:if test="${historySVRuleInfoEntity.value.matchedRRuleEntities.size() > 0}">${historySVRuleInfoEntity.key}</c:if>
                                                         <c:if test="${historySVRuleInfoEntity.value.matchedRRuleEntities.size() <= 0}"><i class="icon-warning-sign bigger-120"></i> <s>${historySVRuleInfoEntity.key}</s></c:if>
@@ -550,12 +543,10 @@
                                                     <td>${historySVRuleInfoEntity.value.algorithmType}</td>
                                                 </tr>
                                                 <tr class="odd">
-                                                    <td class="center  sorting_1"></td>
                                                     <td colspan="3">${historySVRuleInfoEntity.value.sentence}</td>
                                                     <td colspan="3">${historySVRuleInfoEntity.value.sentenceModified}</td>
                                                 </tr>
                                                 <tr class="odd">
-                                                    <td class="center  sorting_1  "></td>
                                                     <td>多余词语</td>
                                                     <td colspan="5">
                                                         <c:forEach items="${historySVRuleInfoEntity.value.redundantWordInfos}" var="redundantWordInfo">
@@ -564,7 +555,6 @@
                                                     </td>
                                                 </tr>
                                                 <tr class="odd">
-                                                    <td class="center  sorting_1  "></td>
                                                     <td>匹配的REWIs</td>
                                                     <td colspan="5">
                                                         <c:forEach items="${historySVRuleInfoEntity.value.matchedREntityWordInfos}" var="matchedREntityWordInfo">
@@ -573,7 +563,6 @@
                                                     </td>
                                                 </tr>
                                                 <tr class="odd">
-                                                    <td class="center  sorting_1  "></td>
                                                     <td>匹配的RREs</td>
                                                     <td colspan="5">
                                                         <c:forEach items="${historySVRuleInfoEntity.value.matchedRRuleEntities}" var="matchedRRuleEntity">
@@ -582,7 +571,6 @@
                                                     </td>
                                                 </tr>
                                                 <tr class="odd">
-                                                    <td class="center  sorting_1  "></td>
                                                     <td>缺失的RREs</td>
                                                     <td colspan="5">
                                                         <c:if test="${historySVRuleInfoEntity.value.matchedRRuleEntities.size() > 0}">
@@ -618,6 +606,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-xs-6">
                             <div class="table-header" style="line-height: 20px;">
                                 可换实体集
@@ -628,20 +617,15 @@
                                         <table class="table table-striped table-bordered table-hover dataTable" aria-describedby="sample-table-2_info">
                                             <tbody role="alert" aria-live="polite" aria-relevant="all" >
                                             <tr class="odd">
-                                                <td class="center  sorting_1  " width="5%" height="1px;"></td>
-                                                <td width="19%"></td>
-                                                <td width="8%"></td>
-                                                <td width="8%"></td>
                                                 <td width="20%"></td>
-                                                <td width="20%"></td>
-                                                <td width="20%"></td>
+                                                <td width="80%"></td>
+
                                             </tr>
 
                                             <c:forEach var="hitCurrentREWIEntity" items="${hitCurrentREntityWordInfoMap}">
                                                 <tr class="odd">
-                                                    <td></td>
                                                     <td>${hitCurrentREWIEntity.key}</td>
-                                                    <td colspan="5">
+                                                    <td>
                                                         <span class="label label-warning">${hitCurrentREWIEntity.value.wordId}_${hitCurrentREWIEntity.value.word}</span>
                                                         <span class="label label-warning">${hitCurrentREWIEntity.value.entityTypeId}_${hitCurrentREWIEntity.value.entityId}_${hitCurrentREWIEntity.value.entityName}</span>
                                                     </td>
@@ -654,17 +638,19 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="dataTables_paginate paging_bootstrap">
-                                                <%--<ul class="pagination">--%>
+                                                <ul class="pagination">
                                                     <%--<c:forEach var="sentenceVector" items="${sentenceVectors_cpm}">--%>
                                                         <%--<li><a href="#${sentenceVector.id}">${sentenceVector.id}</a></li>--%>
+                                                        <li><a href="#${sentenceVector.id}">1</a></li>
                                                     <%--</c:forEach>--%>
-                                                <%--</ul>--%>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-xs-6">
                             <div class="table-header" style="line-height: 20px;">
                                 可换实体数据统计
@@ -687,7 +673,7 @@
                                                 <tr class="odd">
                                                     <td class="center  sorting_1"></td>
                                                     <td colspan="3">${svIdcontextId_productValueEntity.key}</td>
-                                                    <td colspan="3">${svIdcontextId_productValueEntity.value}</td>
+                                                    <td colspan="3"><fmt:formatNumber type="number" value="${svIdcontextId_productValueEntity.value}" maxFractionDigits="3"/></td>
                                                 </tr>
                                             </c:forEach>
                                             </tbody>
@@ -697,11 +683,12 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="dataTables_paginate paging_bootstrap">
-                                                <%--<ul class="pagination">--%>
+                                                <ul class="pagination">
                                                     <%--<c:forEach var="historyContextId" items="${historySVRuleInfoMap_cpm.keySet()}">--%>
                                                         <%--<li><a href="javascript:void(0)" onclick="scrollNow('contextId${historyContextId}')">${historyContextId}</a></li>--%>
+                                                        <li><a href="javascript:void(0)">1</a></li>
                                                     <%--</c:forEach>--%>
-                                                <%--</ul>--%>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -709,6 +696,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-xs-12">
                             <div class="table-header" style="line-height: 20px;">
                                 初选以及合并过程数据
@@ -733,7 +721,6 @@
                                     </table>
                                 </div>
                             </div>
-                            <br/>
                         </div>
 
                         <div class="col-xs-12">
@@ -747,13 +734,14 @@
                                         <tr role="row">
                                             <th colspan="1" width="4%;"></th>
                                             <th colspan="4" width="32%;">
-                                                <c:forEach begin="0" end="${oldBestSentenceVector.words.size() - 1}" varStatus="status">
-                                                    <span class="label label-warning">${oldBestSentenceVector.words[status.index]}</span>
-                                                    <span class="label label-warning">${oldBestSentenceVector.weights[status.index]}</span>
-                                                    <c:forEach items="${oldBestSentenceVector.rEntityWordInfosList[status.index]}" var="rewi">
-                                                        <span class="badge badge-important">${rewi.entityType}_${rewi.entityId}_${rewi.entityName}</span>
-                                                    </c:forEach>
-                                                    <br/>
+                                                <c:forEach begin="0" end="${oldBestSentenceVector.words.size() }" varStatus="status">
+                                                    <c:if test="${oldBestSentenceVector.words[status.index] != null}">
+                                                        <span class="label label-success">${oldBestSentenceVector.words[status.index]}_${oldBestSentenceVector.weights[status.index]}</span>
+                                                        <c:forEach items="${oldBestSentenceVector.rEntityWordInfosList[status.index]}" var="rewi">
+                                                            <span class="badge badge-warning">${rewi.entityType}_${rewi.entityId}_${rewi.entityName}</span>
+                                                        </c:forEach>
+                                                        <br/>
+                                                    </c:if>
                                                 </c:forEach>
                                             </th>
                                             <th colspan="1" width="32%;">
@@ -850,7 +838,7 @@
 
                                             <c:forEach var="sentenceVector" items="${sentenceVectors_fpm}">
                                                 <tr class="odd">
-                                                    <td id="fpm_sv_"${sentenceVector.id}></td>
+                                                    <td id="sv_"${sentenceVector.id}></td>
                                                     <td>${contextId}</td>
                                                     <td colspan="5">
                                                         <c:forEach items="${sentenceVector.words}" var="word">
@@ -890,18 +878,70 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-6">
 
+                        <div class="col-xs-6">
                             <div class="table-header" style="line-height: 20px;">
-                                规则向量数据
+                                规则实体统计数据
                             </div>
                             <div class="table-responsive">
                                 <div class="dataTables_wrapper" role="grid">
                                     <div style="overflow-x:hidden; height:180px; max-height:180px;">
                                         <table class="table table-striped table-bordered table-hover dataTable" aria-describedby="sample-table-2_info">
-                                            <tbody id="ruleTable" role="alert" aria-live="polite" aria-relevant="all" >
+                                            <tbody role="alert" aria-live="polite" aria-relevant="all" >
 
-                                            <c:forEach var="historySVRuleInfoEntity" items="${historySVRuleInfoMap_fpm}">
+                                            <tr class="odd">
+                                                <td class="center  sorting_1" width="5%"></td>
+                                                <td width="15%"></td>
+                                                <td width="15%"></td>
+                                                <td width="10%"></td>
+                                                <td width="15%"></td>
+                                                <td width="25%"></td>
+                                                <td width="15%"></td>
+                                            </tr>
+
+                                            <c:forEach var="hitRRuleEntityMap" items="${hitRRuleEntityMaps}" varStatus="status">
+                                                <c:forEach var="hitRRuleEntityMapEntity" items="${hitRRuleEntityMap}">
+                                                    <tr class="odd">
+                                                        <td></td>
+                                                        <td>svId: ${status.index}</td>
+                                                        <td>ruleId: ${hitRRuleEntityMapEntity.key}</td>
+                                                        <td colspan="4">
+                                                            <c:forEach var="rre" items="${hitRRuleEntityMapEntity.value}">
+                                                                <span class="badge badge-important">${rre.entityType}_${rre.entityId}_${rre.entityName}_${rre.weight}</span>
+                                                            </c:forEach>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="dataTables_paginate paging_bootstrap">
+                                                <ul class="pagination">
+                                                    <li><a href="#1">1</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-6">
+                            <div class="table-header" style="line-height: 20px;">
+                                Top5规则
+                            </div>
+                            <div class="table-responsive">
+                                <div class="dataTables_wrapper" role="grid">
+                                    <div style="overflow-x:hidden; height:180px; max-height:180px;">
+                                        <table class="table table-striped table-bordered table-hover dataTable" aria-describedby="sample-table-2_info">
+                                            <tbody role="alert" aria-live="polite" aria-relevant="all" >
+
+                                            <c:forEach var="svRuleInfo" items="${svRuleInfosTopFive}" varStatus="status">
                                                 <tr class="odd">
                                                     <td class="center  sorting_1" width="5%"></td>
                                                     <td width="15%"></td>
@@ -914,66 +954,73 @@
                                                 <tr class="odd">
                                                     <td></td>
                                                     <td>
-                                                        <c:if test="${historySVRuleInfoEntity.value.lackedRRuleEntities.size() > 0}">${historySVRuleInfoEntity.key}</c:if>
-                                                        <c:if test="${historySVRuleInfoEntity.value.lackedRRuleEntities.size() <= 0}"><i class="icon-warning-sign bigger-120"></i> <s>${historySVRuleInfoEntity.key}</s></c:if>
+                                                            ${svRuleInfo.sentenceVectorId}
                                                     </td>
-                                                    <td>${historySVRuleInfoEntity.value.ruleId}</td>
+                                                    <td>${svRuleInfo.ruleId}</td>
                                                     <td>
-                                                        <c:if test="${historySVRuleInfoEntity.value.isLongConversationRule == false}">短对话</c:if>
-                                                        <c:if test="${historySVRuleInfoEntity.value.isLongConversationRule == true}">长对话</c:if>
+                                                        <c:if test="${svRuleInfo.isLongConversationRule == false}">短对话</c:if>
+                                                        <c:if test="${svRuleInfo.isLongConversationRule == true}">长对话</c:if>
                                                     </td>
-                                                    <td>${historySVRuleInfoEntity.value.matchType}</td>
-                                                    <td>${historySVRuleInfoEntity.value.runningAccuracyThreshold}</td>
-                                                    <td>${historySVRuleInfoEntity.value.algorithmType}</td>
+                                                    <td>${svRuleInfo.matchType}</td>
+                                                    <td>${svRuleInfo.runningAccuracyThreshold}</td>
+                                                    <td>${svRuleInfo.algorithmType}</td>
                                                 </tr>
                                                 <tr class="odd">
                                                     <td class="center  sorting_1"></td>
-                                                    <td colspan="3">${historySVRuleInfoEntity.value.sentence}</td>
-                                                    <td colspan="3">${historySVRuleInfoEntity.value.sentenceModified}</td>
+                                                    <td colspan="3">${svRuleInfo.sentence}</td>
+                                                    <td colspan="3">${svRuleInfo.sentenceModified}</td>
                                                 </tr>
                                                 <tr class="odd">
-                                                    <td class="center  sorting_1  "></td>
-                                                    <td>多余词语</td>
-                                                    <td colspan="5">
-                                                        <c:forEach items="${historySVRuleInfoEntity.value.redundantWordInfos}" var="redundantWordInfo">
-                                                            <span class="label" style="position: relative;">${redundantWordInfo.wordId}_${redundantWordInfo.word}_${redundantWordInfo.weight}</span>
-                                                        </c:forEach>
-                                                    </td>
+                                                    <td class="center  sorting_1"></td>
+                                                    <td colspan="3"><fmt:formatNumber type="number" value="${svRuleInfo.preRuleVolumeRateOccupancy}" maxFractionDigits="3"/></td>
+                                                    <td colspan="3"><fmt:formatNumber type="number" value="${svRuleInfo.preRuleWeightOccupancy}" maxFractionDigits="3"/></td>
                                                 </tr>
-                                                <tr class="odd">
-                                                    <td class="center  sorting_1  "></td>
-                                                    <td>匹配的REWIs</td>
-                                                    <td colspan="5">
-                                                        <c:forEach items="${historySVRuleInfoEntity.value.matchedREntityWordInfos}" var="matchedREntityWordInfo">
-                                                            <span class="label label-warning" style="position: relative;">${matchedREntityWordInfo.wordId}_${matchedREntityWordInfo.word} -> ${matchedREntityWordInfo.entityId}_${matchedREntityWordInfo.entityName}</span>
-                                                        </c:forEach>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td class="center  sorting_1  "></td>
-                                                    <td>匹配的RREs</td>
-                                                    <td colspan="5">
-                                                        <c:forEach items="${historySVRuleInfoEntity.value.matchedRRuleEntities}" var="matchedRRuleEntity">
-                                                            <span class="badge badge-important" style="position: relative;">${matchedRRuleEntity.entityType}_${matchedRRuleEntity.entityId}_${matchedRRuleEntity.entityName}</span>
-                                                        </c:forEach>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td class="center  sorting_1  "></td>
-                                                    <td>缺失的RREs</td>
-                                                    <td colspan="5">
-                                                        <c:if test="${historySVRuleInfoEntity.value.lackedRRuleEntities.size() > 0}">
-                                                            <c:forEach items="${historySVRuleInfoEntity.value.lackedRRuleEntities}" var="lackedRRuleEntity">
-                                                                <span class="badge" style="position: relative;">${lackedRRuleEntity.entityType}_${lackedRRuleEntity.entityId}_${lackedRRuleEntity.entityName}</span>
-                                                            </c:forEach>
-                                                        </c:if>
-                                                        <c:if test="${historySVRuleInfoEntity.value.lackedRRuleEntities.size() <= 0}">
-                                                                <span class="label label-warning">
-                                                                    <i class="icon-warning-sign bigger-120"></i>
-                                                                    没有缺失参数，无需补充参数
-                                                                </span>
-                                                        </c:if>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
 
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="dataTables_paginate paging_bootstrap">
+                                                <ul class="pagination">
+                                                    <li><a href="#1">1</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-6">
+                            <div class="table-header" style="line-height: 20px;">
+                                Top5规则具体实体数据
+                            </div>
+                            <div class="table-responsive">
+                                <div class="dataTables_wrapper" role="grid">
+                                    <div style="overflow-x:hidden; height:180px; max-height:180px;">
+                                        <table class="table table-striped table-bordered table-hover dataTable" aria-describedby="sample-table-2_info">
+                                            <tbody role="alert" aria-live="polite" aria-relevant="all" >
+
+                                            <c:forEach var="ruleId_rRuleEntityDataEntity" items="${ruleId_rRuleEntityDataMap}" varStatus="status">
+                                                <tr class="odd">
+                                                    <td class="center  sorting_1" width="5%"></td>
+                                                    <td width="15%"></td>
+                                                    <td width="15%"></td>
+                                                    <td width="10%"></td>
+                                                    <td width="15%"></td>
+                                                    <td width="25%"></td>
+                                                    <td width="15%"></td>
+                                                </tr>
+                                                <tr class="odd">
+                                                    <td></td>
+                                                    <td>ruleId：${ruleId_rRuleEntityDataEntity.key} </td>
+                                                    <td colspan="5">
+                                                        <c:forEach var="rRuleEntity" items="${ruleId_rRuleEntityDataEntity.value.values()}" varStatus="status">
+                                                            <span class="badge badge-important">${rRuleEntity.entityType}_${rRuleEntity.entityId}_${rRuleEntity.entityName}_${rRuleEntity.weight}</span>
+                                                        </c:forEach>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -985,9 +1032,151 @@
                                         <div class="col-sm-12">
                                             <div class="dataTables_paginate paging_bootstrap">
                                                 <ul class="pagination">
-                                                    <c:forEach var="historyContextId" items="${historySVRuleInfoMap_fpm.keySet()}">
-                                                        <li><a href="javascript:void(0)" onclick="scrollNow('contextId${historyContextId}')">${historyContextId}</a></li>
+                                                    <li><a href="#1">1</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-6">
+                            <div class="table-header" style="line-height: 20px;">
+                                Top5规则计算数据
+                            </div>
+                            <div class="table-responsive">
+                                <div class="dataTables_wrapper" role="grid">
+                                    <div style="overflow-x:hidden; height:180px; max-height:180px;">
+                                        <table class="table table-striped table-bordered table-hover dataTable" aria-describedby="sample-table-2_info">
+                                            <tbody role="alert" aria-live="polite" aria-relevant="all" >
+
+                                            <tr class="odd">
+                                                <td class="center  sorting_1" width="5%"></td>
+                                                <td width="15%"></td>
+                                                <td width="15%"></td>
+                                                <td width="10%"></td>
+                                                <td width="15%"></td>
+                                                <td width="25%"></td>
+                                                <td width="15%"></td>
+                                            </tr>
+
+                                            <c:forEach var="ids_rewisMapKey" items="${similarityCalculationData_fpm.ids_rewisMap.keySet()}" varStatus="status">
+                                                <tr class="odd">
+                                                    <td></td>
+                                                    <td>${ids_rewisMapKey} </td>
+                                                    <td colspan="3">
+                                                        <c:forEach var="rewi" items="${similarityCalculationData_fpm.ids_rewisMap.get(ids_rewisMapKey)}">
+                                                            <span class="label label-warning">${rewi.wordId}_${rewi.word}}</span>
+                                                            ->
+                                                            <span class="badge badge-important">${rewi.entityType}_${rewi.entityId}_${rewi.entityName}</span><br/>
+                                                        </c:forEach>
+                                                    </td>
+                                                    <td colspan="2">
+                                                            ${similarityCalculationData_fpm.ids_scoreMap.get(ids_rewisMapKey)}
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="dataTables_paginate paging_bootstrap">
+                                                <ul class="pagination">
+                                                    <li><a href="#1">1</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-6">
+                            <div class="table-header" style="line-height: 20px;">
+                                最优规则
+                            </div>
+                            <div class="table-responsive">
+                                <div class="dataTables_wrapper" role="grid">
+                                    <div style="overflow-x:hidden; height:180px; max-height:180px;">
+                                        <table class="table table-striped table-bordered table-hover dataTable" aria-describedby="sample-table-2_info">
+                                            <tbody role="alert" aria-live="polite" aria-relevant="all" >
+
+                                            <tr class="odd">
+                                                <td class="center  sorting_1" width="5%"></td>
+                                                <td width="15%"></td>
+                                                <td width="15%"></td>
+                                                <td width="10%"></td>
+                                                <td width="15%"></td>
+                                                <td width="25%"></td>
+                                                <td width="15%"></td>
+                                            </tr>
+                                            <tr class="odd">
+                                                <td></td>
+                                                <td>${optimalSvRuleInfo_fpm.sentenceVectorId}</td>
+                                                <td>${optimalSvRuleInfo_fpm.ruleId}</td>
+                                                <td>
+                                                    <c:if test="${optimalSvRuleInfo_fpm.isLongConversationRule == false}">短对话</c:if>
+                                                    <c:if test="${optimalSvRuleInfo_fpm.isLongConversationRule == true}">长对话</c:if>
+                                                </td>
+                                                <td>${optimalSvRuleInfo_fpm.matchType}</td>
+                                                <td>${optimalSvRuleInfo_fpm.runningAccuracyThreshold}</td>
+                                                <td>${optimalSvRuleInfo_fpm.algorithmType}</td>
+                                            </tr>
+                                            <tr class="odd">
+                                                <td class="center  sorting_1"></td>
+                                                <td colspan="3">${optimalSvRuleInfo_fpm.sentence}</td>
+                                                <td colspan="3">${optimalSvRuleInfo_fpm.sentenceModified}</td>
+                                            </tr>
+                                            <tr class="odd">
+                                                <td class="center  sorting_1  "></td>
+                                                <td>多余词语</td>
+                                                <td colspan="5">
+                                                    <c:forEach items="${optimalSvRuleInfo_fpm.redundantWordInfos}" var="redundantWordInfo">
+                                                        <span class="label" style="position: relative;">${redundantWordInfo.wordId}_${redundantWordInfo.word}_${redundantWordInfo.weight}</span>
                                                     </c:forEach>
+                                                </td>
+                                            </tr>
+                                            <tr class="odd">
+                                                <td class="center  sorting_1  "></td>
+                                                <td>匹配的REWIs</td>
+                                                <td colspan="5">
+                                                    <c:forEach items="${optimalSvRuleInfo_fpm.matchedREntityWordInfos}" var="matchedREntityWordInfo">
+                                                        <span class="label label-warning" style="position: relative;">${matchedREntityWordInfo.wordId}_${matchedREntityWordInfo.word} -> ${matchedREntityWordInfo.entityId}_${matchedREntityWordInfo.entityName}</span>
+                                                    </c:forEach>
+                                                </td>
+                                            </tr>
+                                            <tr class="odd">
+                                                <td class="center  sorting_1  "></td>
+                                                <td>匹配的RREs</td>
+                                                <td colspan="5">
+                                                    <c:forEach items="${optimalSvRuleInfo_fpm.matchedRRuleEntities}" var="matchedRRuleEntity">
+                                                        <span class="badge badge-important" style="position: relative;">${matchedRRuleEntity.entityType}_${matchedRRuleEntity.entityId}_${matchedRRuleEntity.entityName}</span>
+                                                    </c:forEach>
+                                                </td>
+                                            </tr>
+                                            <tr class="odd">
+                                                <td class="center  sorting_1  "></td>
+                                                <td>缺失的RREs</td>
+                                                <td colspan="5">
+                                                    <c:forEach items="${optimalSvRuleInfo_fpm.lackedRRuleEntities}" var="lackedRRuleEntity">
+                                                        <span class="badge" style="position: relative;">${lackedRRuleEntity.entityType}_${lackedRRuleEntity.entityId}_${lackedRRuleEntity.entityName}</span>
+                                                    </c:forEach>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="dataTables_paginate paging_bootstrap">
+                                                <ul class="pagination">
+                                                    <li><a href="javascript:void(0)" onclick="scrollNow('contextId${historyContextId}')">1</a></li>
                                                 </ul>
                                             </div>
                                         </div>

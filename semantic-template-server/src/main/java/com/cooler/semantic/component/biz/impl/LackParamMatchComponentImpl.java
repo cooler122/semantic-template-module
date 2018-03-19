@@ -278,7 +278,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                             amnesiacData.setHistoryContextId(historyContextId);
                             amnesiacData.setContextDistance(currentContextId - historyContextId);
                             amnesiacData.setAmnesiacAlgorithmType(1);                                                   //TODO:实际上当前失忆算法只有一种，如果有必要，以后多添加一点算法
-                            amnesiacData.setBaseNumber(0.6);                                                            //TODO:以后这个也由用户自己设置
+                            amnesiacData.setBaseNumber(0.8);                                                            //TODO:以后这个也由用户自己设置
                             amnesiacData.setCoefficient(amnesiacCoefficient);
                             amnesiacDatas.add(amnesiacData);
 
@@ -325,18 +325,19 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
 
             canceledLPMContextIdSet.add(bestContextId);
             redisService.setCacheObject(canceledLPMContextIdSet_DataName, new DataComponentBase(outputDataBeanId, contextOwner, HashSet.class.getSimpleName(), canceledLPMContextIdSet));   //此处保存被选中的contextId到redis，下次使用时进行排查，进而避免无用匹配
+            return new ComponentBizResult("LPMC_S", Constant.STORE_LOCAL_REMOTE, lpm_optimalSvRuleInfo);      //无论结果是否为null，都要保存，此结果在本地和远程都要存储;
+        }else{
+            return new ComponentBizResult("LPMC_F", Constant.STORE_LOCAL_REMOTE, null);         //无论结果是否为null，都要保存，此结果在本地和远程都要存储;
         }
-
-        return new ComponentBizResult("LPMC_S", Constant.STORE_LOCAL_REMOTE, lpm_optimalSvRuleInfo);      //无论结果是否为null，都要保存，此结果在本地和远程都要存储;
     }
 
     /**
-     * 根据上下文轮次，获取失忆系数（当前以0.6的指数函数作为失忆函数，0.6算是失忆倍数）
+     * 根据上下文轮次，获取失忆系数（当前以0.8的指数函数作为失忆函数，0.6算是失忆倍数）
      * @param historyRoundDistance 上下文轮次，距离当前上下文编号的距离
      * @return
      */
     private double getAmnesiacCoefficient(int historyRoundDistance){
-        return Math.pow(0.6, -1 * historyRoundDistance);
+        return Math.pow(0.8, -1 * historyRoundDistance);
     }
 
     /**

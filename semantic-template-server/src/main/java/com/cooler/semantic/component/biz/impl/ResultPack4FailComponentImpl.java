@@ -47,6 +47,9 @@ public class ResultPack4FailComponentImpl extends FunctionComponentBase<SVRuleIn
         }
         long responseTimestamp = System.currentTimeMillis();
         SemanticParserResponse semanticParserResponse = new SemanticParserResponse();
+        semanticParserResponse.setAccountIds(contextOwner.getAccountIds());
+        semanticParserResponse.setUserId(contextOwner.getUserId());
+        semanticParserResponse.setContextId(contextOwner.getContextId());
         semanticParserResponse.setSentence(sentence);
         semanticParserResponse.setResponseType(Constant.FAIL_RESULT);
         semanticParserResponse.setScore(similarity);

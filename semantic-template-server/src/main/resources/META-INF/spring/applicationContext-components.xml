@@ -73,6 +73,7 @@
                 <entry key="D1_N" value="CPMC"/>
 
                 <entry key="LPMC_S" value="D2"/>
+                <entry key="LPMC_F" value="D2"/>
 
                 <entry key="D2_Y" value="ORSC"/>          <!-- 存储策略在各个组件会自己声明，不再成为流程图中的节点，直接跳过 -->
                 <entry key="D2_N" value="CPMC"/>
@@ -85,13 +86,12 @@
                 <entry key="FPMC_S" value="ORSC"/>
                 <entry key="FPMC_F" value="ORSC"/>
 
-                <entry key="ORSC_S_L" value="D4"/>
-                <entry key="ORSC_S_C1" value="D4"/>
-                <entry key="ORSC_S_F1" value="D4"/>
-
-                <entry key="ORSC_S_C2" value="D4"/>
-                <entry key="ORSC_S_F2" value="D4"/>
-                <entry key="ORSC_S" value="D4"/>
+                <entry key="ORSC_S_Y_L" value="D4"/>
+                <entry key="ORSC_S_Y_C" value="D4"/>
+                <entry key="ORSC_S_Y_F" value="D4"/>
+                <entry key="ORSC_S_N_C" value="D4"/>
+                <entry key="ORSC_S_N_F" value="D4"/>
+                <entry key="ORSC_S_N" value="D4"/>
 
                 <entry key="D4_Y" value="D6"/>
                 <entry key="D4_N" value="D9"/>
@@ -108,16 +108,14 @@
                 <entry key="D8_N" value="RPC4NR"/>
                 <entry key="D8_Y" value="RPC4R"/>
 
-                <entry key="D9_Y_Y" value="D10"/>
-                <entry key="D9_N_Y" value="D10"/>
-                <entry key="D9_Y_N" value="RPC4F"/>
-                <entry key="D9_N_N" value="RPC4F"/>
+                <entry key="D9_Y" value="D10"/>         <!-- 没有匹配到结果，但state < 0,尝试进行上下文回退操作 -->
+                <entry key="D9_N" value="RPC4F"/>       <!-- 没有匹配到结果，且state >= 0,无法进行上下文回退操作，进入失败消息体 -->
 
                 <entry key="D10_Y" value="RPC4F"/>
                 <entry key="D10_N" value="LRRC"/>
 
-                <entry key="LRRC_S1" value="RPC4M"/>    <!-- LRRC_S1，代表已经产生了最优规则，故历史缺参规则无需后移，就没有后移 -->
-                <entry key="LRRC_S2" value="RPC4M"/>    <!-- LRRC_S2，代表没有产生了最优规则，但历史缺参规则后移成功 -->
+                <entry key="LRRC_S_N" value="RPC4M"/>    <!-- LRRC_S1，代表产生了最优规则，故历史缺参规则无需后移，就没有后移 -->
+                <entry key="LRRC_S_Y" value="RPC4M"/>    <!-- LRRC_S2，代表没有产生最优规则，进行了历史缺参规则后移 -->
                 <entry key="LRRC_F" value="RPC4F"/>     <!-- LRRC_F，代表没有产生了最优规则，但历史缺参规则尝试过后移但失败（没有历史缺参规则） -->
 
                 <entry key="RPC4NR_S" value="ENDC"/>

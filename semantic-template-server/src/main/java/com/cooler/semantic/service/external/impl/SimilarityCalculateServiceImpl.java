@@ -179,7 +179,10 @@ public class SimilarityCalculateServiceImpl implements SimilarityCalculateServic
 
             if(enableCalculateLog){
                 StringBuffer sb = new StringBuffer();
-                sb.append(similarity).append(" = ").append(intersectionVolumeRateOccupancy != 0d ? intersectionVolumeRateOccupancy + " * " : "").append(intersectionWeightOccupancy != 0d ? intersectionWeightOccupancy : "");
+                sb.append(String.format("%.3f", similarity)).
+                    append(" = ").
+                    append(intersectionVolumeRateOccupancy != 0d ? String.format("%.3f", intersectionVolumeRateOccupancy) + " * " : "").
+                    append(intersectionWeightOccupancy != 0d ? String.format("%.3f", intersectionWeightOccupancy) : "");
                 ids_scoreMap.put(currentKey, sb.toString());
                 similarityCalculationData_fpm.setIds_rewisMap(ids_rewDatasMap);
                 similarityCalculationData_fpm.setIds_scoreMap(ids_scoreMap);

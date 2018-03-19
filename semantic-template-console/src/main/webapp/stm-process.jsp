@@ -59,6 +59,7 @@
         }
     </style>
     <script type="text/javascript">
+
         //"处理文本展示/隐藏"按钮，点击后会展示/隐藏每段对话的修改语句（蓝色）。
         function slideModifiedSentence(){
             $(".modifiedSentence").slideToggle();
@@ -119,7 +120,6 @@
                 }
             });
         }
-
 
         //点击每一段“对话”，会获取这段对话的LogDataProcess数据，并将其数据图形化展示到左边的表格里面。
         function getOneLogDataProcess(log_data_process_id){

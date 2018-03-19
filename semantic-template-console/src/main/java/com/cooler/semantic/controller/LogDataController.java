@@ -85,41 +85,12 @@ public class LogDataController {
     }
 
 
-//    @RequestMapping(value = "/getLogDataCalculation.do", method = RequestMethod.GET )
-//    public String getLogDataCalculation(@RequestParam("accountId") String accountId,
-//                                          @RequestParam("userId")String userId,
-//                                          @RequestParam("contextId")String contextId,
-//                                          @RequestParam("currentTimeMillis")String currentTimeMillis,
-//                                          Model model){
-//        Integer accountIdParam = Integer.parseInt(accountId);
-//        Integer userIdParam = Integer.parseInt(userId);
-//        Integer contextIdParam = Integer.parseInt(contextId);
-//        Long currentTimeMillisParam = Long.parseLong(currentTimeMillis);
-//        LogDataCalculation logDataCalculation = logDataCalculationService.getLogDataCalculation(accountIdParam, userIdParam, contextIdParam, currentTimeMillisParam);
-//        int resultParam = 0;
-//        if(logDataCalculation != null){
-//            model.addAttribute("accountId", accountId);
-//            model.addAttribute("userId", userId);
-//            model.addAttribute("contextId", contextId);
-//            model.addAttribute("dateTime", logDataCalculation.getDateTime());
-//            model.addAttribute("processTrace", logDataCalculation.getProcessTrace());
-//            model.addAttribute("detailContextOwner", logDataCalculation.getDetailContextOwner());
-//            int resultParamLPM = createData_LPM(logDataCalculation, model);
-//            int resultParamCPM = createData_CPM(logDataCalculation, model);
-//            int resultParamFPM = createData_FPM(logDataCalculation, model);
-//            resultParam = resultParam + resultParamCPM + resultParamLPM + resultParamFPM;
-//        }
-//        model.addAttribute("resultParam", resultParam);
-//        return "stm-calculation";
-//    }
-
-    //test fpm
     @RequestMapping(value = "/getLogDataCalculation.do", method = RequestMethod.GET )
-    public String getLogDataCalculation2(@RequestParam("accountId") String accountId,
-                                        @RequestParam("userId")String userId,
-                                        @RequestParam("contextId")String contextId,
-                                        @RequestParam("currentTimeMillis")String currentTimeMillis,
-                                        Model model){
+    public String getLogDataCalculation(@RequestParam("accountId") String accountId,
+                                          @RequestParam("userId")String userId,
+                                          @RequestParam("contextId")String contextId,
+                                          @RequestParam("currentTimeMillis")String currentTimeMillis,
+                                          Model model){
         Integer accountIdParam = Integer.parseInt(accountId);
         Integer userIdParam = Integer.parseInt(userId);
         Integer contextIdParam = Integer.parseInt(contextId);
@@ -139,7 +110,7 @@ public class LogDataController {
             resultParam = resultParam + resultParamCPM + resultParamLPM + resultParamFPM;
         }
         model.addAttribute("resultParam", resultParam);
-        return "stm-calculation-fpm";
+        return "stm-calculation";
     }
 
     private Integer createData_LPM(LogDataCalculation logDataCalculation, Model model) {

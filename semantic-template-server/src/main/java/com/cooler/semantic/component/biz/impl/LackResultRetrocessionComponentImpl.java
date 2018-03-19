@@ -29,8 +29,8 @@ public class LackResultRetrocessionComponentImpl extends FunctionComponentBase<S
     @Override
     protected ComponentBizResult<SVRuleInfo> runBiz(ContextOwner contextOwner, SVRuleInfo svRuleInfo) {
         logger.trace("LRRC.缺参结果回退");
-        if(svRuleInfo != null && svRuleInfo.getSimilarity() >= svRuleInfo.getRunningAccuracyThreshold()){               //如果svRuleInfo不为空或者有效svRuleInfo，那么才无需回退
-            return new ComponentBizResult("LRRC_S1");
+        if(svRuleInfo != null && svRuleInfo.getSimilarity() >= svRuleInfo.getRunningAccuracyThreshold()){               //如果svRuleInfo不为空并且svRuleInfo有效，那么无需缺参上下文回退
+            return new ComponentBizResult("LRRC_S_N");
         }
         if(svRuleInfo != null && svRuleInfo.getSimilarity() < svRuleInfo.getRunningAccuracyThreshold()){               //用户的句子没有匹配上，但可以设置提示句子
             String sentence = svRuleInfo.getSentence();
@@ -53,9 +53,9 @@ public class LackResultRetrocessionComponentImpl extends FunctionComponentBase<S
             }
         }
 
-        if(optimalSvRuleInfo != null){                                                                                 //如果当前有了值，则返回成功
-            return new ComponentBizResult("LRRC_S2", Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo);
-        }else{                                                                                                          //如果入参为空，经过上面历史赋值都失败了，那么就返回失败
+        if(optimalSvRuleInfo != null){                                                                                 //走到这里，说明本轮结果为空或者小于阈值，则准备好上一轮的缺参上下文进行回退
+            return new ComponentBizResult("LRRC_S_Y", Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo);
+        }else{                                                                                                          //如果入参结果为空或者小于阈值，而且经过上面历史赋值都失败了都不能回退，那么就只能返回失败了
             return new ComponentBizResult("LRRC_F");
         }
     }

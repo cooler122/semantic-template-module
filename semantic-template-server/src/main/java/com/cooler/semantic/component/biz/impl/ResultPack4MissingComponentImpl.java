@@ -84,6 +84,9 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
         long responseTimestamp = System.currentTimeMillis();
 
         SemanticParserResponse semanticParserResponse = new SemanticParserResponse();
+        semanticParserResponse.setAccountIds(contextOwner.getAccountIds());
+        semanticParserResponse.setUserId(contextOwner.getUserId());
+        semanticParserResponse.setContextId(contextOwner.getContextId());
         semanticParserResponse.setResponseMsg(responseMsg);
         semanticParserResponse.setSentence(sentence);
         semanticParserResponse.setSentenceModified(sentenceModified);

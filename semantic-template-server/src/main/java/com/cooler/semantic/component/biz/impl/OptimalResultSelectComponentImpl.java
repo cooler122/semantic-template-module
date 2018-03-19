@@ -41,7 +41,7 @@ public class OptimalResultSelectComponentImpl extends FunctionComponentBase<SVRu
         DataComponent<SVRuleInfo> dataComponent_LPM = componentConstant.getDataComponent("optimalSvRuleInfo_LPM", contextOwner);
         if(dataComponent_LPM != null && dataComponent_LPM.getData() != null){                                                                       //优先缺参结果LPM
             optimalSvRuleInfo_DataComponent = dataComponent_LPM;
-            resultCode = "ORSC_S_L";
+            resultCode = "ORSC_S_Y_L";
         }else{
             DataComponent<SVRuleInfo> dataComponent_CPM = componentConstant.getDataComponent("optimalSvRuleInfo_CPM", contextOwner);
             DataComponent<SVRuleInfo> dataComponent_FPM = componentConstant.getDataComponent("optimalSvRuleInfo_FPM", contextOwner);
@@ -49,38 +49,38 @@ public class OptimalResultSelectComponentImpl extends FunctionComponentBase<SVRu
                 optimalSvRuleInfo_DataComponent = dataComponent_FPM;
                 double ruleAccuracyThresholdOccupyRate = getRuleAccuracyThresholdOccupyRate(optimalSvRuleInfo_DataComponent, accountId, accuracyThreshold);
                 if(ruleAccuracyThresholdOccupyRate > 1.0d){                                                             //全参匹配值超过阈值，算匹配上
-                    resultCode = "ORSC_S_F1";
+                    resultCode = "ORSC_S_Y_F";
                 }else{                                                                                                  //全参匹配值没有超过阈值，不能算匹配上
-                    resultCode = "ORSC_S_F2";
+                    resultCode = "ORSC_S_N_F";
                 }
             }else if((dataComponent_CPM != null && dataComponent_CPM.getData() != null) && (dataComponent_FPM == null || dataComponent_FPM.getData() == null)){   //如果换参结果不为空，而全参结果为空，则选换参结果
                 optimalSvRuleInfo_DataComponent = dataComponent_CPM;
                 double ruleAccuracyThresholdOccupyRate = getRuleAccuracyThresholdOccupyRate(optimalSvRuleInfo_DataComponent, accountId, accuracyThreshold);
                 if(ruleAccuracyThresholdOccupyRate > 1.0d){                                                             //全参匹配值超过阈值，算匹配上
-                    resultCode = "ORSC_S_C1";
+                    resultCode = "ORSC_S_Y_C";
                 }else{                                                                                                  //全参匹配值没有超过阈值，不能算匹配上
-                    resultCode = "ORSC_S_C2";
+                    resultCode = "ORSC_S_N_C";
                 }
-            }else if((dataComponent_CPM != null && dataComponent_CPM.getData() != null) && (dataComponent_FPM != null && dataComponent_FPM.getData() != null)){   //如果两者都不为空，选相似度大的结果
+            }else if((dataComponent_CPM != null && dataComponent_CPM.getData() != null) && (dataComponent_FPM != null && dataComponent_FPM.getData() != null)){   //如果两者都不为空，两者pk，选相似度大的结果
                 double ruleAccuracyThresholdOccupyRate_cpm = getRuleAccuracyThresholdOccupyRate(dataComponent_CPM, accountId, accuracyThreshold);
                 double ruleAccuracyThresholdOccupyRate_fpm = getRuleAccuracyThresholdOccupyRate(dataComponent_FPM, accountId, accuracyThreshold);
                 if(ruleAccuracyThresholdOccupyRate_cpm > ruleAccuracyThresholdOccupyRate_fpm){                          //这个时候比较大小没有意义了，不同规则有不同的阈值；是看谁超出阈值更多，才选择谁；如果都小于1，也要选占比比较大的那个。
                     optimalSvRuleInfo_DataComponent = dataComponent_CPM;
                     if(ruleAccuracyThresholdOccupyRate_cpm > 1.0d){                                                     //换参匹配值超过阈值，算匹配上
-                        resultCode = "ORSC_S_C1";
+                        resultCode = "ORSC_S_Y_C";
                     }else{                                                                                             //换参匹配值没有超过阈值，不能算匹配上
-                        resultCode = "ORSC_S_C2";
+                        resultCode = "ORSC_S_N_C";
                     }
                 }else{
                     optimalSvRuleInfo_DataComponent = dataComponent_FPM;
                     if(ruleAccuracyThresholdOccupyRate_fpm > 1.0d){                                                     //全参匹配值超过阈值，算匹配上
-                        resultCode = "ORSC_S_F1";
+                        resultCode = "ORSC_S_Y_F";
                     }else{                                                                                             //全参匹配值没有超过阈值，不能算匹配上
-                        resultCode = "ORSC_S_F2";
+                        resultCode = "ORSC_S_N_F";
                     }
                 }
             }else{                                                                                                      //如果两者都为空，谁都不选
-                resultCode = "ORSC_S";
+                resultCode = "ORSC_S_N";
             }
         }
         if(optimalSvRuleInfo_DataComponent != null && optimalSvRuleInfo_DataComponent.getData() != null){
@@ -92,7 +92,7 @@ public class OptimalResultSelectComponentImpl extends FunctionComponentBase<SVRu
                 matchedREntityWordInfo.setWeights(Arrays.asList(finalWeight));                                          //实际上对于本轮对话，此处权重以没有作用，这里还是将最终确定用上的权重在这里设置，是为了下几轮对话，也许下几轮对话会用上。
             }
             optimalSvRuleInfo.setSentenceVectorId(0);                                                                   //上面将确定后的权重改变到了第0个位置，那么将此最佳SVRuleInfo的SentenceVectorId设置为0
-            return new ComponentBizResult(resultCode, Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo);  //此结果在本地和远程都要存储，无论它是否超过规则规定的阈值，都将记为历史记录
+            return new ComponentBizResult(resultCode, Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo);              //此结果在本地和远程都要存储，无论它是否超过规则规定的阈值，都将记为历史记录
         }else{
             return new ComponentBizResult(resultCode);
         }

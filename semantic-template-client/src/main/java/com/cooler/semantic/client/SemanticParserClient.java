@@ -8,6 +8,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 public class SemanticParserClient {
     private static ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath*:applicationContext-consumer.xml");
@@ -26,9 +27,9 @@ public class SemanticParserClient {
 
 //        String[] sentences = { "北京天气怎么样？", "上海呢？", "天津呢？", "今天"};                                        //测试缺参情况下的换参匹配
 
-        String[] sentences = { "天气怎么样？", "哈哈", "哈哈", "哈哈", "今天", "北京" };                                   //测试打断上下文的缺参匹配1
+//        String[] sentences = { "天气怎么样？", "哈哈", "哈哈", "哈哈", "今天", "北京" };                                   //测试打断上下文的缺参匹配1
 
-//        String[] sentences = { "天气怎么样？", "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京", "哈哈"};                       //测试打断上下文的缺参匹配2
+        String[] sentences = { "天气怎么样？", "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京", "哈哈"};                       //测试打断上下文的缺参匹配2
 
 //        String[] sentences = {  "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京" };                                       //测试匹配失败
 
@@ -46,32 +47,35 @@ public class SemanticParserClient {
 
 //        String[] sentences = {  "唱周杰伦的歌" , "唱他的双节棍", "播放他的听妈妈的话", "唱林俊杰的美人鱼", "江南"};        //另一场景，测试换参匹配（自定义分词 + 连续指代消解 + 换参匹配）
 
-        String[] sentences = { "天气怎么样？", "今天", "唱周杰伦的歌" , "唱周杰伦的双节棍", "播放他的听妈妈的话", "林俊杰的江南"};        //测试多场景
+//        String[] sentences = { "天气怎么样？", "今天", "唱周杰伦的歌" , "唱周杰伦的双节棍", "播放他的听妈妈的话", "林俊杰的江南"};        //测试多场景
 
 //        String[] sentences = { "我要取款", "八八八", "六六六六六六", "三五千", "三千", "确认" , "要"};        //测试多场景
 
+        List<Integer> accountIds = Arrays.asList(1, 2, 3);
+        Integer userId = 2;
         Integer contextId = (int)(Math.random() * 10000000 + 1);
+        String passWord = "123456";
 //        Integer contextId = 21;
-        System.out.println("对话编号：" + contextId);
 
         Integer state = 0;
         for (String sentence : sentences) {
-            SemanticParserResponse semanticParserResponse = buildRequest(sentence, contextId, state);
+            SemanticParserResponse semanticParserResponse = buildRequest(accountIds, userId, contextId, passWord, sentence, state);
             state = semanticParserResponse.getState();
+            contextId = semanticParserResponse.getContextId() + 1;
 
-            contextId ++;
+            System.out.println("对话编号：" + contextId);
             System.out.println("人   ------    " + sentence);
             System.out.println("机   ------    " + semanticParserResponse.getResponseMsg());
             System.out.println(JSON.toJSONString(semanticParserResponse));
         }
     }
 
-    public static SemanticParserResponse buildRequest(String sentence, Integer contextId, Integer state){
+    public static SemanticParserResponse buildRequest(List<Integer> accountId, Integer userId, Integer contextId, String passWord, String sentence,  Integer state){
         SemanticParserRequest request = new SemanticParserRequest();
         request.setCmd(sentence);                                                                                       //添加一个句子
-        request.setAccountIds(Arrays.asList(1, 2, 3));                                                                        //添加一个测试账户 accountId = 1
-        request.setPassword("123456");                    //TODO:看看密码有没有效果
-        request.setUserId(2);                                                                                           //添加一个用户标号 userId = 2
+        request.setAccountIds(accountId);                                                                               //添加一个测试账户 accountId = 1
+        request.setPassword(passWord);
+        request.setUserId(userId);                                                                                      //添加一个用户标号 userId = 2
         request.setContextId(contextId);                                                                                //添加一个上下文编号
         request.setLastState(state);
         return semanticParserFacade.semanticParse(request);

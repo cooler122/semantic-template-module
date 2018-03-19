@@ -1,8 +1,24 @@
 package com.cooler.semantic.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class SemanticParserResponse implements Serializable {
+    /**
+     * 账户集
+     */
+    private List<Integer> accountIds;
+
+    /**
+     * 用户号
+     */
+    private Integer userId;
+
+    /**
+     * 上下文编号
+     */
+    private Integer contextId;
+
     //原始句子
     private String sentence;
 
@@ -21,11 +37,35 @@ public class SemanticParserResponse implements Serializable {
     //状态
     private int state = 0;
 
-    //积累的问话
+    //对某一领域（规则、实体）积累的问话
     private int accumulateQueryCount;
 
     //响应的时间戳
     private long responseTimestamp;
+
+    public List<Integer> getAccountIds() {
+        return accountIds;
+    }
+
+    public void setAccountIds(List<Integer> accountIds) {
+        this.accountIds = accountIds;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getContextId() {
+        return contextId;
+    }
+
+    public void setContextId(Integer contextId) {
+        this.contextId = contextId;
+    }
 
     public String getSentence() {
         return sentence;

@@ -30,6 +30,9 @@ public class ResultPack4RunningComponentImpl extends FunctionComponentBase<SVRul
         long responseTimestamp = System.currentTimeMillis();
 
         SemanticParserResponse semanticParserResponse = new SemanticParserResponse();
+        semanticParserResponse.setAccountIds(contextOwner.getAccountIds());
+        semanticParserResponse.setUserId(contextOwner.getUserId());
+        semanticParserResponse.setContextId(contextOwner.getContextId());
         semanticParserResponse.setSentence(sentence);
         semanticParserResponse.setSentenceModified(sentenceModified);
         semanticParserResponse.setResponseType(Constant.RUNNING_RESULT);

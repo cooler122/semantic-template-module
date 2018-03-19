@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.cooler.semantic.dto.LogDataProcessDTO;
 import com.cooler.semantic.entity.LogDataCalculation;
 import com.cooler.semantic.entity.LogDataProcess;
+import com.cooler.semantic.entity.RRuleEntity;
 import com.cooler.semantic.model.*;
 import com.cooler.semantic.model.console.AmnesiacData;
 import com.cooler.semantic.model.console.CoupleAlterationRateData;
+import com.cooler.semantic.model.console.SimilarityCalculationData_FPM;
 import com.cooler.semantic.model.console.SimilarityCalculationData_LPM;
 import com.cooler.semantic.service.LogDataCalculationService;
 import com.cooler.semantic.service.LogDataProcessService;
@@ -83,12 +85,41 @@ public class LogDataController {
     }
 
 
+//    @RequestMapping(value = "/getLogDataCalculation.do", method = RequestMethod.GET )
+//    public String getLogDataCalculation(@RequestParam("accountId") String accountId,
+//                                          @RequestParam("userId")String userId,
+//                                          @RequestParam("contextId")String contextId,
+//                                          @RequestParam("currentTimeMillis")String currentTimeMillis,
+//                                          Model model){
+//        Integer accountIdParam = Integer.parseInt(accountId);
+//        Integer userIdParam = Integer.parseInt(userId);
+//        Integer contextIdParam = Integer.parseInt(contextId);
+//        Long currentTimeMillisParam = Long.parseLong(currentTimeMillis);
+//        LogDataCalculation logDataCalculation = logDataCalculationService.getLogDataCalculation(accountIdParam, userIdParam, contextIdParam, currentTimeMillisParam);
+//        int resultParam = 0;
+//        if(logDataCalculation != null){
+//            model.addAttribute("accountId", accountId);
+//            model.addAttribute("userId", userId);
+//            model.addAttribute("contextId", contextId);
+//            model.addAttribute("dateTime", logDataCalculation.getDateTime());
+//            model.addAttribute("processTrace", logDataCalculation.getProcessTrace());
+//            model.addAttribute("detailContextOwner", logDataCalculation.getDetailContextOwner());
+//            int resultParamLPM = createData_LPM(logDataCalculation, model);
+//            int resultParamCPM = createData_CPM(logDataCalculation, model);
+//            int resultParamFPM = createData_FPM(logDataCalculation, model);
+//            resultParam = resultParam + resultParamCPM + resultParamLPM + resultParamFPM;
+//        }
+//        model.addAttribute("resultParam", resultParam);
+//        return "stm-calculation";
+//    }
+
+    //test fpm
     @RequestMapping(value = "/getLogDataCalculation.do", method = RequestMethod.GET )
-    public String getLogDataCalculation(@RequestParam("accountId") String accountId,
-                                          @RequestParam("userId")String userId,
-                                          @RequestParam("contextId")String contextId,
-                                          @RequestParam("currentTimeMillis")String currentTimeMillis,
-                                          Model model){
+    public String getLogDataCalculation2(@RequestParam("accountId") String accountId,
+                                        @RequestParam("userId")String userId,
+                                        @RequestParam("contextId")String contextId,
+                                        @RequestParam("currentTimeMillis")String currentTimeMillis,
+                                        Model model){
         Integer accountIdParam = Integer.parseInt(accountId);
         Integer userIdParam = Integer.parseInt(userId);
         Integer contextIdParam = Integer.parseInt(contextId);
@@ -108,7 +139,7 @@ public class LogDataController {
             resultParam = resultParam + resultParamCPM + resultParamLPM + resultParamFPM;
         }
         model.addAttribute("resultParam", resultParam);
-        return "stm-calculation";
+        return "stm-calculation-fpm";
     }
 
     private Integer createData_LPM(LogDataCalculation logDataCalculation, Model model) {
@@ -179,6 +210,21 @@ public class LogDataController {
     private Integer createData_FPM(LogDataCalculation logDataCalculation, Model model) {
         String fpmJsonData = logDataCalculation.getFpmJsonData();
         if(fpmJsonData != null){
+            CalculationLogParam_FPM calculationLogParam_fpm = JSON.parseObject(fpmJsonData, CalculationLogParam_FPM.class);
+            List<SentenceVector> sentenceVectors_fpm = calculationLogParam_fpm.getSentenceVectors();
+            List<Map<String, List<RRuleEntity>>> hitRRuleEntityMaps = calculationLogParam_fpm.getHitRRuleEntityMaps();
+            List<SVRuleInfo> svRuleInfosTopFive = calculationLogParam_fpm.getSvRuleInfosTopFive();
+            Map<Integer, Map<String, RRuleEntity>> ruleId_rRuleEntityDataMap = calculationLogParam_fpm.getRuleId_RRuleEntityDataMap();
+            SimilarityCalculationData_FPM similarityCalculationData_fpm = calculationLogParam_fpm.getSimilarityCalculationData_fpm();
+            SVRuleInfo optimalSvRuleInfo_fpm = calculationLogParam_fpm.getOptimalSvRuleInfo_FPM();
+
+            model.addAttribute("sentenceVectors_fpm", sentenceVectors_fpm);
+            model.addAttribute("hitRRuleEntityMaps", hitRRuleEntityMaps);
+            model.addAttribute("svRuleInfosTopFive", svRuleInfosTopFive);
+            model.addAttribute("ruleId_rRuleEntityDataMap", ruleId_rRuleEntityDataMap);
+            model.addAttribute("similarityCalculationData_fpm", similarityCalculationData_fpm);
+            model.addAttribute("optimalSvRuleInfo_fpm", optimalSvRuleInfo_fpm);
+
             return 100;
         }
         return 0;

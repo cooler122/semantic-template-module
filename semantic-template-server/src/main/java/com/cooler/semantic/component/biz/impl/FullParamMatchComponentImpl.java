@@ -48,6 +48,7 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
         CalculationLogParam_FPM calculationLogParam_fpm = null;
         if(calculationLogType != Constant.NO_CALCULATION_LOG){
             calculationLogParam_fpm = new CalculationLogParam_FPM();
+            calculationLogParam_fpm.setSentenceVectors(sentenceVectors);
         }
 
         //1.通过各个分词段检索出的实体，将各个实体对应的rule数据（这一步主要获得各个实体对应的ruleId）检索出来，通过预估值计算，提取最佳的前5位规则，并封装成SVRuleInfo集合返回出来
@@ -58,14 +59,14 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
             List<RRuleEntity> rRuleEntities = rRuleEntityService.selectBySVRuleInfos(contextOwner.getCoreAccountId(), fmpTop5SvRuleInfos);            //这个list理应包含所有SVRuleInfo的所有实体相关数据
             Map<Integer, Map<String, RRuleEntity>> ruleId_RRuleEntityDataMap = new HashMap<>();
             for (RRuleEntity rRuleEntity : rRuleEntities) {
-                Integer ruleId = rRuleEntity.getRuleId();                                                                   //由于前面getRulesBySentenceVectors方法里面做过限定，此ruleId不会超过5个，所以下面新建里的小Map不会超过5个
+                Integer ruleId = rRuleEntity.getRuleId();                                                               //由于前面getRulesBySentenceVectors方法里面做过限定，此ruleId不会超过5个，所以下面新建里的小Map不会超过5个
                 Map<String, RRuleEntity> rRuleEntityMap = ruleId_RRuleEntityDataMap.get(ruleId);
                 if(rRuleEntityMap == null){
                     rRuleEntityMap = new HashMap<>();
                 }
                 String entityTypeId = rRuleEntity.getEntityTypeId();
-                rRuleEntityMap.put(entityTypeId, rRuleEntity);                                                              //将这些数据放入了Map<entityTypeId, RRE>集合中，方便后续取用
-                ruleId_RRuleEntityDataMap.put(ruleId, rRuleEntityMap);                                                      //将设置好值得Map放到大Map中Map<ruleId, Map<entityTypeId, RRuleEntity>>
+                rRuleEntityMap.put(entityTypeId, rRuleEntity);                                                          //将这些数据放入了Map<entityTypeId, RRE>集合中，方便后续取用
+                ruleId_RRuleEntityDataMap.put(ruleId, rRuleEntityMap);                                                  //将设置好值得Map放到大Map中Map<ruleId, Map<entityTypeId, RRuleEntity>>
             }
             if(calculationLogType != Constant.NO_CALCULATION_LOG){
                 calculationLogParam_fpm.setRuleId_RRuleEntityDataMap(ruleId_RRuleEntityDataMap);
@@ -83,7 +84,7 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
             List<SVRuleInfo> svRuleInfosResult = similarityCalculateService.similarityCalculate_FPM(algorithmType, fmpTop5SvRuleInfos, ruleId_RRuleEntityDataMap, similarityCalculationData_fpm); //svRuleInfosResult不可能为null，且传进去多少，也返回多少
             Collections.sort(svRuleInfosResult, new Comparator<SVRuleInfo>() {
                 @Override
-                public int compare(SVRuleInfo o1, SVRuleInfo o2) {                                                        //倒序排序，见"if(similarity1 > similarity2) return -1;"
+                public int compare(SVRuleInfo o1, SVRuleInfo o2) {                                               //倒序排序，见"if(similarity1 > similarity2) return -1;"
                     Double similarity1 = o1.getSimilarity();
                     Double similarity2 = o2.getSimilarity();
                     if(similarity1 > similarity2) return -1;
@@ -93,10 +94,10 @@ public class FullParamMatchComponentImpl extends FunctionComponentBase<List<Sent
             });
             if(svRuleInfosResult != null && svRuleInfosResult.size() > 0){
                 SVRuleInfo optimalSvRuleInfo_FPM = svRuleInfosResult.get(0);                                            //获取相似度值最大的那一个（最优结果）
-                optimalSvRuleInfo_FPM.setMatchType(Constant.FPM);                                                      //设置匹配类型
+                optimalSvRuleInfo_FPM.setMatchType(Constant.FPM);                                                       //设置匹配类型
                 optimalSvRuleInfo_FPM.setAlgorithmType(algorithmType);                                                  //设置算法类型
                 optimalSvRuleInfo_FPM.setSentenceModified(optimalSvRuleInfo_FPM.getSentence());                         //全参匹配不改变句子，但还是要设置
-                optimalSvRuleInfo_FPM.setrEntityWordInfosList(null);                                                   //最优规则找到后，需要保存（本地、远程），此过程数据太大而且后续没有更多作用，故此处设置为null
+                optimalSvRuleInfo_FPM.setrEntityWordInfosList(null);                                                    //最优规则找到后，需要保存（本地、远程），此过程数据太大而且后续没有更多作用，故此处设置为null
                 StringBuffer sentenceModifiedSB = new StringBuffer();
                 for (String wordModified : optimalSvRuleInfo_FPM.getWords()) {
                     sentenceModifiedSB.append(wordModified);

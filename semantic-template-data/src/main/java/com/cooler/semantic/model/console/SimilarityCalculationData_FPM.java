@@ -1,5 +1,7 @@
 package com.cooler.semantic.model.console;
 
+import com.cooler.semantic.model.REntityWordInfo;
+
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +25,7 @@ public class SimilarityCalculationData_FPM {
     /**
      * 4.细节实体数据：Map<(svId_ruleId), (wordId_word_entityId_entityName_weight1, wordId_word_entityId_entityName_weight2, wordId_word_entityId_entityName_weight3...)>
      */
-    Map<String, List<String>> ids_rewDatasMap = null;
+    Map<String, List<REntityWordInfo>> ids_rewisMap = null;
 
     /**
      * 5.细节计算值数据：Map<(svId_ruleId), (similarityScore = intersectionVolumeRateOccupancy * intersectionWeightOccupancy) >
@@ -54,12 +56,12 @@ public class SimilarityCalculationData_FPM {
         this.algorithmFormula = algorithmFormula;
     }
 
-    public Map<String, List<String>> getIds_rewDatasMap() {
-        return ids_rewDatasMap;
+    public Map<String, List<REntityWordInfo>> getIds_rewisMap() {
+        return ids_rewisMap;
     }
 
-    public void setIds_rewDatasMap(Map<String, List<String>> ids_rewDatasMap) {
-        this.ids_rewDatasMap = ids_rewDatasMap;
+    public void setIds_rewisMap(Map<String, List<REntityWordInfo>> ids_rewisMap) {
+        this.ids_rewisMap = ids_rewisMap;
     }
 
     public Map<String, String> getIds_scoreMap() {

@@ -70,6 +70,10 @@ public class ComponentConstant {
         for (String dataComponentId : dataComponentIds) {
             dataBeanMap.remove(dataComponentId + "_" + contextOwnerCxtIndex);
         }
+        String[] calculation_log_componentIds = Constant.CALCULATION_LOG_COMPONENT_IDs;
+        for (String dataComponentId : calculation_log_componentIds) {
+            dataBeanMap.remove(dataComponentId + "_" + contextOwnerCxtIndex);
+        }
     }
 
     /**

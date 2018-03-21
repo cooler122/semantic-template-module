@@ -28,20 +28,12 @@ public class SemanticParserFacadeImpl implements SemanticParserFacade {
     private ComponentConstant componentConstant;
 
     public SemanticParserResponse semanticParse(SemanticParserRequest request) {
-        //0.构建用户上下文坐标
+        //1.构建用户上下文坐标
         List<Integer> accountIds = request.getAccountIds();
         Integer coreAccountId = accountIds.get(0);                                                                     //用户账号
         Integer userId = request.getUserId();                                                                          //用户编号
         Integer contextId = request.getContextId();                                                                    //上下文编号
         ContextOwner contextOwner = new ContextOwner(accountIds, userId, contextId);                                //上下文拥有者对象
-
-        //删除历史数据
-        String ownerIndex = contextOwner.getOwnerIndex();
-        String last6OwnerIndex = contextOwner.getLastNOwnerIndex(6);
-        componentConstant.clearTraceByCxtIndex(ownerIndex);                                                         //预先删除本轮的数据记录，为了在测试阶段不至于影响结果
-        componentConstant.clearDataComponentByCxtIndex(ownerIndex);
-        componentConstant.clearTraceByCxtIndex(last6OwnerIndex);
-        componentConstant.clearDataComponentByCxtIndex(last6OwnerIndex);                                            //删除向前数第6轮对话产生的历史数据，为了减小componentConstant里面的Map，节约本地内存
 
         //2.加载数据
         DataComponent<SemanticParserRequest> initDataComponent = new DataComponentBase<>("semanticParserRequest", contextOwner, "SemanticParserRequest", request);     //初始用户的瞬时数据到数据组件

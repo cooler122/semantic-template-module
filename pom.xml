@@ -11,7 +11,8 @@
     <module>semantic-template-server</module>
     <module>semantic-template-client</module>
     <module>semantic-template-console</module>
-      <module>semantic-template-data</module>
+    <module>semantic-template-data</module>
+    <module>semantic-template-context</module>
   </modules>
 
   <packaging>pom</packaging>

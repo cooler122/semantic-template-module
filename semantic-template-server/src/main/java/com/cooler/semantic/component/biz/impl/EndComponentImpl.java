@@ -72,6 +72,10 @@ public class EndComponentImpl extends FunctionComponentBase<Object, Object> {
                     }
                     calculationLogService.writeLog(contextOwner, calculationLogType, dataComponents, processTrace, currentTimeMillis);
                 }
+
+                //4.清除本轮产生的本地缓存数据
+                componentConstant.clearTraceByCxtIndex(contextOwner.getOwnerIndex());                                                         //预先删除本轮的数据记录，为了在测试阶段不至于影响结果
+                componentConstant.clearDataComponentByCxtIndex(contextOwner.getOwnerIndex());
             }
         };
         thread.start();

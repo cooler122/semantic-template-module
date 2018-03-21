@@ -200,22 +200,22 @@
                                                         <td width="15%"></td>
                                                     </tr>
                                                     <tr class="odd">
-                                                        <td>
+                                                        <td title="上下文ID">
                                                             <c:if test="${historySVRuleInfoEntity.value.lackedRRuleEntities.size() > 0}">${historySVRuleInfoEntity.key}</c:if>
                                                             <c:if test="${historySVRuleInfoEntity.value.lackedRRuleEntities.size() <= 0}"><i class="icon-warning-sign bigger-120"></i> <s>${historySVRuleInfoEntity.key}</s></c:if>
                                                         </td>
-                                                        <td>${historySVRuleInfoEntity.value.ruleId}</td>
+                                                        <td title="规则ID">${historySVRuleInfoEntity.value.ruleId}</td>
                                                         <td>
                                                             <c:if test="${historySVRuleInfoEntity.value.isLongConversationRule == false}">短对话</c:if>
                                                             <c:if test="${historySVRuleInfoEntity.value.isLongConversationRule == true}">长对话</c:if>
                                                         </td>
-                                                        <td>${historySVRuleInfoEntity.value.matchType}</td>
-                                                        <td>${historySVRuleInfoEntity.value.runningAccuracyThreshold}</td>
-                                                        <td>${historySVRuleInfoEntity.value.similarity}</td>
+                                                        <td title="匹配类型1：LPM，2：CPM，3：FPM"> ${historySVRuleInfoEntity.value.matchType}</td>
+                                                        <td title="运行时阈值">${historySVRuleInfoEntity.value.runningAccuracyThreshold}</td>
+                                                        <td title="相似度得分"><fmt:formatNumber type="number" value="${historySVRuleInfoEntity.value.similarity}" maxFractionDigits="3"/></td>
                                                     </tr>
                                                     <tr class="odd">
-                                                        <td colspan="3">${historySVRuleInfoEntity.value.sentence}</td>
-                                                        <td colspan="3">${historySVRuleInfoEntity.value.sentenceModified}</td>
+                                                        <td colspan="3" title="原始句">${historySVRuleInfoEntity.value.sentence}</td>
+                                                        <td colspan="3" title="修改句">${historySVRuleInfoEntity.value.sentenceModified}</td>
                                                     </tr>
                                                     <tr class="odd">
                                                         <td>多余词语</td>
@@ -1068,7 +1068,7 @@
                                                     <td>${ids_rewisMapKey} </td>
                                                     <td colspan="3">
                                                         <c:forEach var="rewi" items="${similarityCalculationData_fpm.ids_rewisMap.get(ids_rewisMapKey)}">
-                                                            <span class="label label-warning">${rewi.wordId}_${rewi.word}}</span>
+                                                            <span class="label label-warning">${rewi.wordId}_${rewi.word}</span>
                                                             ->
                                                             <span class="badge badge-important">${rewi.entityType}_${rewi.entityId}_${rewi.entityName}</span><br/>
                                                         </c:forEach>

@@ -1,6 +1,6 @@
 package com.cooler.semantic.service.external.impl;
 
-import com.cooler.semantic.service.external.RedisService;
+import com.cooler.semantic.service.external.ContextService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.*;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service("redisService")
-public class RedisServiceImpl<T> implements RedisService<T> {
+public class ContextServiceImpl<T> implements ContextService<T> {
 
     @Autowired
     @Qualifier("jedisTemplate")

@@ -9,7 +9,7 @@ import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.external.AnaphoraResolutionService;
-import com.cooler.semantic.service.external.RedisService;
+import com.cooler.semantic.service.external.ContextService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class AnaphoraResolutionServiceImpl implements AnaphoraResolutionService 
     @Autowired
     private RAnaphoraEntityMapper rAnaphoraEntityMapper;
     @Autowired
-    private RedisService<SVRuleInfo> redisService;
+    private ContextService<SVRuleInfo> contextService;
 
     @Override
     public Map<String, List<REntityWordInfo>> anaphoraResolution(ContextOwner contextOwner, Set<String> words, int sentenceVectorSize) {
@@ -31,7 +31,7 @@ public class AnaphoraResolutionServiceImpl implements AnaphoraResolutionService 
         String last1OwnerIndex = contextOwner.getLast1OwnerIndex();
 
         //2.获取上轮对话数据
-        DataComponentBase<SVRuleInfo> dataComponentBase = redisService.getCacheObject(last1OwnerIndex + "_optimalSvRuleInfo");                                           //获取上一轮对话数据
+        DataComponentBase<SVRuleInfo> dataComponentBase = contextService.getCacheObject(last1OwnerIndex + "_optimalSvRuleInfo");                                           //获取上一轮对话数据
         if(dataComponentBase != null && dataComponentBase.getData() != null){                                         //上轮对话数据没有，直接返回空
             SVRuleInfo svRuleInfo = dataComponentBase.getData();
             Map<Integer, String> anaphoraEntityId_WordMap = new HashMap<>();                                            //指代词语对应的指代实体ID

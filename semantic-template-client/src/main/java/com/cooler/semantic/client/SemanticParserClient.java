@@ -19,7 +19,7 @@ public class SemanticParserClient {
 
 //        String[] sentences = { "天气怎么样？", "今天", "北京" };                                                      //测试缺参匹配
 
-//        String[] sentences = { "天气怎么样？", "今天", "北京", "天气怎么样？", "今天北京" };                          //测试缺参匹配（批量询问，需要设置can_batch_query = 1）
+        String[] sentences = { "天气怎么样？", "今天", "北京", "天气怎么样？", "今天北京" };                          //测试缺参匹配（批量询问，需要设置can_batch_query = 1）
 
 //        String[] sentences = { "天气怎么样？", "我说的是今天", "当然是北京", "天气怎么样？", "今天和北京" };                          //测试有冗余词汇的缺参匹配（批量询问，需要设置can_batch_query = 1）
 
@@ -29,7 +29,7 @@ public class SemanticParserClient {
 
 //        String[] sentences = { "天气怎么样？", "哈哈", "哈哈", "哈哈", "今天", "北京" };                                   //测试打断上下文的缺参匹配1
 
-        String[] sentences = { "天气怎么样？", "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京", "哈哈"};                       //测试打断上下文的缺参匹配2
+//        String[] sentences = { "天气怎么样？", "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京", "哈哈"};                       //测试打断上下文的缺参匹配2
 
 //        String[] sentences = {  "哈哈", "哈哈",  "今天", "哈哈", "哈哈", "北京" };                                       //测试匹配失败
 

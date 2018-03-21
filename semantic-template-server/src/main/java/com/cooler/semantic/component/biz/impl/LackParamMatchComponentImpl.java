@@ -13,15 +13,13 @@ import com.cooler.semantic.model.*;
 import com.cooler.semantic.model.console.AmnesiacData;
 import com.cooler.semantic.model.console.CoupleAlterationRateData;
 import com.cooler.semantic.model.console.SimilarityCalculationData_LPM;
-import com.cooler.semantic.service.external.RedisService;
+import com.cooler.semantic.service.external.ContextService;
 import com.cooler.semantic.service.external.SimilarityCalculateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -33,7 +31,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
     private SimilarityCalculateService similarityCalculateService;
 
     @Autowired
-    private RedisService redisService;
+    private ContextService contextService;
 
     public enum CalculationLogDataType { sentenceVectors, historySVRuleInfoMap , canceledLPMContextIdSet, coupleAlterationRateDatas , amnesiacDatas , similarityCalculationDatas , lpmSVRuleInfo };
 
@@ -68,7 +66,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
         this.saveCalculationLog(calculationLogType, CalculationLogDataType.sentenceVectors , calculationLogParam_lpm, sentenceVectors);                  //*****************缺参日志准备：1-1
 
         String canceledLPMContextIdSet_DataName = accountId + "_" + userId + "_canceledLPMContextIdSet";
-        DataComponentBase<Set<Integer>> canceledLPMContextIdData = (DataComponentBase<Set<Integer>>)redisService.getCacheObject(canceledLPMContextIdSet_DataName);
+        DataComponentBase<Set<Integer>> canceledLPMContextIdData = (DataComponentBase<Set<Integer>>) contextService.getCacheObject(canceledLPMContextIdSet_DataName);
         Set<Integer> canceledLPMContextIdSet = null;
         if(canceledLPMContextIdData != null){
             canceledLPMContextIdSet = canceledLPMContextIdData.getData();
@@ -324,7 +322,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
             }
 
             canceledLPMContextIdSet.add(bestContextId);
-            redisService.setCacheObject(canceledLPMContextIdSet_DataName, new DataComponentBase(outputDataBeanId, contextOwner, HashSet.class.getSimpleName(), canceledLPMContextIdSet));   //此处保存被选中的contextId到redis，下次使用时进行排查，进而避免无用匹配
+            contextService.setCacheObject(canceledLPMContextIdSet_DataName, new DataComponentBase(outputDataBeanId, contextOwner, HashSet.class.getSimpleName(), canceledLPMContextIdSet));   //此处保存被选中的contextId到redis，下次使用时进行排查，进而避免无用匹配
             return new ComponentBizResult("LPMC_S", Constant.STORE_LOCAL_REMOTE, lpm_optimalSvRuleInfo);      //无论结果是否为null，都要保存，此结果在本地和远程都要存储;
         }else{
             return new ComponentBizResult("LPMC_F", Constant.STORE_LOCAL_REMOTE, null);         //无论结果是否为null，都要保存，此结果在本地和远程都要存储;

@@ -7,7 +7,7 @@ import com.cooler.semantic.constant.Constant;
 import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.SVRuleInfo;
-import com.cooler.semantic.service.external.RedisService;
+import com.cooler.semantic.service.external.ContextService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class StartComponentImpl extends FunctionComponentBase<Object, Object> {
     private static Logger logger = LoggerFactory.getLogger(StartComponentImpl.class.getName());
 
     @Autowired
-    private RedisService<DataComponent<SVRuleInfo>> redisService;
+    private ContextService<DataComponent<SVRuleInfo>> contextService;
 
     public StartComponentImpl() {
         super("STARTC", null, "historyDataComponents");
@@ -44,7 +44,7 @@ public class StartComponentImpl extends FunctionComponentBase<Object, Object> {
             lastNDataNames.add(lastIDataName);
         }
 
-        List<DataComponent<SVRuleInfo>> historyDataComponents = redisService.getCacheObjects(lastNDataNames);         //一次查询出memorizedConversationCount个历史记录
+        List<DataComponent<SVRuleInfo>> historyDataComponents = contextService.getCacheObjects(lastNDataNames);         //一次查询出memorizedConversationCount个历史记录
 
         List<DataComponent<SVRuleInfo>> enableHistoryDataComponents = new ArrayList<>();
         for (DataComponent<SVRuleInfo> historyDataComponent : historyDataComponents) {                                  //做一次过滤，只保留在longConversationMemorizedCount次的长对话和在shortConversationMemorizedCount次的短对话

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface RedisService<T> {
+public interface ContextService<T> {
     <T> ValueOperations<String, T> setCacheObject(String key, T value);
     /**
      * 获得缓存的基本对象。

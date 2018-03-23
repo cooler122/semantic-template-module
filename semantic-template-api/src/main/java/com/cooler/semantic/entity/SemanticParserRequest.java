@@ -18,6 +18,9 @@ public class SemanticParserRequest implements Serializable {
      */
     private List<Integer> accountIds;
 
+    /**
+     * md5密码
+     */
     private String password;
     /**
      * 核心账号的用户ID
@@ -74,6 +77,11 @@ public class SemanticParserRequest implements Serializable {
      * 计算日志类型
      */
     private int calculationLogType = 0;
+
+    /**
+     * 上下文日志类型
+     */
+    private int contextLogType = 0;
 
     /**
      * 算法类型
@@ -289,6 +297,14 @@ public class SemanticParserRequest implements Serializable {
         this.calculationLogType = calculationLogType;
     }
 
+    public int getContextLogType() {
+        return contextLogType;
+    }
+
+    public void setContextLogType(int contextLogType) {
+        this.contextLogType = contextLogType;
+    }
+
     public int getAlgorithmType() {
         return algorithmType;
     }
@@ -322,6 +338,7 @@ public class SemanticParserRequest implements Serializable {
                 ", accuracyThreshold=" + accuracyThreshold +
                 ", processLogType=" + processLogType +
                 ", calculationLogType=" + calculationLogType +
+                ", contextLogType=" + contextLogType +
                 ", algorithmType=" + algorithmType +
                 ", contextId=" + contextId +
                 ", lastEndTimestamp=" + lastEndTimestamp +

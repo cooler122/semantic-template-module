@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cooler.semantic.dao.ReferRuleRelationMapper" >
-
   <resultMap id="BaseResultMap" type="com.cooler.semantic.entity.ReferRuleRelation" >
     <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
@@ -9,36 +8,36 @@
       <arg column="rule_name" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="refer_rule_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="refer_rule_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="account_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="guide_intent_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="has_conditions" jdbcType="TINYINT" javaType="java.lang.Byte" />
       <arg column="state" jdbcType="INTEGER" javaType="java.lang.Integer" />
     </constructor>
   </resultMap>
-
   <sql id="Base_Column_List" >
-    id, rule_id, rule_name, refer_rule_id, refer_rule_name, has_conditions, state
+    id, rule_id, rule_name, refer_rule_id, refer_rule_name, account_id, guide_intent_id,
+    has_conditions, state
   </sql>
-
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from refer_rule_relation
     where id = #{id,jdbcType=INTEGER}
   </select>
-
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from refer_rule_relation
     where id = #{id,jdbcType=INTEGER}
   </delete>
-
   <insert id="insert" parameterType="com.cooler.semantic.entity.ReferRuleRelation" >
     insert into refer_rule_relation (id, rule_id, rule_name, 
-      refer_rule_id, refer_rule_name, has_conditions, 
-      state)
+      refer_rule_id, refer_rule_name, account_id, 
+      guide_intent_id, has_conditions, state
+      )
     values (#{id,jdbcType=INTEGER}, #{ruleId,jdbcType=INTEGER}, #{ruleName,jdbcType=VARCHAR}, 
-      #{referRuleId,jdbcType=INTEGER}, #{referRuleName,jdbcType=VARCHAR}, #{hasConditions,jdbcType=TINYINT}, 
-      #{state,jdbcType=INTEGER})
+      #{referRuleId,jdbcType=INTEGER}, #{referRuleName,jdbcType=VARCHAR}, #{accountId,jdbcType=INTEGER}, 
+      #{guideIntentId,jdbcType=INTEGER}, #{hasConditions,jdbcType=TINYINT}, #{state,jdbcType=INTEGER}
+      )
   </insert>
-
   <insert id="insertSelective" parameterType="com.cooler.semantic.entity.ReferRuleRelation" >
     insert into refer_rule_relation
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -56,6 +55,12 @@
       </if>
       <if test="referRuleName != null" >
         refer_rule_name,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="guideIntentId != null" >
+        guide_intent_id,
       </if>
       <if test="hasConditions != null" >
         has_conditions,
@@ -80,6 +85,12 @@
       <if test="referRuleName != null" >
         #{referRuleName,jdbcType=VARCHAR},
       </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="guideIntentId != null" >
+        #{guideIntentId,jdbcType=INTEGER},
+      </if>
       <if test="hasConditions != null" >
         #{hasConditions,jdbcType=TINYINT},
       </if>
@@ -88,7 +99,6 @@
       </if>
     </trim>
   </insert>
-
   <update id="updateByPrimaryKeySelective" parameterType="com.cooler.semantic.entity.ReferRuleRelation" >
     update refer_rule_relation
     <set >
@@ -104,6 +114,12 @@
       <if test="referRuleName != null" >
         refer_rule_name = #{referRuleName,jdbcType=VARCHAR},
       </if>
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="guideIntentId != null" >
+        guide_intent_id = #{guideIntentId,jdbcType=INTEGER},
+      </if>
       <if test="hasConditions != null" >
         has_conditions = #{hasConditions,jdbcType=TINYINT},
       </if>
@@ -113,24 +129,33 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-
   <update id="updateByPrimaryKey" parameterType="com.cooler.semantic.entity.ReferRuleRelation" >
     update refer_rule_relation
     set rule_id = #{ruleId,jdbcType=INTEGER},
       rule_name = #{ruleName,jdbcType=VARCHAR},
       refer_rule_id = #{referRuleId,jdbcType=INTEGER},
       refer_rule_name = #{referRuleName,jdbcType=VARCHAR},
+      account_id = #{accountId,jdbcType=INTEGER},
+      guide_intent_id = #{guideIntentId,jdbcType=INTEGER},
       has_conditions = #{hasConditions,jdbcType=TINYINT},
       state = #{state,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
   <!-- 业务相关 -->
-  <select id="selectByRuleId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByRIdAId" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
     from refer_rule_relation
-    where rule_id = #{ruleId,jdbcType=INTEGER} and state = 1
+    where rule_id = #{ruleId,jdbcType=INTEGER} and guide_intent_id = #{guideIntentId,jdbcType=INTEGER} and account_id = #{accountId,jdbcType=INTEGER} and state = 1
+  </select>
+
+
+  <select id="selectRRIdsByIntentId" resultType="java.lang.Integer" >
+    select
+    refer_rule_id
+    from refer_rule_relation
+    where guide_intent_id = #{guideIntentId,jdbcType=INTEGER} and account_id = #{accountId,jdbcType=INTEGER} and state = 1
   </select>
 
 </mapper>

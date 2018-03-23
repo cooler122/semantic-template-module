@@ -8,9 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by zhangsheng on 2017/12/31.
- */
 public class REntityWordInfo implements Serializable{
 
     /**

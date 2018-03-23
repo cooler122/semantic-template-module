@@ -1,4 +1,4 @@
-package com.cooler.semantic.service.impl;
+package com.cooler.semantic.service.external.impl;
 
 import com.cooler.semantic.dao.LogDataCalculationMapper;
 import com.cooler.semantic.entity.LogDataCalculation;

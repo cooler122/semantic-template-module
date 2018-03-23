@@ -10,6 +10,7 @@ import com.cooler.semantic.entity.SemanticParserRequest;
 import com.cooler.semantic.entity.SemanticParserResponse;
 import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.EntityQueryParam;
+import com.cooler.semantic.model.REntityWordInfo;
 import com.cooler.semantic.model.SVRuleInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +36,13 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
         String sentenceModified = svRuleInfo.getSentenceModified();
         similarity = new BigDecimal(similarity).setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
         List<RRuleEntity> lackedRRuleEntities = svRuleInfo.getLackedRRuleEntities();
+        Map<String, REntityWordInfo> fixedAccumulatedMatchedREWIMap = svRuleInfo.getFixedAccumulatedMatchedREWIMap();
         int lackedSize = lackedRRuleEntities.size();
 
-        String responseMsg = "";
-
+        StringBuffer responseMsgSB = new StringBuffer();
         DataComponent sugguestDataDataComponent = componentConstant.getDataComponent("sugguestData", contextOwner);         //看看前面是否获取了建议语句
         if(sugguestDataDataComponent != null && sugguestDataDataComponent.getData() != null){
-            responseMsg = sugguestDataDataComponent.getData() + "，前面您问的是：";
+            responseMsgSB.append(sugguestDataDataComponent.getData()).append("，前面您问的是：");
         }
 
         if(lackedRRuleEntities != null && lackedSize > 1){                                                             //1.如果缺失实体问题数量 > 1
@@ -50,7 +51,7 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
             Boolean canBatchQuery = request.isCanBatchQuery();                                                          //查询缺参状态下是否可以批量询问
             if(canBatchQuery){                                                                                          //如果缺参问题可以批量询问
                 for (RRuleEntity lackedRRuleEntity : lackedRRuleEntities) {
-                    responseMsg += getResponseMsg(lackedRRuleEntity);
+                    responseMsgSB.append(getResponseMsg(lackedRRuleEntity, fixedAccumulatedMatchedREWIMap));
                 }
             }else{                                                                                                      //如果缺参问题不可以批量询问，则先排序，后取最前的一个缺失实体的问题进行询问
                 Collections.sort(lackedRRuleEntities, new Comparator<RRuleEntity>() {
@@ -74,11 +75,11 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
                     }
                 });
                 RRuleEntity rRuleEntity = lackedRRuleEntities.get(0);
-                responseMsg += getResponseMsg(rRuleEntity);
+                responseMsgSB.append(getResponseMsg(rRuleEntity, fixedAccumulatedMatchedREWIMap));
             }
         }else{                                                                                                         //2.如果缺失实体问题数量 = 1
             RRuleEntity rRuleEntity = lackedRRuleEntities.get(0);
-            responseMsg += getResponseMsg(rRuleEntity);
+            responseMsgSB.append(getResponseMsg(rRuleEntity, fixedAccumulatedMatchedREWIMap));
         }
 
         long responseTimestamp = System.currentTimeMillis();
@@ -87,7 +88,7 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
         semanticParserResponse.setAccountIds(contextOwner.getAccountIds());
         semanticParserResponse.setUserId(contextOwner.getUserId());
         semanticParserResponse.setContextId(contextOwner.getContextId());
-        semanticParserResponse.setResponseMsg(responseMsg);
+        semanticParserResponse.setResponseMsg(responseMsgSB.toString());
         semanticParserResponse.setSentence(sentence);
         semanticParserResponse.setSentenceModified(sentenceModified);
         semanticParserResponse.setResponseType(Constant.MISSING_RESULT);
@@ -100,11 +101,12 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
 
     /**
      * 获取回应信息
-     * @param rRuleEntity
+     * @param rRuleEntity   缺失实体
+     * @param fixedAccumulatedMatchedREWIMap    缺失实体的猜测答案
      * @return
      */
-    private String getResponseMsg(RRuleEntity rRuleEntity){
-        String responseMsg = "";
+    private String getResponseMsg(RRuleEntity rRuleEntity, Map<String, REntityWordInfo> fixedAccumulatedMatchedREWIMap){
+        StringBuffer responseMsgSB = new StringBuffer();
         int queryType = rRuleEntity.getQueryType();
         String necessaryEntityQuery = rRuleEntity.getNecessaryEntityQuery();
         EntityQueryParam entityQueryParam = JSONObject.parseObject(necessaryEntityQuery, EntityQueryParam.class);
@@ -112,16 +114,23 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
             logger.warn("注意设置错误！此处必须参数的query_type必须设置为非0");
         }else if(queryType == Constant.AB_QUESTION_RESPONSE_MODE){
             String directQuestion = entityQueryParam.getDirectQuestion();
-            responseMsg += directQuestion;
+            responseMsgSB.append(directQuestion);
         }else if(queryType == Constant.AB_CHOICE_QUESTION_MODE){
             String indirectQuestion = entityQueryParam.getIndirectQuestion();
             Map<String, String> indirectQueryParamMap = entityQueryParam.getIndirectQueryParamMap();
             Set<String> choiceSet = indirectQueryParamMap.keySet();
-            responseMsg += indirectQuestion + StringUtils.collectionToDelimitedString(choiceSet, " ? ") + " ?";
+            responseMsgSB.append(indirectQuestion + StringUtils.collectionToDelimitedString(choiceSet, " ? ") + " ?");
         }else{
             //TODO:还有两个类型
             System.out.println("其它的后续处理");
         }
-        return  responseMsg;
+
+        //缺失实体的猜测过程
+        String entityTypeId = rRuleEntity.getEntityTypeId();
+        REntityWordInfo rEntityWordInfo = fixedAccumulatedMatchedREWIMap.get(entityTypeId);
+        if(rEntityWordInfo != null){
+            responseMsgSB.append(" (").append(rEntityWordInfo.getWord()).append(" ? ) ");
+        }
+        return responseMsgSB.toString();
     }
 }

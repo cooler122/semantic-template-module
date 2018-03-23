@@ -29,7 +29,9 @@ public class AccountConfiguration {
 
     private Integer calculationLogType;
 
-    public AccountConfiguration(Integer id, Integer accountId, Integer userId, Boolean canBreakContext, Boolean canBatchQuery, Integer ruleMaxQueryCount, Integer entityMaxQueryCount, Integer contextWaitTime, Double accuracyThreshold, Integer shortConversationMemorizedCount, Integer longConversationMemorizedCount, Integer algorithmType, Integer processLogType, Integer calculationLogType) {
+    private Integer contextLogType;
+
+    public AccountConfiguration(Integer id, Integer accountId, Integer userId, Boolean canBreakContext, Boolean canBatchQuery, Integer ruleMaxQueryCount, Integer entityMaxQueryCount, Integer contextWaitTime, Double accuracyThreshold, Integer shortConversationMemorizedCount, Integer longConversationMemorizedCount, Integer algorithmType, Integer processLogType, Integer calculationLogType, Integer contextLogType) {
         this.id = id;
         this.accountId = accountId;
         this.userId = userId;
@@ -44,6 +46,7 @@ public class AccountConfiguration {
         this.algorithmType = algorithmType;
         this.processLogType = processLogType;
         this.calculationLogType = calculationLogType;
+        this.contextLogType = contextLogType;
     }
 
     public AccountConfiguration() {
@@ -160,5 +163,13 @@ public class AccountConfiguration {
 
     public void setCalculationLogType(Integer calculationLogType) {
         this.calculationLogType = calculationLogType;
+    }
+
+    public Integer getContextLogType() {
+        return contextLogType;
+    }
+
+    public void setContextLogType(Integer contextLogType) {
+        this.contextLogType = contextLogType;
     }
 }

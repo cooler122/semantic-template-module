@@ -204,4 +204,12 @@
     where state > 0 and account_id = #{accountId,jdbcType=INTEGER} and id = #{ruleId,jdbcType=INTEGER}
   </select>
 
+
+  <select id="selectIntentId" resultType="java.lang.Integer" >
+    select
+    intent_id
+    from rule
+    where state > 0 and id = #{ruleId,jdbcType=INTEGER}
+  </select>
+
 </mapper>

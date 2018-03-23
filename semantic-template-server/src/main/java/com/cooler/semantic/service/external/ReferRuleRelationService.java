@@ -11,5 +11,12 @@ public interface ReferRuleRelationService extends BaseService<ReferRuleRelation>
      * @param ruleId
      * @return
      */
-    List<ReferRuleRelation> selectByRuleId(Integer ruleId);
+    List<ReferRuleRelation> selectByRIdAId(Integer ruleId, Integer guideIntentId, Integer accountId);
+
+    /**
+     * 根据总的引导意图ID，来查询其下引导的所有ruleId集合。
+     * @param guideIntentId
+     * @return
+     */
+    List<Integer> selectRRIdsByIntentId(Integer accountId, Integer guideIntentId);
 }

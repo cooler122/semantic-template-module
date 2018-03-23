@@ -44,7 +44,14 @@ public class ReferRuleRelationServiceImpl implements ReferRuleRelationService {
     }
 
     @Override
-    public List<ReferRuleRelation> selectByRuleId(Integer ruleId) {
-        return referRuleRelationMapper.selectByRuleId(ruleId);
+    public List<ReferRuleRelation> selectByRIdAId(Integer ruleId, Integer guideIntentId, Integer accountId) {
+        return referRuleRelationMapper.selectByRIdAId(ruleId, guideIntentId, accountId);
     }
+
+    @Override
+    public List<Integer> selectRRIdsByIntentId(Integer accountId, Integer guideIntentId) {
+        return referRuleRelationMapper.selectRRIdsByIntentId(accountId, guideIntentId);
+    }
+
+
 }

@@ -25,6 +25,7 @@ public class Constant{
     public static final int STORE_LOCAL = 1;                                          //本地存储
     public static final int STORE_REMOTE = 2;                                         //远程存储
     public static final int STORE_LOCAL_REMOTE = 3;                                  //本地和远程都存储
+    public static final int STORE_LOCAL_REMOTE_CONTEXTLOG = 4;                     //本地和远程都存储，并且保存上下文日志
 
     //------------------------------------------------------------------------------相似度算法类型
     public static final int JACCARD_VOLUME_RATE = 1;                                //贾卡德（只考虑实体占用率）

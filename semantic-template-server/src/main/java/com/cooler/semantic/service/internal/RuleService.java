@@ -14,4 +14,11 @@ public interface RuleService extends BaseService<Rule> {
      * @return
      */
     Double selectAccuracyThresholdByIdAccountId(Integer accountId, Integer ruleId);
+
+    /**
+     * 根据ruleId查询意图ID
+     * @param ruleId
+     * @return
+     */
+    Integer selectIntentId(Integer ruleId);
 }

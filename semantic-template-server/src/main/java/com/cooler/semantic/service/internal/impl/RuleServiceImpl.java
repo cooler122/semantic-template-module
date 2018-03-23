@@ -50,4 +50,9 @@ public class RuleServiceImpl implements RuleService {
         Double ruleAccuracyThreshold = ruleMapper.selectAccuracyThresholdByIdAccountId(accountId, ruleId);                        //最多取出两个记录
         return ruleAccuracyThreshold;
     }
+
+    @Override
+    public Integer selectIntentId(Integer ruleId) {
+        return ruleMapper.selectIntentId(ruleId);
+    }
 }

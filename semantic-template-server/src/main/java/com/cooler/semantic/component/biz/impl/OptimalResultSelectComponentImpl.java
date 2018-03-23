@@ -35,6 +35,7 @@ public class OptimalResultSelectComponentImpl extends FunctionComponentBase<SVRu
         DataComponent<SemanticParserRequest> dataComponent = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = dataComponent.getData();
         double accuracyThreshold = request.getAccuracyThreshold();                                                     //用户设置的全局阈值
+        int contextLogType = request.getContextLogType();                                                              //上下文日志类型
 
         String resultCode = null;
         DataComponent<SVRuleInfo> optimalSvRuleInfo_DataComponent = null;
@@ -92,7 +93,8 @@ public class OptimalResultSelectComponentImpl extends FunctionComponentBase<SVRu
                 matchedREntityWordInfo.setWeights(Arrays.asList(finalWeight));                                          //实际上对于本轮对话，此处权重以没有作用，这里还是将最终确定用上的权重在这里设置，是为了下几轮对话，也许下几轮对话会用上。
             }
             optimalSvRuleInfo.setSentenceVectorId(0);                                                                   //上面将确定后的权重改变到了第0个位置，那么将此最佳SVRuleInfo的SentenceVectorId设置为0
-            return new ComponentBizResult(resultCode, Constant.STORE_LOCAL_REMOTE, optimalSvRuleInfo);              //此结果在本地和远程都要存储，无论它是否超过规则规定的阈值，都将记为历史记录
+                                                                                                                        //此结果在本地和远程都要存储，无论它是否超过规则规定的阈值，都将记为历史记录；如果contextLogType不为0，则存储上下文日志。
+            return new ComponentBizResult(resultCode, contextLogType == 0 ? Constant.STORE_LOCAL_REMOTE : Constant.STORE_LOCAL_REMOTE_CONTEXTLOG, optimalSvRuleInfo);
         }else{
             return new ComponentBizResult(resultCode);
         }

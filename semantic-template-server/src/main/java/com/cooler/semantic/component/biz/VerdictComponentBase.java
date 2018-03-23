@@ -12,6 +12,7 @@ import com.cooler.semantic.model.ContextOwner;
 import com.cooler.semantic.model.SVRuleInfo;
 import com.cooler.semantic.service.external.ContextService;
 import com.cooler.semantic.service.external.ReferRuleRelationService;
+import com.cooler.semantic.service.internal.RuleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,9 @@ public class VerdictComponentBase<I> implements SemanticComponent{
 
     @Autowired
     private ContextService<DataComponent> contextService;
+
+    @Autowired
+    private RuleService ruleService;
 
     @Autowired
     private ReferRuleRelationService referRuleRelationService;
@@ -85,10 +89,13 @@ public class VerdictComponentBase<I> implements SemanticComponent{
             if(saveCode == Constant.STORE_LOCAL){                                                                     //将输出对象保存到本地
                 componentConstant.putDataComponent(outputDataComponent);                                                    //子组件的OutPutDataComponent保存到数据源ComponentConstant的Map中（后续最好用ThreadLocal实现此Map，放redis也行啊）
             }else if(saveCode == Constant.STORE_REMOTE){                                                             //将输出对象保存到远程
-                contextService.setCacheObject(contextOwner.getOwnerIndex() + "_" + outputDataBeanId, outputDataComponent);
+                contextService.setContext(contextOwner.getOwnerIndex() + "_" + outputDataBeanId, outputDataComponent);
             }else if(saveCode == Constant.STORE_LOCAL_REMOTE){                                                      //将输出对象保存到本地和远程
                 componentConstant.putDataComponent(outputDataComponent);
-                contextService.setCacheObject(contextOwner.getOwnerIndex() + "_" + outputDataBeanId, outputDataComponent);
+                contextService.setContext(contextOwner.getOwnerIndex() + "_" + outputDataBeanId, outputDataComponent);
+            } else if (saveCode == Constant.STORE_LOCAL_REMOTE_CONTEXTLOG){
+                componentConstant.putDataComponent(outputDataComponent);
+                contextService.setContext(contextOwner.getOwnerIndex() + "_" + outputDataBeanId, outputDataComponent, true);
             }
         }
         componentConstant.setTraceByContextOwnerIndex(contextOwner.getOwnerIndex(), resultCode);
@@ -171,9 +178,15 @@ public class VerdictComponentBase<I> implements SemanticComponent{
     private ComponentBizResult d7(ContextOwner contextOwner) {
         DataComponent<SVRuleInfo> optimalSvRuleInfo = componentConstant.getDataComponent("optimalSvRuleInfo", contextOwner); //此时optimalSvRuleInfo一定不为空
         SVRuleInfo svRuleInfo = optimalSvRuleInfo.getData();
+        Integer accountId = svRuleInfo.getAccountId();
+
         Integer ruleId = svRuleInfo.getRuleId();
-        List<ReferRuleRelation> referRuleRelations = referRuleRelationService.selectByRuleId(ruleId);
-        if(referRuleRelations.size() == 0){
+        Integer guideIntentId = svRuleInfo.getGuideIntentId();
+        if(guideIntentId == null){                                                                                     //第一次进入引导规则，这个引导意图ID是没有的，需要取出引导规则的意图ID
+            guideIntentId = ruleService.selectIntentId(ruleId);
+        }
+        List<ReferRuleRelation> referRuleRelations = referRuleRelationService.selectByRIdAId(ruleId, guideIntentId, accountId);
+        if(referRuleRelations == null || referRuleRelations.size() == 0){
             return new ComponentBizResult("D7_N");
         }else{
             svRuleInfo.setIsLongConversationRule(true);                                                                  //此处设置此SVRuleInfo是长对话规则

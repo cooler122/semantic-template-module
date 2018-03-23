@@ -118,6 +118,7 @@ public class ValidateConfComponentImpl extends FunctionComponentBase<SemanticPar
             request.setAccuracyThreshold(accountConfiguration.getAccuracyThreshold());
             request.setProcessLogType(accountConfiguration.getProcessLogType());
             request.setCalculationLogType(accountConfiguration.getCalculationLogType());
+            request.setContextLogType(accountConfiguration.getContextLogType());
             request.setAlgorithmType(accountConfiguration.getAlgorithmType());
             request.setShortConversationMemorizedCount(accountConfiguration.getShortConversationMemorizedCount());
             request.setLongConversationMemorizedCount(accountConfiguration.getLongConversationMemorizedCount());

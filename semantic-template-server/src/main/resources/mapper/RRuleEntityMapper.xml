@@ -275,4 +275,16 @@
     query_type > 0
   </select>
 
+  <select id="selectByRuleIds" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from r_rule_entity
+    where
+    state = 1 and account_id = #{accountId,jdbcType=INTEGER} and query_type > 0 and
+    rule_id IN
+    <foreach collection="ruleIds" item="ruleId" open="(" separator="," close=")">
+      #{ruleId,jdbcType=INTEGER}
+    </foreach>
+  </select>
+
 </mapper>

@@ -19,7 +19,7 @@ public class SemanticParserClient {
 
 //        String[] sentences = { "天气怎么样？", "今天", "北京" };                                                      //测试缺参匹配
 
-        String[] sentences = { "天气怎么样？", "今天", "北京", "天气怎么样？", "今天北京" };                          //测试缺参匹配（批量询问，需要设置can_batch_query = 1）
+//        String[] sentences = { "天气怎么样？", "今天", "北京", "天气怎么样？", "今天北京" };                          //测试缺参匹配（批量询问，需要设置can_batch_query = 1）
 
 //        String[] sentences = { "天气怎么样？", "我说的是今天", "当然是北京", "天气怎么样？", "今天和北京" };                          //测试有冗余词汇的缺参匹配（批量询问，需要设置can_batch_query = 1）
 
@@ -49,7 +49,7 @@ public class SemanticParserClient {
 
 //        String[] sentences = { "天气怎么样？", "今天", "唱周杰伦的歌" , "唱周杰伦的双节棍", "播放他的听妈妈的话", "林俊杰的江南"};        //测试多场景
 
-//        String[] sentences = { "我要取款", "八八八", "六六六六六六", "三五千", "三千", "确认" , "要"};        //测试多场景
+        String[] sentences = { "我要取款五千", "八八八", "六六六六六六", "三五千", "三千", "确认" , "要"};        //测试多场景
 
         List<Integer> accountIds = Arrays.asList(1, 2, 3);
         Integer userId = 2;

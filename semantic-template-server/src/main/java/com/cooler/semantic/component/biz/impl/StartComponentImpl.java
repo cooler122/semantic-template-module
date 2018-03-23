@@ -44,7 +44,7 @@ public class StartComponentImpl extends FunctionComponentBase<Object, Object> {
             lastNDataNames.add(lastIDataName);
         }
 
-        List<DataComponent<SVRuleInfo>> historyDataComponents = contextService.getCacheObjects(lastNDataNames);         //一次查询出memorizedConversationCount个历史记录
+        List<DataComponent<SVRuleInfo>> historyDataComponents = contextService.getContextList(lastNDataNames);         //一次查询出memorizedConversationCount个历史记录
 
         List<DataComponent<SVRuleInfo>> enableHistoryDataComponents = new ArrayList<>();
         for (DataComponent<SVRuleInfo> historyDataComponent : historyDataComponents) {                                  //做一次过滤，只保留在longConversationMemorizedCount次的长对话和在shortConversationMemorizedCount次的短对话

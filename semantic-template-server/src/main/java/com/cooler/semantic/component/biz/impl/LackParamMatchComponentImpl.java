@@ -50,6 +50,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
         //0.准备好用户配置数据
         DataComponent<SemanticParserRequest> dataComponent = componentConstant.getDataComponent("semanticParserRequest", contextOwner);
         SemanticParserRequest request = dataComponent.getData();
+        String sentence = request.getCmd();
         int algorithmType = request.getAlgorithmType();                                                                 //由用户选择使用哪种算法（当前1~5种， 默认JACCARD_VOLUME_WEIGHT_RATE）
         int calculationLogType = request.getCalculationLogType();                                                       //由用户选择何种类型打印计算日志
         CalculationLogParam_LPM calculationLogParam_lpm = null;
@@ -66,7 +67,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
         this.saveCalculationLog(calculationLogType, CalculationLogDataType.sentenceVectors , calculationLogParam_lpm, sentenceVectors);                  //*****************缺参日志准备：1-1
 
         String canceledLPMContextIdSet_DataName = accountId + "_" + userId + "_canceledLPMContextIdSet";
-        DataComponentBase<Set<Integer>> canceledLPMContextIdData = (DataComponentBase<Set<Integer>>) contextService.getCacheObject(canceledLPMContextIdSet_DataName);
+        DataComponentBase<Set<Integer>> canceledLPMContextIdData = (DataComponentBase<Set<Integer>>) contextService.getContext(canceledLPMContextIdSet_DataName);
         Set<Integer> canceledLPMContextIdSet = null;
         if(canceledLPMContextIdData != null){
             canceledLPMContextIdSet = canceledLPMContextIdData.getData();
@@ -246,8 +247,10 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
                         double similarityDistance = currentSimilarity - historySimilarity;
                         if(similarityDistance > maxSimilarityDistance || (similarityDistance == maxSimilarityDistance && (bestContextId != null && bestContextId < historyContextId))){
                             maxSimilarityDistance = similarityDistance;
-                            lpm_optimalSvRuleInfo = resultSvRuleInfo;
                             bestContextId = historyContextId;
+                            lpm_optimalSvRuleInfo = resultSvRuleInfo;
+                            lpm_optimalSvRuleInfo.setSentenceVectorId(sentenceVectorId);
+                            lpm_optimalSvRuleInfo.setrEntityWordInfosList(rEntityWordInfosList);                             //最优规则最后会被选择，才有设置rEntityWordInfosList的必要
                         }
 
                         //2.2.9.制作缺参匹配的日志
@@ -299,6 +302,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
 
         //3.此处缺参匹配已经匹配成功，既然已经选定了一个SVRuleInfo对象作为lpm_optimalSvRuleInfo，那么要完善此处的lpm_optimalSvRuleInfo内部结构体
         if(lpm_optimalSvRuleInfo != null){
+            lpm_optimalSvRuleInfo.setSentence(sentence);
             lpm_optimalSvRuleInfo.setMatchType(Constant.LPM);                                                           //设置匹配类型
             lpm_optimalSvRuleInfo.setAlgorithmType(algorithmType);                                                      //设置算法类型
             List<REntityWordInfo> matchedREntityWordInfos = lpm_optimalSvRuleInfo.getMatchedREntityWordInfos();
@@ -322,7 +326,7 @@ public class LackParamMatchComponentImpl extends FunctionComponentBase<List<Sent
             }
 
             canceledLPMContextIdSet.add(bestContextId);
-            contextService.setCacheObject(canceledLPMContextIdSet_DataName, new DataComponentBase(outputDataBeanId, contextOwner, HashSet.class.getSimpleName(), canceledLPMContextIdSet));   //此处保存被选中的contextId到redis，下次使用时进行排查，进而避免无用匹配
+            contextService.setContext(canceledLPMContextIdSet_DataName, new DataComponentBase(outputDataBeanId, contextOwner, HashSet.class.getSimpleName(), canceledLPMContextIdSet));   //此处保存被选中的contextId到redis，下次使用时进行排查，进而避免无用匹配
             return new ComponentBizResult("LPMC_S", Constant.STORE_LOCAL_REMOTE, lpm_optimalSvRuleInfo);      //无论结果是否为null，都要保存，此结果在本地和远程都要存储;
         }else{
             return new ComponentBizResult("LPMC_F", Constant.STORE_LOCAL_REMOTE, null);         //无论结果是否为null，都要保存，此结果在本地和远程都要存储;

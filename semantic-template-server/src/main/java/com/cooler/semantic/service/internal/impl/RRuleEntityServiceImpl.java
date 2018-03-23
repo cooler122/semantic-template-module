@@ -25,6 +25,11 @@ public class RRuleEntityServiceImpl implements RRuleEntityService {
     }
 
     @Override
+    public List<RRuleEntity> selectByRuleIds(Integer accountId, List<Integer> referRuleIds) {
+        return rRuleEntityMapper.selectByRuleIds(accountId, referRuleIds);
+    }
+
+    @Override
     public int deleteByPrimaryKey(Integer id) {
         return rRuleEntityMapper.deleteByPrimaryKey(id);
     }

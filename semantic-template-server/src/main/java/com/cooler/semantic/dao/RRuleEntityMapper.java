@@ -32,4 +32,12 @@ public interface RRuleEntityMapper extends BaseMapper<RRuleEntity> {
      * @return
      */
     List<RRuleEntity> selectNecessaryByAIdRId(@Param("accountId") Integer accountId, @Param("ruleId") Integer enableReferRuleId);
+
+    /**
+     * 根据所有ruleIds查询RRE集合(必须实体）
+     * @param accountId
+     * @param ruleIds
+     * @return
+     */
+    List<RRuleEntity> selectByRuleIds(@Param("accountId") Integer accountId, @Param("ruleIds") List<Integer> ruleIds);
 }

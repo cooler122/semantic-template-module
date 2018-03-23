@@ -11,22 +11,24 @@ public class ReferRuleRelation {
 
     private String referRuleName;
 
+    private Integer accountId;
+
+    private Integer guideIntentId;
+
     private Byte hasConditions;
 
     private Integer state;
 
-    public ReferRuleRelation(Integer id, Integer ruleId, String ruleName, Integer referRuleId, String referRuleName, Byte hasConditions, Integer state) {
+    public ReferRuleRelation(Integer id, Integer ruleId, String ruleName, Integer referRuleId, String referRuleName, Integer accountId, Integer guideIntentId, Byte hasConditions, Integer state) {
         this.id = id;
         this.ruleId = ruleId;
         this.ruleName = ruleName;
         this.referRuleId = referRuleId;
         this.referRuleName = referRuleName;
+        this.accountId = accountId;
+        this.guideIntentId = guideIntentId;
         this.hasConditions = hasConditions;
         this.state = state;
-    }
-
-    public ReferRuleRelation() {
-        super();
     }
 
     public Integer getId() {
@@ -50,7 +52,7 @@ public class ReferRuleRelation {
     }
 
     public void setRuleName(String ruleName) {
-        this.ruleName = ruleName == null ? null : ruleName.trim();
+        this.ruleName = ruleName;
     }
 
     public Integer getReferRuleId() {
@@ -66,7 +68,23 @@ public class ReferRuleRelation {
     }
 
     public void setReferRuleName(String referRuleName) {
-        this.referRuleName = referRuleName == null ? null : referRuleName.trim();
+        this.referRuleName = referRuleName;
+    }
+
+    public Integer getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
+    }
+
+    public Integer getGuideIntentId() {
+        return guideIntentId;
+    }
+
+    public void setGuideIntentId(Integer guideIntentId) {
+        this.guideIntentId = guideIntentId;
     }
 
     public Byte getHasConditions() {

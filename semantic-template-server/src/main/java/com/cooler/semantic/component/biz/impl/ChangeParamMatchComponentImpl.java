@@ -150,6 +150,8 @@ public class ChangeParamMatchComponentImpl extends FunctionComponentBase<List<Se
             String bestHistoryOptimalSvRuleInfoStr = JSON.toJSONString(bestHistoryOptimalSvRuleInfo);
             SVRuleInfo changeParamOptimalSvRuleInfo = JSON.parseObject(bestHistoryOptimalSvRuleInfoStr, SVRuleInfo.class);  //克隆一个全新的换参匹配SVRuleInfo对象，作为最优换参结果，后面将参数改一下（主要是contextId参数）
             changeParamOptimalSvRuleInfo.setMatchType(Constant.CPM);                                                   //设置匹配类型
+            changeParamOptimalSvRuleInfo.setSentenceVectorId(maxValueSentenceVectorId);
+            changeParamOptimalSvRuleInfo.setrEntityWordInfosList(sentenceVectors.get(maxValueContextId).getrEntityWordInfosList());
 //            changeParamOptimalSvRuleInfo.setAlgorithmType(?);        //这个只从历史记录里面取的，以前是什么，现在还是什么，无需设置。
             List<String> words = changeParamOptimalSvRuleInfo.getWords();
             List<REntityWordInfo> matchedREntityWordInfosModified = new ArrayList<>();                                  //准备一个新的REWI集合，作为换参SVRuleInfo的匹配REWI集合

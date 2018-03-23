@@ -107,6 +107,12 @@ public class SVRuleInfo implements Serializable{
     private List<List<REntityWordInfo>> rEntityWordInfosList = null;
 
     //*****************************************************4.绑定的rule相关数据，跟这个句子向量进行匹配
+
+    /**
+     * 引导意图ID（如果是长对话，那么就必须有一个引导意图）
+     */
+    private Integer guideIntentId;
+
     /**
      * 绑定的规则ID
      */
@@ -144,9 +150,17 @@ public class SVRuleInfo implements Serializable{
     private List<RRuleEntity> lackedRRuleEntities;
 
     /**
-     * 在长对话中，积累的匹配上的RRE集合
+     * 在长对话中，积累的匹配上的RRE集合，形式：Map<ruleId, {REWI1, REWI2, REWI3...}>
      */
-    private List<MatchedEntityParam> accumulatedMatchedEntityParams;
+//    private List<MatchedEntityParam> accumulatedMatchedEntityParams;
+//    private Map<Integer, List<REntityWordInfo>> accumulatedRuleREWIsMap;
+
+
+    private Map<String, REntityWordInfo> fixedAccumulatedMatchedREWIMap;
+    /**
+     * 在长对话中，积累的匹配上的RRE集合(相当于上面集合的变形）形式：Map<entityTypeId, {REWI1, REWI2, REWI3, ...}>
+     */
+//    private Map<String, List<REntityWordInfo>> accumulatedMatchedREWIsMap;
 
     /**
      * 获得的有用值积累，在解析过程中获取（用到应用中的值）
@@ -171,6 +185,14 @@ public class SVRuleInfo implements Serializable{
 
     public void setSentenceVectorId(Integer sentenceVectorId) {
         this.sentenceVectorId = sentenceVectorId;
+    }
+
+    public Integer getGuideIntentId() {
+        return guideIntentId;
+    }
+
+    public void setGuideIntentId(Integer guideIntentId) {
+        this.guideIntentId = guideIntentId;
     }
 
     public Integer getRuleId() {
@@ -357,13 +379,37 @@ public class SVRuleInfo implements Serializable{
         isLongConversationRule = islongConversationRule;
     }
 
-    public List<MatchedEntityParam> getAccumulatedMatchedEntityParams() {
-        return accumulatedMatchedEntityParams;
+//    public Map<Integer, List<REntityWordInfo>> getAccumulatedRuleREWIsMap() {
+//        return accumulatedRuleREWIsMap;
+//    }
+//
+//    public void setAccumulatedRuleREWIsMap(Map<Integer, List<REntityWordInfo>> accumulatedRuleREWIsMap) {
+//        this.accumulatedRuleREWIsMap = accumulatedRuleREWIsMap;
+//    }
+
+//    public Map<String, List<REntityWordInfo>> getAccumulatedMatchedREWIsMap() {
+//        return accumulatedMatchedREWIsMap;
+//    }
+//
+//    public void setAccumulatedMatchedREWIsMap(Map<String, List<REntityWordInfo>> accumulatedMatchedREWIsMap) {
+//        this.accumulatedMatchedREWIsMap = accumulatedMatchedREWIsMap;
+//    }
+
+    public Map<String, REntityWordInfo> getFixedAccumulatedMatchedREWIMap() {
+        return fixedAccumulatedMatchedREWIMap;
     }
 
-    public void setAccumulatedMatchedEntityParams(List<MatchedEntityParam> accumulatedMatchedEntityParams) {
-        this.accumulatedMatchedEntityParams = accumulatedMatchedEntityParams;
+    public void setFixedAccumulatedMatchedREWIMap(Map<String, REntityWordInfo> fixedAccumulatedMatchedREWIMap) {
+        this.fixedAccumulatedMatchedREWIMap = fixedAccumulatedMatchedREWIMap;
     }
+
+    //    public List<MatchedEntityParam> getAccumulatedMatchedEntityParams() {
+//        return accumulatedMatchedEntityParams;
+//    }
+//
+//    public void setAccumulatedMatchedEntityParams(List<MatchedEntityParam> accumulatedMatchedEntityParams) {
+//        this.accumulatedMatchedEntityParams = accumulatedMatchedEntityParams;
+//    }
 
 //    public Integer getContextId() {
 //        return contextId;

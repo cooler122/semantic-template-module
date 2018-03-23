@@ -14,10 +14,12 @@
       <arg column="state" jdbcType="INTEGER" javaType="java.lang.Integer" />
     </constructor>
   </resultMap>
+
   <sql id="Base_Column_List" >
     id, rule_id, rule_name, refer_rule_id, refer_rule_name, account_id, guide_intent_id,
     has_conditions, state
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />

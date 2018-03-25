@@ -32,6 +32,9 @@
         .label{
             margin:2px;
         }
+        .badge {
+            magin: 2px;
+        }
         .page-content {
             background: #fff;
             margin: 0;

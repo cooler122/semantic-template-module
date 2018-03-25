@@ -126,11 +126,14 @@ public class ResultPack4MissingComponentImpl extends FunctionComponentBase<SVRul
         }
 
         //缺失实体的猜测过程
-        String entityTypeId = rRuleEntity.getEntityTypeId();
-        REntityWordInfo rEntityWordInfo = fixedAccumulatedMatchedREWIMap.get(entityTypeId);
-        if(rEntityWordInfo != null){
-            responseMsgSB.append(" (").append(rEntityWordInfo.getWord()).append(" ? ) ");
+        if(fixedAccumulatedMatchedREWIMap != null){
+            String entityTypeId = rRuleEntity.getEntityTypeId();
+            REntityWordInfo rEntityWordInfo = fixedAccumulatedMatchedREWIMap.get(entityTypeId);
+            if(rEntityWordInfo != null){
+                responseMsgSB.append(" (").append(rEntityWordInfo.getWord()).append(" ? ) ");
+            }
         }
+
         return responseMsgSB.toString();
     }
 }

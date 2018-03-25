@@ -48,10 +48,14 @@
             border-radius: 4px;
         }
         .label {
-            font-size: 12px;
-            line-height: 1.15;
-            height: 20px;
-            margin: 1px;
+            font-size: 14px;
+            padding: 2px 4px 2px 4px;
+            /*line-height: 1.15;*/
+            /*height: 20px;*/
+            /*margin: 1px;*/
+        }
+        .badge {
+            magin: 2px;
         }
     </style>
 
